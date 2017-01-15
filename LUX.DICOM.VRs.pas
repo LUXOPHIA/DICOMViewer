@@ -70,9 +70,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMVRs
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
-     TDICOMVRs = class
+     TdcmBookVR = class
      private
      protected
        _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
@@ -115,7 +115,7 @@ uses LUX.DICOM;
 
 function HTypeVR.ToString :String;
 begin
-     Result := String( _VRs_.KindToName[ [Self] ] );
+     Result := String( _BookVR_.KindToName[ [Self] ] );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
@@ -178,7 +178,7 @@ end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMVRs
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -186,7 +186,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TDICOMVRs.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
 begin
      _NameToKind.Add( Name_, Kind_ );
      _KindToName.Add( Kind_, Name_ );
@@ -196,7 +196,7 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOMVRs.Create;
+constructor TdcmBookVR.Create;
 begin
      inherited;
 
@@ -240,7 +240,7 @@ begin
      Add( [TTypeVR.vrUT], 'UT', 6, 'Unlimited Text' );
 end;
 
-destructor TDICOMVRs.Destroy;
+destructor TdcmBookVR.Destroy;
 begin
      _NameToKind.Free;
      _KindToName.Free;
@@ -252,7 +252,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TDICOMVRs.ReadStream( const F_:TFileStream ) :TKindVR;
+function TdcmBookVR.ReadStream( const F_:TFileStream ) :TKindVR;
 var
    P :Integer;
    Name :TAnsiChar2;

@@ -8,14 +8,14 @@ uses System.Classes, System.SysUtils,
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-     TDICOMData = class;
-     TDICOM     = class;
+     TdcmData = class;
+     TdcmFile = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMHeader
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmHead
 
-     TDICOMHeader = packed record
+     TdcmHead = packed record
      private
      public
        Prea :array [ 0..128-1 ] of     Byte;
@@ -24,17 +24,17 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMData
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmData
 
-     TDICOMData = class( TTreeLeaf<TTreeNode> )
+     TdcmData = class( TTreeLeaf<TTreeNode> )
      private
      protected
-       _Tag   :TDICOMTag;
+       _Tag   :TdcmTag;
        _ExpVR :TKindVR;
        _Data  :TBytes;
        ///// アクセス
        function GetIsStd :Boolean;
-       function GetElem :TDICOMElem;
+       function GetElem :TdcmElem;
        function GetOriVR :TKindVR;
        function GetSize :Cardinal;
        procedure SetSize( const Size_:Cardinal );
@@ -43,21 +43,21 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        constructor Create; override;
        destructor Destroy; override;
        ///// プロパティ
-       property Tag   :TDICOMTag  read   _Tag                ;
-       property IsStd :Boolean    read GetIsStd              ;
-       property Elem  :TDICOMElem read GetElem               ;
-       property OriVR :TKindVR    read GetOriVR              ;
-       property ExpVR :TKindVR    read   _ExpVR              ;
-       property Size  :Cardinal   read GetSize  write SetSize;
-       property Data  :TBytes     read   _Data               ;
-       property Desc  :String     read GetDesc               ;
+       property Tag   :TdcmTag  read   _Tag                ;
+       property IsStd :Boolean  read GetIsStd              ;
+       property Elem  :TdcmElem read GetElem               ;
+       property OriVR :TKindVR  read GetOriVR              ;
+       property ExpVR :TKindVR  read   _ExpVR              ;
+       property Size  :Cardinal read GetSize  write SetSize;
+       property Data  :TBytes   read   _Data               ;
+       property Desc  :String   read GetDesc               ;
        ///// メソッド
        procedure ReadStream( const F_:TFileStream );
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOM
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmFile
 
-     TDICOM = class( TTreeRoot<TDICOMData> )
+     TdcmFile = class( TTreeRoot<TdcmData> )
      private
      protected
      public
@@ -71,8 +71,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
 
-    _Tags_ :TDICOMGrups;
-    _VRs_  :TDICOMVRs;
+    _BookTag_ :TdcmBookTag;
+    _BookVR_  :TdcmBookVR;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
@@ -82,13 +82,7 @@ uses Main;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMHeader
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMTag
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmHead
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -96,7 +90,7 @@ uses Main;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMData
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmData
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -104,45 +98,45 @@ uses Main;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TDICOMData.GetIsStd :Boolean;
+function TdcmData.GetIsStd :Boolean;
 begin
-     Result := _Tags_.Contains( _Tag );
+     Result := _BookTag_.Contains( _Tag );
 end;
 
-function TDICOMData.GetElem :TDICOMElem;
+function TdcmData.GetElem :TdcmElem;
 begin
-     Result := _Tags_[ _Tag ];
+     Result := _BookTag_[ _Tag ];
 end;
 
-function TDICOMData.GetOriVR :TKindVR;
+function TdcmData.GetOriVR :TKindVR;
 begin
      Result := GetElem.Kind;
 end;
 
-function TDICOMData.GetSize :Cardinal;
+function TdcmData.GetSize :Cardinal;
 begin
      Result := Length( _Data );
 end;
 
-procedure TDICOMData.SetSize( const Size_:Cardinal );
+procedure TdcmData.SetSize( const Size_:Cardinal );
 begin
      SetLength( _Data, Size_ );
 end;
 
-function TDICOMData.GetDesc :String;
+function TdcmData.GetDesc :String;
 begin
      Result := GetElem.Desc;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOMData.Create;
+constructor TdcmData.Create;
 begin
      inherited;
 
 end;
 
-destructor TDICOMData.Destroy;
+destructor TdcmData.Destroy;
 begin
 
      inherited;
@@ -150,7 +144,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TDICOMData.ReadStream( const F_:TFileStream );
+procedure TdcmData.ReadStream( const F_:TFileStream );
 //-----------------------------------------------------
      function ReadWord :Word;
      begin
@@ -165,14 +159,14 @@ procedure TDICOMData.ReadStream( const F_:TFileStream );
 begin
      F_.Read( _Tag, SizeOf( _Tag ) );
 
-     _ExpVR := _VRs_.ReadStream( F_ );
+     _ExpVR := _BookVR_.ReadStream( F_ );
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.3
      //// 7.1.3 Data Element Structure with Implicit VR
      if _ExpVR = [] then Size := ReadCardinal
      else
      begin
-          case _VRs_.KindToSize[ _ExpVR ] of
+          case _BookVR_.KindToSize[ _ExpVR ] of
             2: begin
                     Size := ReadWord;
                end;
@@ -187,7 +181,7 @@ begin
      F_.ReadBuffer( _Data, Size );
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOM
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmFile
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -195,13 +189,13 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOM.Create;
+constructor TdcmFile.Create;
 begin
      inherited;
 
 end;
 
-destructor TDICOM.Destroy;
+destructor TdcmFile.Destroy;
 begin
 
      inherited;
@@ -209,10 +203,10 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TDICOM.LoadFromFile( const FileName_:String );
+procedure TdcmFile.LoadFromFile( const FileName_:String );
 var
    F :TFileStream;
-   H :TDICOMHeader;
+   H :TdcmHead;
 begin
      F := TFileStream.Create( FileName_, fmOpenRead );
 
@@ -220,7 +214,7 @@ begin
 
      Assert( H.Pref = 'DICM', 'It is not the DICOM file.' );
 
-     while F.Position < F.Size do TDICOMData.Create( Self ).ReadStream( F );
+     while F.Position < F.Size do TdcmData.Create( Self ).ReadStream( F );
 
      F.Free;
 end;
@@ -231,12 +225,12 @@ end;
 
 initialization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 初期化
 
-     _Tags_ := TDICOMGrups.Create;
-     _VRs_  := TDICOMVRs  .Create;
+     _BookTag_ := TdcmBookTag.Create;
+     _BookVR_  := TdcmBookVR .Create;
 
 finalization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 最終化
 
-     _VRs_ .Free;
-     _Tags_.Free;
+     _BookVR_ .Free;
+     _BookTag_.Free;
 
 end. //######################################################################### ■

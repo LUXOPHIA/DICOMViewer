@@ -20,9 +20,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMTag
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTag
 
-     TDICOMTag = packed record
+     TdcmTag = packed record
      private
      public
        Grup :THex4;
@@ -33,9 +33,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElem
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmElem
 
-     TDICOMElem = class
+     TdcmElem = class
      private
      protected
        _Kind :TKindVR;
@@ -49,7 +49,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElems
 
-     TDICOMElems = class( TDictionary<Word,TDICOMElem> )
+     TDICOMElems = class( TDictionary<Word,TdcmElem> )
      private
      protected
        ///// メソッド
@@ -59,21 +59,21 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        destructor Destroy; override;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMGrups
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookTag
 
-     TDICOMGrups = class( TDictionary<Word,TDICOMElems> )
+     TdcmBookTag = class( TDictionary<Word,TDICOMElems> )
      private
      protected
        ///// アクセス
-       function GetElem( const Tag_:TDICOMTag ) :TDICOMElem;
+       function GetElem( const Tag_:TdcmTag ) :TdcmElem;
      public
        constructor Create;
        destructor Destroy; override;
        ///// プロパティ
-       property Elem[ const Tag_:TDICOMTag ] :TDICOMElem read GetElem; default;
+       property Elem[ const Tag_:TdcmTag ] :TdcmElem read GetElem; default;
        ///// メソッド
-       function Contains( const Tag_:TDICOMTag ) :Boolean;
-       function Find( const Tag_:TDICOMTag ) :TDICOMElem;
+       function Contains( const Tag_:TdcmTag ) :Boolean;
+       function Find( const Tag_:TdcmTag ) :TdcmElem;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -174,7 +174,7 @@ end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMTag
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTag
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -182,14 +182,14 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TDICOMTag.ToString :String;
+function TdcmTag.ToString :String;
 begin
      Result := '(' + Grup.ToString + ',' + Elem.ToString + ')';
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElem
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmElem
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -197,7 +197,7 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOMElem.Create( const Kind_:TKindVR; const Desc_:String );
+constructor TdcmElem.Create( const Kind_:TKindVR; const Desc_:String );
 begin
      inherited Create;
 
@@ -215,7 +215,7 @@ end;
 
 procedure TDICOMElems.Add( const Elem_:Word; const Kind_:TKindVR; const Desc_:String );
 begin
-     inherited Add( Elem_, TDICOMElem.Create( Kind_, Desc_ ) );
+     inherited Add( Elem_, TdcmElem.Create( Kind_, Desc_ ) );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -228,14 +228,14 @@ end;
 
 destructor TDICOMElems.Destroy;
 var
-   V :TDICOMElem;
+   V :TdcmElem;
 begin
      for V in Self.Values do V.Free;
 
      inherited;
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMGrups
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookTag
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -243,14 +243,14 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TDICOMGrups.GetElem( const Tag_:TDICOMTag ) :TDICOMElem;
+function TdcmBookTag.GetElem( const Tag_:TdcmTag ) :TdcmElem;
 begin
      with Tag_ do Result := Items[ Grup ].Items[ Elem ];
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOMGrups.Create;
+constructor TdcmBookTag.Create;
 begin
      inherited Create;
 
@@ -328,7 +328,7 @@ begin
      Add( $FFFE, TDICOMElemsFFFE.Create );
 end;
 
-destructor TDICOMGrups.Destroy;
+destructor TdcmBookTag.Destroy;
 var
    V :TDICOMElems;
 begin
@@ -339,12 +339,12 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TDICOMGrups.Contains( const Tag_:TDICOMTag ) :Boolean;
+function TdcmBookTag.Contains( const Tag_:TdcmTag ) :Boolean;
 begin
      with Tag_ do Result := ContainsKey( Grup ) and Items[ Grup ].ContainsKey( Elem );
 end;
 
-function TDICOMGrups.Find( const Tag_:TDICOMTag ) :TDICOMElem;
+function TdcmBookTag.Find( const Tag_:TdcmTag ) :TdcmElem;
 begin
      if ContainsKey( Tag_.Grup ) then
      begin
