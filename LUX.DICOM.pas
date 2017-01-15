@@ -33,6 +33,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        _ExpVR :TKindVR;
        _Data  :TBytes;
        ///// アクセス
+       function GetIsStd :Boolean;
+       function GetElem :TDICOMElem;
        function GetOriVR :TKindVR;
        function GetSize :Cardinal;
        procedure SetSize( const Size_:Cardinal );
@@ -41,12 +43,14 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        constructor Create; override;
        destructor Destroy; override;
        ///// プロパティ
-       property Tag   :TDICOMTag read   _Tag               ;
-       property OriVR :TKindVR   read GetOriVR             ;
-       property ExpVR :TKindVR   read   _ExpVR             ;
-       property Data  :TBytes    read   _Data              ;
-       property Size  :Cardinal  read GetSize write SetSize;
-       property Desc  :String    read GetDesc              ;
+       property Tag   :TDICOMTag  read   _Tag                ;
+       property IsStd :Boolean    read GetIsStd              ;
+       property Elem  :TDICOMElem read GetElem               ;
+       property OriVR :TKindVR    read GetOriVR              ;
+       property ExpVR :TKindVR    read   _ExpVR              ;
+       property Size  :Cardinal   read GetSize  write SetSize;
+       property Data  :TBytes     read   _Data               ;
+       property Desc  :String     read GetDesc               ;
        ///// メソッド
        procedure ReadStream( const F_:TFileStream );
      end;
@@ -100,20 +104,19 @@ uses Main;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
+function TDICOMData.GetIsStd :Boolean;
+begin
+     Result := _Tags_.Contains( _Tag );
+end;
+
+function TDICOMData.GetElem :TDICOMElem;
+begin
+     Result := _Tags_[ _Tag ];
+end;
+
 function TDICOMData.GetOriVR :TKindVR;
 begin
-     if _Tags_.ContainsKey( _Tag.Grup ) then
-     begin
-          with _Tags_[ _Tag.Grup ] do
-          begin
-               if ContainsKey( _Tag.Elem ) then
-               begin
-                    Result := Items[ _Tag.Elem ].Kind;
-               end
-               else Result := [];
-          end;
-     end
-     else Result := [];
+     Result := GetElem.Kind;
 end;
 
 function TDICOMData.GetSize :Cardinal;
@@ -128,18 +131,7 @@ end;
 
 function TDICOMData.GetDesc :String;
 begin
-     if _Tags_.ContainsKey( _Tag.Grup ) then
-     begin
-          with _Tags_[ _Tag.Grup ] do
-          begin
-               if ContainsKey( _Tag.Elem ) then
-               begin
-                    Result := Items[ _Tag.Elem ].Desc;
-               end
-               else Result := 'E?';
-          end;
-     end
-     else Result := 'G?';
+     Result := GetElem.Desc;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public

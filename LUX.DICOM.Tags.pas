@@ -31,18 +31,21 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
+     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElem
 
-     TDICOMElem = record
+     TDICOMElem = class
      private
+     protected
+       _Kind :TKindVR;
+       _Desc :String;
      public
-       Kind :TKindVR;
-       Desc :String;
-       /////
        constructor Create( const Kind_:TKindVR; const Desc_:String );
+       ///// プロパティ
+       property Kind :TKindVR read _Kind;
+       property Desc :String  read _Desc;
      end;
-
-     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElems
 
@@ -61,9 +64,16 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TDICOMGrups = class( TDictionary<Word,TDICOMElems> )
      private
      protected
+       ///// アクセス
+       function GetElem( const Tag_:TDICOMTag ) :TDICOMElem;
      public
        constructor Create;
        destructor Destroy; override;
+       ///// プロパティ
+       property Elem[ const Tag_:TDICOMTag ] :TDICOMElem read GetElem; default;
+       ///// メソッド
+       function Contains( const Tag_:TDICOMTag ) :Boolean;
+       function Find( const Tag_:TDICOMTag ) :TDICOMElem;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -177,21 +187,23 @@ begin
      Result := '(' + Grup.ToString + ',' + Elem.ToString + ')';
 end;
 
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElem
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
 
-/////////////////////////////////////////////////////////////////////// メソッド
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 constructor TDICOMElem.Create( const Kind_:TKindVR; const Desc_:String );
 begin
-     Kind := Kind_;
-     Desc := Desc_;
-end;
+     inherited Create;
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+     _Kind := Kind_;
+     _Desc := Desc_;
+end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElems
 
@@ -215,7 +227,10 @@ begin
 end;
 
 destructor TDICOMElems.Destroy;
+var
+   V :TDICOMElem;
 begin
+     for V in Self.Values do V.Free;
 
      inherited;
 end;
@@ -225,6 +240,13 @@ end;
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TDICOMGrups.GetElem( const Tag_:TDICOMTag ) :TDICOMElem;
+begin
+     with Tag_ do Result := Items[ Grup ].Items[ Elem ];
+end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
@@ -313,6 +335,26 @@ begin
      for V in Self.Values do V.Free;
 
      inherited;
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TDICOMGrups.Contains( const Tag_:TDICOMTag ) :Boolean;
+begin
+     with Tag_ do Result := ContainsKey( Grup ) and Items[ Grup ].ContainsKey( Elem );
+end;
+
+function TDICOMGrups.Find( const Tag_:TDICOMTag ) :TDICOMElem;
+begin
+     if ContainsKey( Tag_.Grup ) then
+     begin
+          with Items[ Tag_.Grup ] do
+          begin
+               if ContainsKey( Tag_.Elem ) then Result := Items[ Tag_.Elem ]
+                                           else Result := nil;
+          end;
+     end
+     else Result := nil;
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
