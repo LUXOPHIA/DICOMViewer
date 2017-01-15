@@ -70,15 +70,28 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmVR
+
+     TdcmVR = class
+     private
+     protected
+       _Name :TAnsiChar2;
+       _Size :Byte;
+       _Desc :String;
+     public
+       constructor Create( const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+       ///// プロパティ
+       property Name :TAnsiChar2 read _Name;
+       property Size :Byte       read _Size;
+       property Desc :String     read _Desc;
+     end;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
-     TdcmBookVR = class
+     TdcmBookVR = class( TDictionary<TKindVR,TdcmVR> )
      private
      protected
        _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
-       _KindToName :TDictionary<TKindVR,TAnsiChar2>;
-       _KindToSize :TDictionary<TKindVR,Byte>      ;
-       _KindToDesc :TDictionary<TKindVR,String>    ;
        ///// メソッド
        procedure Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
      public
@@ -86,9 +99,6 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        destructor Destroy; override;
        ///// プロパティ
        property NameToKind :TDictionary<TAnsiChar2,TKindVR> read _NameToKind;
-       property KindToName :TDictionary<TKindVR,TAnsiChar2> read _KindToName;
-       property KindToSize :TDictionary<TKindVR,Byte>       read _KindToSize;
-       property KindToDesc :TDictionary<TKindVR,String>     read _KindToDesc;
        ///// メソッド
        function ReadStream( const F_:TFileStream ) :TKindVR;
      end;
@@ -115,7 +125,7 @@ uses LUX.DICOM;
 
 function HTypeVR.ToString :String;
 begin
-     Result := String( _BookVR_.KindToName[ [Self] ] );
+     Result := String( _BookVR_[ [Self] ].Name );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
@@ -164,19 +174,24 @@ end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMHeader
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMTag
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmVR
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TdcmVR.Create( const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+begin
+     inherited Create;
+
+     _Name := Name_;
+     _Size := Size_;
+     _Desc := Desc_;
+end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
@@ -189,21 +204,17 @@ end;
 procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
 begin
      _NameToKind.Add( Name_, Kind_ );
-     _KindToName.Add( Kind_, Name_ );
-     _KindToSize.Add( Kind_, Size_ );
-     _KindToDesc.Add( Kind_, Desc_ );
+
+     inherited Add( Kind_, TdcmVR.Create( Name_, Size_, Desc_ ) );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 constructor TdcmBookVR.Create;
 begin
-     inherited;
+     inherited Create;
 
      _NameToKind := TDictionary<TAnsiChar2,TKindVR>.Create;
-     _KindToName := TDictionary<TKindVR,TAnsiChar2>.Create;
-     _KindToSize := TDictionary<TKindVR,Byte>      .Create;
-     _KindToDesc := TDictionary<TKindVR,String>    .Create;
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
      //// 7.1.2 Data Element Structure with Explicit VR
@@ -241,11 +252,12 @@ begin
 end;
 
 destructor TdcmBookVR.Destroy;
+var
+   V :TdcmVR;
 begin
+     for V in Self.Values do V.Free;
+
      _NameToKind.Free;
-     _KindToName.Free;
-     _KindToSize.Free;
-     _KindToDesc.Free;
 
      inherited;
 end;

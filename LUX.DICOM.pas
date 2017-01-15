@@ -168,7 +168,7 @@ begin
      if _ExpVR = [] then Size := ReadCardinal
      else
      begin
-          case _BookVR_.KindToSize[ _ExpVR ] of
+          case _BookVR_[ _ExpVR ].Size of
             2: begin
                     Size := ReadWord;
                end;
