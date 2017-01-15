@@ -45,8 +45,8 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, TKindVR.vrOF, 'First Order Phase Correction Angle' );
-     Add( $0020, TKindVR.vrOF, 'Spectroscopy Data' );
+     Add( $0010, [TTypeVR.vrOF], 'First Order Phase Correction Angle' );
+     Add( $0020, [TTypeVR.vrOF], 'Spectroscopy Data' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

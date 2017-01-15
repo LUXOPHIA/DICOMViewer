@@ -45,13 +45,13 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $3000, TKindVR.vrSQ, 'Histogram Sequence' );
-     Add( $3002, TKindVR.vrUS, 'Histogram Number of Bins' );
-     Add( $3004, TKindVR.vrUSSS, 'Histogram First Bin Value' );
-     Add( $3006, TKindVR.vrUSSS, 'Histogram Last Bin Value' );
-     Add( $3008, TKindVR.vrUS, 'Histogram Bin Width' );
-     Add( $3010, TKindVR.vrLO, 'Histogram Explanation' );
-     Add( $3020, TKindVR.vrUL, 'Histogram Data' );
+     Add( $3000, [TTypeVR.vrSQ], 'Histogram Sequence' );
+     Add( $3002, [TTypeVR.vrUS], 'Histogram Number of Bins' );
+     Add( $3004, [TTypeVR.vrUS,TTypeVR.vrSS], 'Histogram First Bin Value' );
+     Add( $3006, [TTypeVR.vrUS,TTypeVR.vrSS], 'Histogram Last Bin Value' );
+     Add( $3008, [TTypeVR.vrUS], 'Histogram Bin Width' );
+     Add( $3010, [TTypeVR.vrLO], 'Histogram Explanation' );
+     Add( $3020, [TTypeVR.vrUL], 'Histogram Data' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

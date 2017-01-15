@@ -45,30 +45,30 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, TKindVR.vrCS, 'Assessment Summary' );
-     Add( $0003, TKindVR.vrUT, 'Assessment Summary Description' );
-     Add( $0004, TKindVR.vrSQ, 'Assessed SOP Instance Sequence' );
-     Add( $0005, TKindVR.vrSQ, 'Referenced Comparison SOP Instance Sequence' );
-     Add( $0006, TKindVR.vrUL, 'Number of Assessment Observations' );
-     Add( $0007, TKindVR.vrSQ, 'Assessment Observations Sequence' );
-     Add( $0008, TKindVR.vrCS, 'Observation Significance' );
-     Add( $000A, TKindVR.vrUT, 'Observation Description' );
-     Add( $000C, TKindVR.vrSQ, 'Structured Constraint Observation Sequence' );
-     Add( $0010, TKindVR.vrSQ, 'Assessed Attribute Value Sequence' );
-     Add( $0016, TKindVR.vrLO, 'Assessment Set ID' );
-     Add( $0017, TKindVR.vrSQ, 'Assessment Requester Sequence' );
-     Add( $0018, TKindVR.vrLO, 'Selector Attribute Name' );
-     Add( $0019, TKindVR.vrLO, 'Selector Attribute Keyword' );
-     Add( $0021, TKindVR.vrSQ, 'Assessment Type Code Sequence' );
-     Add( $0022, TKindVR.vrSQ, 'Observation Basis Code Sequence' );
-     Add( $0023, TKindVR.vrLO, 'Assessment Label' );
-     Add( $0032, TKindVR.vrCS, 'Constraint Type' );
-     Add( $0033, TKindVR.vrUT, 'Specification Selection Guidance' );
-     Add( $0034, TKindVR.vrSQ, 'Constraint Value Sequence' );
-     Add( $0035, TKindVR.vrSQ, 'Recommended Default Value Sequence' );
-     Add( $0036, TKindVR.vrCS, 'Constraint Violation Significance' );
-     Add( $0037, TKindVR.vrUT, 'Constraint Violation Condition' );
-     Add( $0038, TKindVR.vrCS, 'Modifiable Constraint Flag' );
+     Add( $0001, [TTypeVR.vrCS], 'Assessment Summary' );
+     Add( $0003, [TTypeVR.vrUT], 'Assessment Summary Description' );
+     Add( $0004, [TTypeVR.vrSQ], 'Assessed SOP Instance Sequence' );
+     Add( $0005, [TTypeVR.vrSQ], 'Referenced Comparison SOP Instance Sequence' );
+     Add( $0006, [TTypeVR.vrUL], 'Number of Assessment Observations' );
+     Add( $0007, [TTypeVR.vrSQ], 'Assessment Observations Sequence' );
+     Add( $0008, [TTypeVR.vrCS], 'Observation Significance' );
+     Add( $000A, [TTypeVR.vrUT], 'Observation Description' );
+     Add( $000C, [TTypeVR.vrSQ], 'Structured Constraint Observation Sequence' );
+     Add( $0010, [TTypeVR.vrSQ], 'Assessed Attribute Value Sequence' );
+     Add( $0016, [TTypeVR.vrLO], 'Assessment Set ID' );
+     Add( $0017, [TTypeVR.vrSQ], 'Assessment Requester Sequence' );
+     Add( $0018, [TTypeVR.vrLO], 'Selector Attribute Name' );
+     Add( $0019, [TTypeVR.vrLO], 'Selector Attribute Keyword' );
+     Add( $0021, [TTypeVR.vrSQ], 'Assessment Type Code Sequence' );
+     Add( $0022, [TTypeVR.vrSQ], 'Observation Basis Code Sequence' );
+     Add( $0023, [TTypeVR.vrLO], 'Assessment Label' );
+     Add( $0032, [TTypeVR.vrCS], 'Constraint Type' );
+     Add( $0033, [TTypeVR.vrUT], 'Specification Selection Guidance' );
+     Add( $0034, [TTypeVR.vrSQ], 'Constraint Value Sequence' );
+     Add( $0035, [TTypeVR.vrSQ], 'Recommended Default Value Sequence' );
+     Add( $0036, [TTypeVR.vrCS], 'Constraint Violation Significance' );
+     Add( $0037, [TTypeVR.vrUT], 'Constraint Violation Condition' );
+     Add( $0038, [TTypeVR.vrCS], 'Modifiable Constraint Flag' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

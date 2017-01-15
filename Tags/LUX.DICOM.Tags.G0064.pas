@@ -45,14 +45,14 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0002, TKindVR.vrSQ, 'Deformable Registration Sequence' );
-     Add( $0003, TKindVR.vrUI, 'Source Frame of Reference UID' );
-     Add( $0005, TKindVR.vrSQ, 'Deformable Registration Grid Sequence' );
-     Add( $0007, TKindVR.vrUL, 'Grid Dimensions' );
-     Add( $0008, TKindVR.vrFD, 'Grid Resolution' );
-     Add( $0009, TKindVR.vrOF, 'Vector Grid Data' );
-     Add( $000F, TKindVR.vrSQ, 'Pre Deformation Matrix Registration Sequence' );
-     Add( $0010, TKindVR.vrSQ, 'Post Deformation Matrix Registration Sequence' );
+     Add( $0002, [TTypeVR.vrSQ], 'Deformable Registration Sequence' );
+     Add( $0003, [TTypeVR.vrUI], 'Source Frame of Reference UID' );
+     Add( $0005, [TTypeVR.vrSQ], 'Deformable Registration Grid Sequence' );
+     Add( $0007, [TTypeVR.vrUL], 'Grid Dimensions' );
+     Add( $0008, [TTypeVR.vrFD], 'Grid Resolution' );
+     Add( $0009, [TTypeVR.vrOF], 'Vector Grid Data' );
+     Add( $000F, [TTypeVR.vrSQ], 'Pre Deformation Matrix Registration Sequence' );
+     Add( $0010, [TTypeVR.vrSQ], 'Post Deformation Matrix Registration Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

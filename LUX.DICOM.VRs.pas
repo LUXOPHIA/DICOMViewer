@@ -9,60 +9,60 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      TAnsiChar2 = array [ 0..2-1 ] of AnsiChar;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TTypeVR
 
-     // http://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1
-     // Table 6.2-1. DICOM Value Representations
-     TKindVR = ( vr00, { Implicit VR           }
-                 vrAE, { Application Entity }
-                 vrAS, { Age String }
-                 vrAT, { Attribute Tag }
-                 vrCS, { Code String }
-                 vrDA, { Date }
-                 vrDS, { Decimal String }
-                 vrDT, { Date Time }
-                 vrFL, { Floating Point Single }
-                 vrFD, { Floating Point Double }
-                 vrIS, { Integer String }
-                 vrLO, { Long String }
-                 vrLT, { Long Text }
-                 vrOB, { Other Byte }
-                 vrOD, { Other Double }
-                 vrOF, { Other Float }
-                 vrOL, { Other Long }
-                 vrOW, { Other Word }
-                 vrPN, { Person Name }
-                 vrSH, { Short String }
-                 vrSL, { Signed Long }
-                 vrSQ, { Sequence of Items }
-                 vrSS, { Signed Short }
-                 vrST, { Short Text }
-                 vrTM, { Time }
-                 vrUC, { Unlimited Characters }
-                 vrUI, { Unique Identifier (UID) }
-                 vrUL, { Unsigned Long }
-                 vrUN, { Unknown }
-                 vrUR, { Universal Resource Identifier or Universal Resource Locator (URI/URL) }
-                 vrUS, { Unsigned Short }
-                 vrUT, { Unlimited Text }
-                 vrOBOW,
-                 vrUSSS,
-                 vrUSSSOW,
-                 vrUSOW );
+     //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1
+     //// Table 6.2-1. DICOM Value Representations
+     TTypeVR = ( vrAE,   //Application Entity
+                 vrAS,   //Age String
+                 vrAT,   //Attribute Tag
+                 vrCS,   //Code String
+                 vrDA,   //Date
+                 vrDS,   //Decimal String
+                 vrDT,   //Date Time
+                 vrFL,   //Floating Point Single
+                 vrFD,   //Floating Point Double
+                 vrIS,   //Integer String
+                 vrLO,   //Long String
+                 vrLT,   //Long Text
+                 vrOB,   //Other Byte
+                 vrOD,   //Other Double
+                 vrOF,   //Other Float
+                 vrOL,   //Other Long
+                 vrOW,   //Other Word
+                 vrPN,   //Person Name
+                 vrSH,   //Short String
+                 vrSL,   //Signed Long
+                 vrSQ,   //Sequence of Items
+                 vrSS,   //Signed Short
+                 vrST,   //Short Text
+                 vrTM,   //Time
+                 vrUC,   //Unlimited Characters
+                 vrUI,   //Unique Identifier (UID)
+                 vrUL,   //Unsigned Long
+                 vrUN,   //Unknown
+                 vrUR,   //Universal Resource Identifier or Universal Resource Locator (URI/URL)
+                 vrUS,   //Unsigned Short
+                 vrUT ); //Unlimited Text
 
-     HKindVR = record helper for TKindVR
+     HTypeVR = record helper for TTypeVR
      private
      public
        function ToString :String;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
-     TKindsVR = set of TKindVR;
+     TKindVR = set of TTypeVR;
 
-     HKindsVR = record helper for TKindsVR
+     HKindVR = record helper for TKindVR
      private
+       function GetCount :Byte;
      public
+       ///// プロパティ
+       property Count :Byte read GetCount;
+       ///// メソッド
+       function ToArray :TArray<TTypeVR>;
        function ToString :String;
      end;
 
@@ -105,37 +105,56 @@ uses LUX.DICOM;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TTypeVR
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function HTypeVR.ToString :String;
+begin
+     Result := String( _VRs_.KindToName[ [Self] ] );
+end;
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+/////////////////////////////////////////////////////////////////////// アクセス
 
-/////////////////////////////////////////////////////////////////////// メソッド
-
-function HKindVR.ToString :String;
+function HKindVR.GetCount :Byte;
+var
+   K :TTypeVR;
 begin
-     Result := String( _VRs_.KindToName[ Self ] );
+     Result := 0;
+
+     for K in Self do Inc( Result );
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function HKindsVR.ToString :String;
+function HKindVR.ToArray :TArray<TTypeVR>;
 var
-   K :TKindVR;
-   Ks :array of TKindVR;
+   K :TTypeVR;
+begin
+     Result := [];
+
+     for K in Self do Result := Result + [ K ];
+end;
+
+function HKindVR.ToString :String;
+var
+   Ks :TArray<TTypeVR>;
    I :Integer;
 begin
      if Self = [] then Result := ''
      else
      begin
-          Ks := [];  for K in Self do Ks := Ks + [ K ];
+          Ks := ToArray;
 
           Result := Ks[ 0 ].ToString;
 
@@ -186,48 +205,39 @@ begin
      _KindToSize := TDictionary<TKindVR,Byte>      .Create;
      _KindToDesc := TDictionary<TKindVR,String>    .Create;
 
-     // http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.3
-     // 7.1.3 Data Element Structure with Implicit VR
-     Add( TKindVR.vr00, '??', 4, 'Implicit VR' );
-
-     // http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
-     // 7.1.2 Data Element Structure with Explicit VR
-     Add( TKindVR.vrAE, 'AE', 2, 'Application Entity' );
-     Add( TKindVR.vrAS, 'AS', 2, 'Age String' );
-     Add( TKindVR.vrAT, 'AT', 2, 'Attribute Tag' );
-     Add( TKindVR.vrCS, 'CS', 2, 'Code String' );
-     Add( TKindVR.vrDA, 'DA', 2, 'Date' );
-     Add( TKindVR.vrDS, 'DS', 2, 'Decimal String' );
-     Add( TKindVR.vrDT, 'DT', 2, 'Date Time' );
-     Add( TKindVR.vrFL, 'FL', 2, 'Floating Point Single' );
-     Add( TKindVR.vrFD, 'FD', 2, 'Floating Point Double' );
-     Add( TKindVR.vrIS, 'IS', 2, 'Integer String' );
-     Add( TKindVR.vrLO, 'LO', 2, 'Long String' );
-     Add( TKindVR.vrLT, 'LT', 2, 'Long Text' );
-     Add( TKindVR.vrOB, 'OB', 6, 'Other Byte' );
-     Add( TKindVR.vrOD, 'OD', 6, 'Other Double' );
-     Add( TKindVR.vrOF, 'OF', 6, 'Other Float' );
-     Add( TKindVR.vrOL, 'OL', 6, 'Other Long' );
-     Add( TKindVR.vrOW, 'OW', 6, 'Other Word' );
-     Add( TKindVR.vrPN, 'PN', 2, 'Person Name' );
-     Add( TKindVR.vrSH, 'SH', 2, 'Short String' );
-     Add( TKindVR.vrSL, 'SL', 2, 'Signed Long' );
-     Add( TKindVR.vrSQ, 'SQ', 6, 'Sequence of Items' );
-     Add( TKindVR.vrSS, 'SS', 2, 'Signed Short' );
-     Add( TKindVR.vrST, 'ST', 2, 'Short Text' );
-     Add( TKindVR.vrTM, 'TM', 2, 'Time' );
-     Add( TKindVR.vrUC, 'UC', 6, 'Unlimited Characters' );
-     Add( TKindVR.vrUI, 'UI', 2, 'Unique Identifier (UID)' );
-     Add( TKindVR.vrUL, 'UL', 2, 'Unsigned Long' );
-     Add( TKindVR.vrUN, 'UN', 6, 'Unknown' );
-     Add( TKindVR.vrUR, 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
-     Add( TKindVR.vrUS, 'US', 2, 'Unsigned Short' );
-     Add( TKindVR.vrUT, 'UT', 6, 'Unlimited Text' );
-
-     Add( TKindVR.vrOBOW  , 'BW', 6, 'OB or OW' );
-     Add( TKindVR.vrUSSS  , 'U1', 2, 'US or SS' );
-     Add( TKindVR.vrUSSSOW, 'U2', 2, 'US or SS or OW' );
-     Add( TKindVR.vrUSOW  , 'U3', 2, 'US or OW' );
+     //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
+     //// 7.1.2 Data Element Structure with Explicit VR
+     Add( [TTypeVR.vrAE], 'AE', 2, 'Application Entity' );
+     Add( [TTypeVR.vrAS], 'AS', 2, 'Age String' );
+     Add( [TTypeVR.vrAT], 'AT', 2, 'Attribute Tag' );
+     Add( [TTypeVR.vrCS], 'CS', 2, 'Code String' );
+     Add( [TTypeVR.vrDA], 'DA', 2, 'Date' );
+     Add( [TTypeVR.vrDS], 'DS', 2, 'Decimal String' );
+     Add( [TTypeVR.vrDT], 'DT', 2, 'Date Time' );
+     Add( [TTypeVR.vrFL], 'FL', 2, 'Floating Point Single' );
+     Add( [TTypeVR.vrFD], 'FD', 2, 'Floating Point Double' );
+     Add( [TTypeVR.vrIS], 'IS', 2, 'Integer String' );
+     Add( [TTypeVR.vrLO], 'LO', 2, 'Long String' );
+     Add( [TTypeVR.vrLT], 'LT', 2, 'Long Text' );
+     Add( [TTypeVR.vrOB], 'OB', 6, 'Other Byte' );
+     Add( [TTypeVR.vrOD], 'OD', 6, 'Other Double' );
+     Add( [TTypeVR.vrOF], 'OF', 6, 'Other Float' );
+     Add( [TTypeVR.vrOL], 'OL', 6, 'Other Long' );
+     Add( [TTypeVR.vrOW], 'OW', 6, 'Other Word' );
+     Add( [TTypeVR.vrPN], 'PN', 2, 'Person Name' );
+     Add( [TTypeVR.vrSH], 'SH', 2, 'Short String' );
+     Add( [TTypeVR.vrSL], 'SL', 2, 'Signed Long' );
+     Add( [TTypeVR.vrSQ], 'SQ', 6, 'Sequence of Items' );
+     Add( [TTypeVR.vrSS], 'SS', 2, 'Signed Short' );
+     Add( [TTypeVR.vrST], 'ST', 2, 'Short Text' );
+     Add( [TTypeVR.vrTM], 'TM', 2, 'Time' );
+     Add( [TTypeVR.vrUC], 'UC', 6, 'Unlimited Characters' );
+     Add( [TTypeVR.vrUI], 'UI', 2, 'Unique Identifier (UID)' );
+     Add( [TTypeVR.vrUL], 'UL', 2, 'Unsigned Long' );
+     Add( [TTypeVR.vrUN], 'UN', 6, 'Unknown' );
+     Add( [TTypeVR.vrUR], 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
+     Add( [TTypeVR.vrUS], 'US', 2, 'Unsigned Short' );
+     Add( [TTypeVR.vrUT], 'UT', 6, 'Unlimited Text' );
 end;
 
 destructor TDICOMVRs.Destroy;
@@ -256,7 +266,7 @@ begin
      begin
           F_.Position := P;
 
-          Result := TKindVR.vr00;
+          Result := [];
      end;
 end;
 

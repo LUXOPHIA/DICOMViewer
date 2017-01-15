@@ -18,8 +18,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TDICOMHeader = packed record
      private
      public
-       Preamble :array [ 0..128-1 ] of     Byte;
-       Prefix   :array [ 0..  4-1 ] of AnsiChar;
+       Prea :array [ 0..128-1 ] of     Byte;
+       Pref :array [ 0..  4-1 ] of AnsiChar;
      end;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
@@ -29,11 +29,11 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TDICOMData = class( TTreeLeaf<TTreeNode> )
      private
      protected
-       _Tag  :TDICOMTag;
-       _VR0  :TKindVR;
-       _VR1  :TKindVR;
-       _Data :TBytes;
+       _Tag   :TDICOMTag;
+       _ExpVR :TKindVR;
+       _Data  :TBytes;
        ///// アクセス
+       function GetOriVR :TKindVR;
        function GetSize :Cardinal;
        procedure SetSize( const Size_:Cardinal );
        function GetDesc :String;
@@ -41,12 +41,12 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        constructor Create; override;
        destructor Destroy; override;
        ///// プロパティ
-       property Tag  :TDICOMTag read   _Tag               ;
-       property VR0  :TKindVR   read   _VR0               ;
-       property VR1  :TKindVR   read   _VR1               ;
-       property Data :TBytes    read   _Data              ;
-       property Size :Cardinal  read GetSize write SetSize;
-       property Desc :String    Read GetDesc              ;
+       property Tag   :TDICOMTag read   _Tag               ;
+       property OriVR :TKindVR   read GetOriVR             ;
+       property ExpVR :TKindVR   read   _ExpVR             ;
+       property Data  :TBytes    read   _Data              ;
+       property Size  :Cardinal  read GetSize write SetSize;
+       property Desc  :String    read GetDesc              ;
        ///// メソッド
        procedure ReadStream( const F_:TFileStream );
      end;
@@ -99,6 +99,22 @@ uses Main;
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
 
 /////////////////////////////////////////////////////////////////////// アクセス
+
+function TDICOMData.GetOriVR :TKindVR;
+begin
+     if _Tags_.ContainsKey( _Tag.Grup ) then
+     begin
+          with _Tags_[ _Tag.Grup ] do
+          begin
+               if ContainsKey( _Tag.Elem ) then
+               begin
+                    Result := Items[ _Tag.Elem ].Kind;
+               end
+               else Result := [];
+          end;
+     end
+     else Result := [];
+end;
 
 function TDICOMData.GetSize :Cardinal;
 begin
@@ -153,49 +169,26 @@ procedure TDICOMData.ReadStream( const F_:TFileStream );
      begin
           F_.ReadData( Result );
      end;
-     //------------------------------------------------
-     function ReadUnkown :TKindVR;
-     begin
-          _VR0 := TKindVR.vr00;
-          _VR1 := _VRs_.ReadStream( F_ );
-
-          Result := _VR1;
-     end;
 //-----------------------------------------------------
-var
-   Es :TDICOMElems;
-   VR :TKindVR;
 begin
      F_.Read( _Tag, SizeOf( _Tag ) );
 
-     if _Tags_.ContainsKey( _Tag.Grup ) then
+     _ExpVR := _VRs_.ReadStream( F_ );
+
+     //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.3
+     //// 7.1.3 Data Element Structure with Implicit VR
+     if _ExpVR = [] then Size := ReadCardinal
+     else
      begin
-          Es := _Tags_[ _Tag.Grup ];
+          case _VRs_.KindToSize[ _ExpVR ] of
+            2: begin
+                    Size := ReadWord;
+               end;
+            6: begin
+                    F_.Seek( 2, TSeekOrigin.soCurrent );  //VR Reserved Block
 
-          if Es.ContainsKey( _Tag.Elem ) then
-          begin
-               _VR0 := Es[ _Tag.Elem ].Kind;
-               _VR1 := _VRs_.ReadStream( F_ );
-
-               if _VR1 = TKindVR.vr00 then VR := _VR1
-                                      else VR := _VR0;
-
-          end
-          else VR := ReadUnkown;
-     end
-     else VR := ReadUnkown;
-
-     case _VRs_.KindToSize[ VR ] of
-       2: begin
-               Size := ReadWord;
-          end;
-       4: begin
-               Size := ReadCardinal;
-          end;
-       6: begin
-               F_.Seek( 2, TSeekOrigin.soCurrent );  //VR Reserved Block
-
-               Size := ReadCardinal;
+                    Size := ReadCardinal;
+               end;
           end;
      end;
 
@@ -233,7 +226,7 @@ begin
 
      F.Read( H, SizeOf( H ) );
 
-     Assert( H.Prefix = 'DICM', 'It is not the DICOM file.' );
+     Assert( H.Pref = 'DICM', 'It is not the DICOM file.' );
 
      while F.Position < F.Size do TDICOMData.Create( Self ).ReadStream( F );
 

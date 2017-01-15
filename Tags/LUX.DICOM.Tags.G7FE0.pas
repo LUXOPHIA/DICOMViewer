@@ -45,12 +45,12 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0008, TKindVR.vrOF, 'Float Pixel Data' );
-     Add( $0009, TKindVR.vrOD, 'Double Float Pixel Data' );
-     Add( $0010, TKindVR.vrOBOW, 'Pixel Data' );
-     Add( $0020, TKindVR.vrOW, 'Coefficients SDVN' );
-     Add( $0030, TKindVR.vrOW, 'Coefficients SDHN' );
-     Add( $0040, TKindVR.vrOW, 'Coefficients SDDN' );
+     Add( $0008, [TTypeVR.vrOF], 'Float Pixel Data' );
+     Add( $0009, [TTypeVR.vrOD], 'Double Float Pixel Data' );
+     Add( $0010, [TTypeVR.vrOB,TTypeVR.vrOW], 'Pixel Data' );
+     Add( $0020, [TTypeVR.vrOW], 'Coefficients SDVN' );
+     Add( $0030, [TTypeVR.vrOW], 'Coefficients SDHN' );
+     Add( $0040, [TTypeVR.vrOW], 'Coefficients SDDN' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

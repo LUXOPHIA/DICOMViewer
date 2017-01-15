@@ -45,26 +45,26 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, TKindVR.vrCS, 'Segmentation Type' );
-     Add( $0002, TKindVR.vrSQ, 'Segment Sequence' );
-     Add( $0003, TKindVR.vrSQ, 'Segmented Property Category Code Sequence' );
-     Add( $0004, TKindVR.vrUS, 'Segment Number' );
-     Add( $0005, TKindVR.vrLO, 'Segment Label' );
-     Add( $0006, TKindVR.vrST, 'Segment Description' );
-     Add( $0007, TKindVR.vrSQ, 'Segmentation Algorithm Identification Sequence' );
-     Add( $0008, TKindVR.vrCS, 'Segment Algorithm Type' );
-     Add( $0009, TKindVR.vrLO, 'Segment Algorithm Name' );
-     Add( $000A, TKindVR.vrSQ, 'Segment Identification Sequence' );
-     Add( $000B, TKindVR.vrUS, 'Referenced Segment Number' );
-     Add( $000C, TKindVR.vrUS, 'Recommended Display Grayscale Value' );
-     Add( $000D, TKindVR.vrUS, 'Recommended Display CIELab Value' );
-     Add( $000E, TKindVR.vrUS, 'Maximum Fractional Value' );
-     Add( $000F, TKindVR.vrSQ, 'Segmented Property Type Code Sequence' );
-     Add( $0010, TKindVR.vrCS, 'Segmentation Fractional Type' );
-     Add( $0011, TKindVR.vrSQ, 'Segmented Property Type Modifier Code Sequence' );
-     Add( $0012, TKindVR.vrSQ, 'Used Segments Sequence' );
-     Add( $0020, TKindVR.vrUT, 'Tracking ID' );
-     Add( $0021, TKindVR.vrUI, 'Tracking UID' );
+     Add( $0001, [TTypeVR.vrCS], 'Segmentation Type' );
+     Add( $0002, [TTypeVR.vrSQ], 'Segment Sequence' );
+     Add( $0003, [TTypeVR.vrSQ], 'Segmented Property Category Code Sequence' );
+     Add( $0004, [TTypeVR.vrUS], 'Segment Number' );
+     Add( $0005, [TTypeVR.vrLO], 'Segment Label' );
+     Add( $0006, [TTypeVR.vrST], 'Segment Description' );
+     Add( $0007, [TTypeVR.vrSQ], 'Segmentation Algorithm Identification Sequence' );
+     Add( $0008, [TTypeVR.vrCS], 'Segment Algorithm Type' );
+     Add( $0009, [TTypeVR.vrLO], 'Segment Algorithm Name' );
+     Add( $000A, [TTypeVR.vrSQ], 'Segment Identification Sequence' );
+     Add( $000B, [TTypeVR.vrUS], 'Referenced Segment Number' );
+     Add( $000C, [TTypeVR.vrUS], 'Recommended Display Grayscale Value' );
+     Add( $000D, [TTypeVR.vrUS], 'Recommended Display CIELab Value' );
+     Add( $000E, [TTypeVR.vrUS], 'Maximum Fractional Value' );
+     Add( $000F, [TTypeVR.vrSQ], 'Segmented Property Type Code Sequence' );
+     Add( $0010, [TTypeVR.vrCS], 'Segmentation Fractional Type' );
+     Add( $0011, [TTypeVR.vrSQ], 'Segmented Property Type Modifier Code Sequence' );
+     Add( $0012, [TTypeVR.vrSQ], 'Used Segments Sequence' );
+     Add( $0020, [TTypeVR.vrUT], 'Tracking ID' );
+     Add( $0021, [TTypeVR.vrUI], 'Tracking UID' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

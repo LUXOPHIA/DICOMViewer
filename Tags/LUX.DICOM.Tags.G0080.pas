@@ -45,19 +45,19 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, TKindVR.vrSQ, 'Surface Scan Acquisition Type Code Sequence' );
-     Add( $0002, TKindVR.vrSQ, 'Surface Scan Mode Code Sequence' );
-     Add( $0003, TKindVR.vrSQ, 'Registration Method Code Sequence' );
-     Add( $0004, TKindVR.vrFD, 'Shot Duration Time' );
-     Add( $0005, TKindVR.vrFD, 'Shot Offset Time' );
-     Add( $0006, TKindVR.vrUS, 'Surface Point Presentation Value Data' );
-     Add( $0007, TKindVR.vrUS, 'Surface Point Color CIELab Value Data' );
-     Add( $0008, TKindVR.vrSQ, 'UV Mapping Sequence' );
-     Add( $0009, TKindVR.vrSH, 'Texture Label' );
-     Add( $0010, TKindVR.vrOF, 'U Value Data' );
-     Add( $0011, TKindVR.vrOF, 'V Value Data' );
-     Add( $0012, TKindVR.vrSQ, 'Referenced Texture Sequence' );
-     Add( $0013, TKindVR.vrSQ, 'Referenced Surface Data Sequence' );
+     Add( $0001, [TTypeVR.vrSQ], 'Surface Scan Acquisition Type Code Sequence' );
+     Add( $0002, [TTypeVR.vrSQ], 'Surface Scan Mode Code Sequence' );
+     Add( $0003, [TTypeVR.vrSQ], 'Registration Method Code Sequence' );
+     Add( $0004, [TTypeVR.vrFD], 'Shot Duration Time' );
+     Add( $0005, [TTypeVR.vrFD], 'Shot Offset Time' );
+     Add( $0006, [TTypeVR.vrUS], 'Surface Point Presentation Value Data' );
+     Add( $0007, [TTypeVR.vrUS], 'Surface Point Color CIELab Value Data' );
+     Add( $0008, [TTypeVR.vrSQ], 'UV Mapping Sequence' );
+     Add( $0009, [TTypeVR.vrSH], 'Texture Label' );
+     Add( $0010, [TTypeVR.vrOF], 'U Value Data' );
+     Add( $0011, [TTypeVR.vrOF], 'V Value Data' );
+     Add( $0012, [TTypeVR.vrSQ], 'Referenced Texture Sequence' );
+     Add( $0013, [TTypeVR.vrSQ], 'Referenced Surface Data Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

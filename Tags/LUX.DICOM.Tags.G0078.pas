@@ -45,24 +45,24 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, TKindVR.vrLO, 'Implant Template Group Name' );
-     Add( $0010, TKindVR.vrST, 'Implant Template Group Description' );
-     Add( $0020, TKindVR.vrLO, 'Implant Template Group Issuer' );
-     Add( $0024, TKindVR.vrLO, 'Implant Template Group Version' );
-     Add( $0026, TKindVR.vrSQ, 'Replaced Implant Template Group Sequence' );
-     Add( $0028, TKindVR.vrSQ, 'Implant Template Group Target Anatomy Sequence' );
-     Add( $002A, TKindVR.vrSQ, 'Implant Template Group Members Sequence' );
-     Add( $002E, TKindVR.vrUS, 'Implant Template Group Member ID' );
-     Add( $0050, TKindVR.vrFD, '3D Implant Template Group Member Matching Point' );
-     Add( $0060, TKindVR.vrFD, '3D Implant Template Group Member Matching Axes' );
-     Add( $0070, TKindVR.vrSQ, 'Implant Template Group Member Matching 2D Coordinates Sequence' );
-     Add( $0090, TKindVR.vrFD, '2D Implant Template Group Member Matching Point' );
-     Add( $00A0, TKindVR.vrFD, '2D Implant Template Group Member Matching Axes' );
-     Add( $00B0, TKindVR.vrSQ, 'Implant Template Group Variation Dimension Sequence' );
-     Add( $00B2, TKindVR.vrLO, 'Implant Template Group Variation Dimension Name' );
-     Add( $00B4, TKindVR.vrSQ, 'Implant Template Group Variation Dimension Rank Sequence' );
-     Add( $00B6, TKindVR.vrUS, 'Referenced Implant Template Group Member ID' );
-     Add( $00B8, TKindVR.vrUS, 'Implant Template Group Variation Dimension Rank' );
+     Add( $0001, [TTypeVR.vrLO], 'Implant Template Group Name' );
+     Add( $0010, [TTypeVR.vrST], 'Implant Template Group Description' );
+     Add( $0020, [TTypeVR.vrLO], 'Implant Template Group Issuer' );
+     Add( $0024, [TTypeVR.vrLO], 'Implant Template Group Version' );
+     Add( $0026, [TTypeVR.vrSQ], 'Replaced Implant Template Group Sequence' );
+     Add( $0028, [TTypeVR.vrSQ], 'Implant Template Group Target Anatomy Sequence' );
+     Add( $002A, [TTypeVR.vrSQ], 'Implant Template Group Members Sequence' );
+     Add( $002E, [TTypeVR.vrUS], 'Implant Template Group Member ID' );
+     Add( $0050, [TTypeVR.vrFD], '3D Implant Template Group Member Matching Point' );
+     Add( $0060, [TTypeVR.vrFD], '3D Implant Template Group Member Matching Axes' );
+     Add( $0070, [TTypeVR.vrSQ], 'Implant Template Group Member Matching 2D Coordinates Sequence' );
+     Add( $0090, [TTypeVR.vrFD], '2D Implant Template Group Member Matching Point' );
+     Add( $00A0, [TTypeVR.vrFD], '2D Implant Template Group Member Matching Axes' );
+     Add( $00B0, [TTypeVR.vrSQ], 'Implant Template Group Variation Dimension Sequence' );
+     Add( $00B2, [TTypeVR.vrLO], 'Implant Template Group Variation Dimension Name' );
+     Add( $00B4, [TTypeVR.vrSQ], 'Implant Template Group Variation Dimension Rank Sequence' );
+     Add( $00B6, [TTypeVR.vrUS], 'Referenced Implant Template Group Member ID' );
+     Add( $00B8, [TTypeVR.vrUS], 'Implant Template Group Variation Dimension Rank' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
