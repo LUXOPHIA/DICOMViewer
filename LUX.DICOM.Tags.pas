@@ -47,9 +47,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        property Desc :String  read _Desc;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElems
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
 
-     TDICOMElems = class( TDictionary<Word,TdcmElem> )
+     TdcmGrup = class( TDictionary<Word,TdcmElem> )
      private
      protected
        ///// メソッド
@@ -61,7 +61,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookTag
 
-     TdcmBookTag = class( TDictionary<Word,TDICOMElems> )
+     TdcmBookTag = class( TDictionary<Word,TdcmGrup> )
      private
      protected
        ///// アクセス
@@ -205,7 +205,7 @@ begin
      _Desc := Desc_;
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDICOMElems
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -213,20 +213,20 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TDICOMElems.Add( const Elem_:Word; const Kind_:TKindVR; const Desc_:String );
+procedure TdcmGrup.Add( const Elem_:Word; const Kind_:TKindVR; const Desc_:String );
 begin
      inherited Add( Elem_, TdcmElem.Create( Kind_, Desc_ ) );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TDICOMElems.Create;
+constructor TdcmGrup.Create;
 begin
      inherited Create;
 
 end;
 
-destructor TDICOMElems.Destroy;
+destructor TdcmGrup.Destroy;
 var
    V :TdcmElem;
 begin
@@ -254,83 +254,83 @@ constructor TdcmBookTag.Create;
 begin
      inherited Create;
 
-     Add( $0000, TDICOMElems0000.Create );
-     Add( $0002, TDICOMElems0002.Create );
-     Add( $0004, TDICOMElems0004.Create );
-     Add( $0008, TDICOMElems0008.Create );
-     Add( $0010, TDICOMElems0010.Create );
-     Add( $0012, TDICOMElems0012.Create );
-     Add( $0014, TDICOMElems0014.Create );
-     Add( $0018, TDICOMElems0018.Create );
-     Add( $0020, TDICOMElems0020.Create );
-     Add( $0022, TDICOMElems0022.Create );
-     Add( $0024, TDICOMElems0024.Create );
-     Add( $0028, TDICOMElems0028.Create );
-     Add( $0032, TDICOMElems0032.Create );
-     Add( $0038, TDICOMElems0038.Create );
-     Add( $003A, TDICOMElems003A.Create );
-     Add( $0040, TDICOMElems0040.Create );
-     Add( $0042, TDICOMElems0042.Create );
-     Add( $0044, TDICOMElems0044.Create );
-     Add( $0046, TDICOMElems0046.Create );
-     Add( $0048, TDICOMElems0048.Create );
-     Add( $0050, TDICOMElems0050.Create );
-     Add( $0052, TDICOMElems0052.Create );
-     Add( $0054, TDICOMElems0054.Create );
-     Add( $0060, TDICOMElems0060.Create );
-     Add( $0062, TDICOMElems0062.Create );
-     Add( $0064, TDICOMElems0064.Create );
-     Add( $0066, TDICOMElems0066.Create );
-     Add( $0068, TDICOMElems0068.Create );
-     Add( $0070, TDICOMElems0070.Create );
-     Add( $0072, TDICOMElems0072.Create );
-     Add( $0074, TDICOMElems0074.Create );
-     Add( $0076, TDICOMElems0076.Create );
-     Add( $0078, TDICOMElems0078.Create );
-     Add( $0080, TDICOMElems0080.Create );
-     Add( $0082, TDICOMElems0082.Create );
-     Add( $0088, TDICOMElems0088.Create );
-     Add( $0100, TDICOMElems0100.Create );
-     Add( $0400, TDICOMElems0400.Create );
-     Add( $1000, TDICOMElems1000.Create );
-     Add( $1010, TDICOMElems1010.Create );
-     Add( $2000, TDICOMElems2000.Create );
-     Add( $2010, TDICOMElems2010.Create );
-     Add( $2020, TDICOMElems2020.Create );
-     Add( $2030, TDICOMElems2030.Create );
-     Add( $2040, TDICOMElems2040.Create );
-     Add( $2050, TDICOMElems2050.Create );
-     Add( $2100, TDICOMElems2100.Create );
-     Add( $2110, TDICOMElems2110.Create );
-     Add( $2120, TDICOMElems2120.Create );
-     Add( $2130, TDICOMElems2130.Create );
-     Add( $2200, TDICOMElems2200.Create );
-     Add( $3002, TDICOMElems3002.Create );
-     Add( $3004, TDICOMElems3004.Create );
-     Add( $3006, TDICOMElems3006.Create );
-     Add( $3008, TDICOMElems3008.Create );
-     Add( $300A, TDICOMElems300A.Create );
-     Add( $300C, TDICOMElems300C.Create );
-     Add( $300E, TDICOMElems300E.Create );
-     Add( $4000, TDICOMElems4000.Create );
-     Add( $4008, TDICOMElems4008.Create );
-     Add( $4010, TDICOMElems4010.Create );
-     Add( $4FFE, TDICOMElems4FFE.Create );
-     Add( $5000, TDICOMElems50xx.Create );
-     Add( $5200, TDICOMElems5200.Create );
-     Add( $5400, TDICOMElems5400.Create );
-     Add( $5600, TDICOMElems5600.Create );
-     Add( $6000, TDICOMElems60xx.Create );
-     Add( $7F00, TDICOMElems7Fxx.Create );
-     Add( $7FE0, TDICOMElems7FE0.Create );
-     Add( $FFFA, TDICOMElemsFFFA.Create );
-     Add( $FFFC, TDICOMElemsFFFC.Create );
-     Add( $FFFE, TDICOMElemsFFFE.Create );
+     Add( $0000, TdcmGrup0000.Create );
+     Add( $0002, TdcmGrup0002.Create );
+     Add( $0004, TdcmGrup0004.Create );
+     Add( $0008, TdcmGrup0008.Create );
+     Add( $0010, TdcmGrup0010.Create );
+     Add( $0012, TdcmGrup0012.Create );
+     Add( $0014, TdcmGrup0014.Create );
+     Add( $0018, TdcmGrup0018.Create );
+     Add( $0020, TdcmGrup0020.Create );
+     Add( $0022, TdcmGrup0022.Create );
+     Add( $0024, TdcmGrup0024.Create );
+     Add( $0028, TdcmGrup0028.Create );
+     Add( $0032, TdcmGrup0032.Create );
+     Add( $0038, TdcmGrup0038.Create );
+     Add( $003A, TdcmGrup003A.Create );
+     Add( $0040, TdcmGrup0040.Create );
+     Add( $0042, TdcmGrup0042.Create );
+     Add( $0044, TdcmGrup0044.Create );
+     Add( $0046, TdcmGrup0046.Create );
+     Add( $0048, TdcmGrup0048.Create );
+     Add( $0050, TdcmGrup0050.Create );
+     Add( $0052, TdcmGrup0052.Create );
+     Add( $0054, TdcmGrup0054.Create );
+     Add( $0060, TdcmGrup0060.Create );
+     Add( $0062, TdcmGrup0062.Create );
+     Add( $0064, TdcmGrup0064.Create );
+     Add( $0066, TdcmGrup0066.Create );
+     Add( $0068, TdcmGrup0068.Create );
+     Add( $0070, TdcmGrup0070.Create );
+     Add( $0072, TdcmGrup0072.Create );
+     Add( $0074, TdcmGrup0074.Create );
+     Add( $0076, TdcmGrup0076.Create );
+     Add( $0078, TdcmGrup0078.Create );
+     Add( $0080, TdcmGrup0080.Create );
+     Add( $0082, TdcmGrup0082.Create );
+     Add( $0088, TdcmGrup0088.Create );
+     Add( $0100, TdcmGrup0100.Create );
+     Add( $0400, TdcmGrup0400.Create );
+     Add( $1000, TdcmGrup1000.Create );
+     Add( $1010, TdcmGrup1010.Create );
+     Add( $2000, TdcmGrup2000.Create );
+     Add( $2010, TdcmGrup2010.Create );
+     Add( $2020, TdcmGrup2020.Create );
+     Add( $2030, TdcmGrup2030.Create );
+     Add( $2040, TdcmGrup2040.Create );
+     Add( $2050, TdcmGrup2050.Create );
+     Add( $2100, TdcmGrup2100.Create );
+     Add( $2110, TdcmGrup2110.Create );
+     Add( $2120, TdcmGrup2120.Create );
+     Add( $2130, TdcmGrup2130.Create );
+     Add( $2200, TdcmGrup2200.Create );
+     Add( $3002, TdcmGrup3002.Create );
+     Add( $3004, TdcmGrup3004.Create );
+     Add( $3006, TdcmGrup3006.Create );
+     Add( $3008, TdcmGrup3008.Create );
+     Add( $300A, TdcmGrup300A.Create );
+     Add( $300C, TdcmGrup300C.Create );
+     Add( $300E, TdcmGrup300E.Create );
+     Add( $4000, TdcmGrup4000.Create );
+     Add( $4008, TdcmGrup4008.Create );
+     Add( $4010, TdcmGrup4010.Create );
+     Add( $4FFE, TdcmGrup4FFE.Create );
+     Add( $5000, TdcmGrup50xx.Create );
+     Add( $5200, TdcmGrup5200.Create );
+     Add( $5400, TdcmGrup5400.Create );
+     Add( $5600, TdcmGrup5600.Create );
+     Add( $6000, TdcmGrup60xx.Create );
+     Add( $7F00, TdcmGrup7Fxx.Create );
+     Add( $7FE0, TdcmGrup7FE0.Create );
+     Add( $FFFA, TdcmGrupFFFA.Create );
+     Add( $FFFC, TdcmGrupFFFC.Create );
+     Add( $FFFE, TdcmGrupFFFE.Create );
 end;
 
 destructor TdcmBookTag.Destroy;
 var
-   V :TDICOMElems;
+   V :TdcmGrup;
 begin
      for V in Self.Values do V.Free;
 
