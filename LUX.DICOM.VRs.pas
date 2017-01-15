@@ -132,11 +132,15 @@ var
    Ks :array of TKindVR;
    I :Integer;
 begin
-     Ks := [];  for K in Self do Ks := Ks + [ K ];
+     if Self = [] then Result := ''
+     else
+     begin
+          Ks := [];  for K in Self do Ks := Ks + [ K ];
 
-     Result := String( _VRs_.KindToName[ Ks[ 0 ] ] );
+          Result := Ks[ 0 ].ToString;
 
-     for I := 1 to High( Ks ) do Result := Result + ' or ' + String( _VRs_.KindToName[ Ks[ I ] ] );
+          for I := 1 to High( Ks ) do Result := Result + '/' + Ks[ I ].ToString;
+     end;
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
