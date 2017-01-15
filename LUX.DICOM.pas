@@ -110,7 +110,8 @@ end;
 
 function TdcmData.GetOriVR :TKindVR;
 begin
-     Result := GetElem.Kind;
+     if IsStd then Result := GetElem.Kind
+              else Result := [];
 end;
 
 function TdcmData.GetSize :Cardinal;
@@ -125,7 +126,8 @@ end;
 
 function TdcmData.GetDesc :String;
 begin
-     Result := GetElem.Desc;
+     if IsStd then Result := GetElem.Desc
+              else Result := '?';
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
