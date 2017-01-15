@@ -9,6 +9,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      TAnsiChar2 = array [ 0..2-1 ] of AnsiChar;
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+
      // http://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1
      // Table 6.2-1. DICOM Value Representations
      TKindVR = ( vr00, { Implicit VR           }
@@ -48,6 +50,22 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                  vrUSSSOW,
                  vrUSOW );
 
+     HKindVR = record helper for TKindVR
+     private
+     public
+       function ToString :String;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
+
+     TKindsVR = set of TKindVR;
+
+     HKindsVR = record helper for TKindsVR
+     private
+     public
+       function ToString :String;
+     end;
+
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
@@ -82,6 +100,44 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
 implementation //############################################################### ■
+
+uses LUX.DICOM;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function HKindVR.ToString :String;
+begin
+     Result := _VRs_.KindToName[ Self ];
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function HKindsVR.ToString :String;
+var
+   K :TKindVR;
+   Ks :array of TKindVR;
+   I :Integer;
+begin
+     Ks := [];  for K in Self do Ks := Ks + [ K ];
+
+     Result := _VRs_.KindToName[ Ks[ 0 ] ];
+
+     for I := 1 to High( Ks ) do Result := Result + ' or ' + _VRs_.KindToName[ Ks[ I ] ];
+end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -163,6 +219,11 @@ begin
      Add( TKindVR.vrUR, 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
      Add( TKindVR.vrUS, 'US', 2, 'Unsigned Short' );
      Add( TKindVR.vrUT, 'UT', 6, 'Unlimited Text' );
+
+     Add( TKindVR.vrOBOW  , 'BW', 6, 'OB or OW' );
+     Add( TKindVR.vrUSSS  , 'U1', 2, 'US or SS' );
+     Add( TKindVR.vrUSSSOW, 'U2', 2, 'US or SS or OW' );
+     Add( TKindVR.vrUSOW  , 'U3', 2, 'US or OW' );
 end;
 
 destructor TDICOMVRs.Destroy;

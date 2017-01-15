@@ -47,7 +47,7 @@ begin
      // 6 Registry of DICOM Data Elements
      Add( $0008, TKindVR.vrOF, 'Float Pixel Data' );
      Add( $0009, TKindVR.vrOD, 'Double Float Pixel Data' );
-     Add( $0010, TKindVR.vrOW, 'Pixel Data' );  // OB or OW
+     Add( $0010, TKindVR.vrOBOW, 'Pixel Data' );
      Add( $0020, TKindVR.vrOW, 'Coefficients SDVN' );
      Add( $0030, TKindVR.vrOW, 'Coefficients SDHN' );
      Add( $0040, TKindVR.vrOW, 'Coefficients SDDN' );
