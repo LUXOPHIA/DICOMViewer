@@ -115,7 +115,7 @@ uses LUX.DICOM;
 
 function HKindVR.ToString :String;
 begin
-     Result := _VRs_.KindToName[ Self ];
+     Result := String( _VRs_.KindToName[ Self ] );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
@@ -134,9 +134,9 @@ var
 begin
      Ks := [];  for K in Self do Ks := Ks + [ K ];
 
-     Result := _VRs_.KindToName[ Ks[ 0 ] ];
+     Result := String( _VRs_.KindToName[ Ks[ 0 ] ] );
 
-     for I := 1 to High( Ks ) do Result := Result + ' or ' + _VRs_.KindToName[ Ks[ I ] ];
+     for I := 1 to High( Ks ) do Result := Result + ' or ' + String( _VRs_.KindToName[ Ks[ I ] ] );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
