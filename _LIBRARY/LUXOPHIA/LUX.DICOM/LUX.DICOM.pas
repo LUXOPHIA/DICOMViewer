@@ -234,7 +234,7 @@ begin
 
           D.ReadStream( F );
 
-          Add( D.Tag, D );
+          AddOrSetValue( D.Tag, D );
      end;
 
      F.Free;
