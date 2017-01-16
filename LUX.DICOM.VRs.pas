@@ -88,7 +88,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
-     TdcmBookVR = class( TDictionary<TKindVR,TdcmVR> )
+     TdcmBookVR = class( TObjectDictionary<TKindVR,TdcmVR> )
      private
      protected
        _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
@@ -212,7 +212,7 @@ end;
 
 constructor TdcmBookVR.Create;
 begin
-     inherited Create;
+     inherited Create( [ doOwnsValues ] );
 
      _NameToKind := TDictionary<TAnsiChar2,TKindVR>.Create;
 
@@ -252,11 +252,7 @@ begin
 end;
 
 destructor TdcmBookVR.Destroy;
-var
-   V :TdcmVR;
 begin
-     for V in Self.Values do V.Free;
-
      _NameToKind.Free;
 
      inherited;

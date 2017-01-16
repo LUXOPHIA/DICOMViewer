@@ -2,9 +2,8 @@
 
 interface //#################################################################### ■
 
-uses System.Classes, System.SysUtils,
-     LUX, LUX.Graph.Tree,
-     LUX.DICOM.Tags, LUX.DICOM.VRs;
+uses System.Classes, System.SysUtils, System.Generics.Collections,
+     LUX, LUX.DICOM.Tags, LUX.DICOM.VRs;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
@@ -26,7 +25,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmData
 
-     TdcmData = class( TTreeLeaf<TTreeNode> )
+     TdcmData = class
      private
      protected
        _Tag   :TdcmTag;
@@ -40,7 +39,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        procedure SetSize( const Size_:Cardinal );
        function GetDesc :String;
      public
-       constructor Create; override;
+       constructor Create;
        destructor Destroy; override;
        ///// プロパティ
        property Tag   :TdcmTag  read   _Tag                ;
@@ -57,14 +56,19 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmFile
 
-     TdcmFile = class( TTreeRoot<TdcmData> )
+     TdcmFile = class( TObjectDictionary<TdcmTag,TdcmData> )
      private
      protected
+       ///// アクセス
+       function GetData( const Grup_,Elem_:THex4 ) :TdcmData;
      public
-       constructor Create; override;
+       constructor Create;
        destructor Destroy; override;
+       ///// プロパティ
+       property Data[ const Grup_,Elem_:THex4 ] :TdcmData read GetData;
        ///// メソッド
        procedure LoadFromFile( const FileName_:String );
+       function TagsToArray :TArray<TdcmTag>;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -189,11 +193,16 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
 
+function TdcmFile.GetData( const Grup_,Elem_:THex4 ) :TdcmData;
+begin
+     Result := Items[ TdcmTag.Create( Grup_, Elem_ ) ];
+end;
+
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 constructor TdcmFile.Create;
 begin
-     inherited;
+     inherited Create( [ doOwnsValues ] );
 
 end;
 
@@ -209,8 +218,9 @@ procedure TdcmFile.LoadFromFile( const FileName_:String );
 var
    F :TFileStream;
    H :TdcmHead;
+   D :TdcmData;
 begin
-     DeleteChilds;
+     Clear;
 
      F := TFileStream.Create( FileName_, fmOpenRead );
 
@@ -218,9 +228,23 @@ begin
 
      Assert( H.Pref = 'DICM', 'It is not the DICOM file.' );
 
-     while F.Position < F.Size do TdcmData.Create( Self ).ReadStream( F );
+     while F.Position < F.Size do
+     begin
+          D := TdcmData.Create;
+
+          D.ReadStream( F );
+
+          Add( D.Tag, D );
+     end;
 
      F.Free;
+end;
+
+function TdcmFile.TagsToArray :TArray<TdcmTag>;
+begin
+     Result := Keys.ToArray;
+
+     TArray.Sort<TdcmTag>( Result, TdcmTagComp.Create );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
