@@ -210,6 +210,8 @@ var
    F :TFileStream;
    H :TdcmHead;
 begin
+     DeleteChilds;
+
      F := TFileStream.Create( FileName_, fmOpenRead );
 
      F.Read( H, SizeOf( H ) );
