@@ -50,13 +50,17 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmElem = class
      private
      protected
+       _Elem :THex4;
+       _Name :AnsiString;
        _Kind :TKindVR;
        _Desc :String;
      public
-       constructor Create( const Kind_:TKindVR; const Desc_:String );
+       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
        ///// プロパティ
-       property Kind :TKindVR read _Kind;
-       property Desc :String  read _Desc;
+       property Elem :THex4      read _Elem;
+       property Name :AnsiString read _Name;
+       property Kind :TKindVR    read _Kind;
+       property Desc :String     read _Desc;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
@@ -64,11 +68,16 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmGrup = class( TObjectDictionary<THex4,TdcmElem> )
      private
      protected
+       _NameToElem :TDictionary<AnsiString,TdcmElem>;
+       ///// アクセス
+       function GetElem( const Name_:AnsiString ) :TdcmElem;
        ///// メソッド
-       procedure Add( const Elem_:THex4; const Kind_:TKindVR; const Desc_:String );
+       procedure Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
      public
        constructor Create;
        destructor Destroy; override;
+       ///// プロパティ
+       property Elem[ const Name_:AnsiString ] :TdcmElem read GetElem;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookTag
@@ -231,10 +240,12 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Kind_:TKindVR; const Desc_:String );
+constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
 begin
      inherited Create;
 
+     _Elem := Elem_;
+     _Name := Name_;
      _Kind := Kind_;
      _Desc := Desc_;
 end;
@@ -245,11 +256,25 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
 
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmGrup.GetElem( const Name_:AnsiString ) :TdcmElem;
+begin
+     if _NameToElem.ContainsKey( Name_ ) then Result := _NameToElem[ Name_ ]
+                                         else Result := nil;
+end;
+
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmGrup.Add( const Elem_:THex4; const Kind_:TKindVR; const Desc_:String );
+procedure TdcmGrup.Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+var
+   E :TdcmElem;
 begin
-     inherited Add( Elem_, TdcmElem.Create( Kind_, Desc_ ) );
+     E := TdcmElem.Create( Elem_, Name_, Kind_, Desc_ );
+
+     inherited Add( Elem_, E );
+
+     if Name_ <> '' then _NameToElem.Add( Name_, E );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -258,10 +283,12 @@ constructor TdcmGrup.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
+     _NameToElem := TDictionary<AnsiString,TdcmElem>.Create;
 end;
 
 destructor TdcmGrup.Destroy;
 begin
+     _NameToElem.Free;
 
      inherited;
 end;

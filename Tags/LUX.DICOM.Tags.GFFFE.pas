@@ -46,9 +46,9 @@ begin
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
      //   Note 2. The VR for Data Elements, Item (FFFE,E000), Item Delimitation Item (FFFE,E00D), and Sequence Delimitation Item (FFFE,E0DD) do not exist. See PS3.5 for explanation.
-     Add( $E000, [], 'Item' );
-     Add( $E00D, [], 'Item Delimitation Item' );
-     Add( $E0DD, [], 'Sequence Delimitation Item' );
+     Add( $E000, 'Item', [], 'Item' );
+     Add( $E00D, 'ItemDelimitationItem', [], 'Item Delimitation Item' );
+     Add( $E0DD, 'SequenceDelimitationItem', [], 'Sequence Delimitation Item' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

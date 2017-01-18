@@ -45,9 +45,9 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, [TTypeVR.vrCS], 'Queue Status' );
-     Add( $0050, [TTypeVR.vrSQ], 'Print Job Description Sequence' );
-     Add( $0070, [TTypeVR.vrSQ], 'Referenced Print Job Sequence' );
+     Add( $0010, 'QueueStatus', [TTypeVR.vrCS], 'Queue Status' );
+     Add( $0050, 'PrintJobDescriptionSequence', [TTypeVR.vrSQ], 'Print Job Description Sequence' );
+     Add( $0070, 'ReferencedPrintJobSequence', [TTypeVR.vrSQ], 'Referenced Print Job Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

@@ -45,7 +45,7 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $FFFC, [TTypeVR.vrOB], 'Data Set Trailing Padding' );
+     Add( $FFFC, 'DataSetTrailingPadding', [TTypeVR.vrOB], 'Data Set Trailing Padding' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
