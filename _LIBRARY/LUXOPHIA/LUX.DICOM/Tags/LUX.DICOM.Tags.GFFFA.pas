@@ -45,7 +45,7 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $FFFA, [TTypeVR.vrSQ], 'Digital Signatures Sequence' );
+     Add( $FFFA, 'DigitalSignaturesSequence', [TTypeVR.vrSQ], 'Digital Signatures Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

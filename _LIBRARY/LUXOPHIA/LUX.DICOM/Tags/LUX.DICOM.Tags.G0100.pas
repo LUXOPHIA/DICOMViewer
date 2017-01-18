@@ -45,10 +45,10 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0410, [TTypeVR.vrCS], 'SOP Instance Status' );
-     Add( $0420, [TTypeVR.vrDT], 'SOP Authorization DateTime' );
-     Add( $0424, [TTypeVR.vrLT], 'SOP Authorization Comment' );
-     Add( $0426, [TTypeVR.vrLO], 'Authorization Equipment Certification Number' );
+     Add( $0410, 'SOPInstanceStatus', [TTypeVR.vrCS], 'SOP Instance Status' );
+     Add( $0420, 'SOPAuthorizationDateTime', [TTypeVR.vrDT], 'SOP Authorization DateTime' );
+     Add( $0424, 'SOPAuthorizationComment', [TTypeVR.vrLT], 'SOP Authorization Comment' );
+     Add( $0426, 'AuthorizationEquipmentCertificationNumber', [TTypeVR.vrLO], 'Authorization Equipment Certification Number' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
