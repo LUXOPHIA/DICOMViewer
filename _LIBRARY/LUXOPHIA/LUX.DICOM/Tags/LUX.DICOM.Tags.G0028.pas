@@ -58,6 +58,7 @@ begin
      Add( $0012, 'Planes', [TTypeVR.vrUS], 'Planes' );
      Add( $0014, 'UltrasoundColorDataPresent', [TTypeVR.vrUS], 'Ultrasound Color Data Present' );
      Add( $0020, '', [], '' );  //For some Data Elements, no Name or Keyword or VR or VM is specified; these are "placeholders" that are not assigned but will not be reused.
+     Add( $0030, 'PixelSpacing', [TTypeVR.vrDS], 'Pixel Spacing' );
      Add( $0031, 'ZoomFactor', [TTypeVR.vrDS], 'Zoom Factor' );
      Add( $0032, 'ZoomCenter', [TTypeVR.vrDS], 'Zoom Center' );
      Add( $0034, 'PixelAspectRatio', [TTypeVR.vrIS], 'Pixel Aspect Ratio' );
