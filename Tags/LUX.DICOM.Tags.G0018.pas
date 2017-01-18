@@ -657,6 +657,7 @@ begin
      Add( $9441, 'RadiusOfCircularExposureControlSensingRegion', [TTypeVR.vrUS], 'Radius of Circular Exposure Control Sensing Region' );
      Add( $9442, 'VerticesOfThePolygonalExposureControlSensingRegion', [TTypeVR.vrSS], 'Vertices of the Polygonal Exposure Control Sensing Region' );
      Add( $9445, '', [], '' );  //For some Data Elements, no Name or Keyword or VR or VM is specified; these are "placeholders" that are not assigned but will not be reused.
+     Add( $9447, 'ColumnAngulationPatient', [TTypeVR.vrFL], 'Column Angulation (Patient)' );
      Add( $9449, 'BeamAngle', [TTypeVR.vrFL], 'Beam Angle' );
      Add( $9451, 'FrameDetectorParametersSequence', [TTypeVR.vrSQ], 'Frame Detector Parameters Sequence' );
      Add( $9452, 'CalculatedAnatomyThickness', [TTypeVR.vrFL], 'Calculated Anatomy Thickness' );
