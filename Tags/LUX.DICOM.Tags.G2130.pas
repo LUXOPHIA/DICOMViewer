@@ -45,15 +45,15 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, [TTypeVR.vrSQ], 'Print Management Capabilities Sequence' );
-     Add( $0015, [TTypeVR.vrSQ], 'Printer Characteristics Sequence' );
-     Add( $0030, [TTypeVR.vrSQ], 'Film Box Content Sequence' );
-     Add( $0040, [TTypeVR.vrSQ], 'Image Box Content Sequence' );
-     Add( $0050, [TTypeVR.vrSQ], 'Annotation Content Sequence' );
-     Add( $0060, [TTypeVR.vrSQ], 'Image Overlay Box Content Sequence' );
-     Add( $0080, [TTypeVR.vrSQ], 'Presentation LUT Content Sequence' );
-     Add( $00A0, [TTypeVR.vrSQ], 'Proposed Study Sequence' );
-     Add( $00C0, [TTypeVR.vrSQ], 'Original Image Sequence' );
+     Add( $0010, 'PrintManagementCapabilitiesSequence', [TTypeVR.vrSQ], 'Print Management Capabilities Sequence' );
+     Add( $0015, 'PrinterCharacteristicsSequence', [TTypeVR.vrSQ], 'Printer Characteristics Sequence' );
+     Add( $0030, 'FilmBoxContentSequence', [TTypeVR.vrSQ], 'Film Box Content Sequence' );
+     Add( $0040, 'ImageBoxContentSequence', [TTypeVR.vrSQ], 'Image Box Content Sequence' );
+     Add( $0050, 'AnnotationContentSequence', [TTypeVR.vrSQ], 'Annotation Content Sequence' );
+     Add( $0060, 'ImageOverlayBoxContentSequence', [TTypeVR.vrSQ], 'Image Overlay Box Content Sequence' );
+     Add( $0080, 'PresentationLUTContentSequence', [TTypeVR.vrSQ], 'Presentation LUT Content Sequence' );
+     Add( $00A0, 'ProposedStudySequence', [TTypeVR.vrSQ], 'Proposed Study Sequence' );
+     Add( $00C0, 'OriginalImageSequence', [TTypeVR.vrSQ], 'Original Image Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

@@ -45,11 +45,11 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, [TTypeVR.vrST], 'Document Title' );
-     Add( $0011, [TTypeVR.vrOB], 'Encapsulated Document' );
-     Add( $0012, [TTypeVR.vrLO], 'MIME Type of Encapsulated Document' );
-     Add( $0013, [TTypeVR.vrSQ], 'Source Instance Sequence' );
-     Add( $0014, [TTypeVR.vrLO], 'List of MIME Types' );
+     Add( $0010, 'DocumentTitle', [TTypeVR.vrST], 'Document Title' );
+     Add( $0011, 'EncapsulatedDocument', [TTypeVR.vrOB], 'Encapsulated Document' );
+     Add( $0012, 'MIMETypeOfEncapsulatedDocument', [TTypeVR.vrLO], 'MIME Type of Encapsulated Document' );
+     Add( $0013, 'SourceInstanceSequence', [TTypeVR.vrSQ], 'Source Instance Sequence' );
+     Add( $0014, 'ListOfMIMETypes', [TTypeVR.vrLO], 'List of MIME Types' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

@@ -45,8 +45,8 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $9229, [TTypeVR.vrSQ], 'Shared Functional Groups Sequence' );
-     Add( $9230, [TTypeVR.vrSQ], 'Per-frame Functional Groups Sequence' );
+     Add( $9229, 'SharedFunctionalGroupsSequence', [TTypeVR.vrSQ], 'Shared Functional Groups Sequence' );
+     Add( $9230, 'PerFrameFunctionalGroupsSequence', [TTypeVR.vrSQ], 'Per-frame Functional Groups Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

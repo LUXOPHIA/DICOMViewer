@@ -45,13 +45,13 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0100, [TTypeVR.vrSQ], 'Waveform Sequence' );
-     Add( $0110, [TTypeVR.vrOB,TTypeVR.vrOW], 'Channel Minimum Value' );
-     Add( $0112, [TTypeVR.vrOB,TTypeVR.vrOW], 'Channel Maximum Value' );
-     Add( $1004, [TTypeVR.vrUS], 'Waveform Bits Allocated' );
-     Add( $1006, [TTypeVR.vrCS], 'Waveform Sample Interpretation' );
-     Add( $100A, [TTypeVR.vrOB,TTypeVR.vrOW], 'Waveform Padding Value' );
-     Add( $1010, [TTypeVR.vrOB,TTypeVR.vrOW], 'Waveform Data' );
+     Add( $0100, 'WaveformSequence', [TTypeVR.vrSQ], 'Waveform Sequence' );
+     Add( $0110, 'ChannelMinimumValue', [TTypeVR.vrOB,TTypeVR.vrOW], 'Channel Minimum Value' );
+     Add( $0112, 'ChannelMaximumValue', [TTypeVR.vrOB,TTypeVR.vrOW], 'Channel Maximum Value' );
+     Add( $1004, 'WaveformBitsAllocated', [TTypeVR.vrUS], 'Waveform Bits Allocated' );
+     Add( $1006, 'WaveformSampleInterpretation', [TTypeVR.vrCS], 'Waveform Sample Interpretation' );
+     Add( $100A, 'WaveformPaddingValue', [TTypeVR.vrOB,TTypeVR.vrOW], 'Waveform Padding Value' );
+     Add( $1010, 'WaveformData', [TTypeVR.vrOB,TTypeVR.vrOW], 'Waveform Data' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
