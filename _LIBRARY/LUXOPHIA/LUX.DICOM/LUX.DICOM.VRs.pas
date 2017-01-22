@@ -58,9 +58,11 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      HKindVR = record helper for TKindVR
      private
        function GetCount :Byte;
+       function GetItems( const I_:Byte ) :TTypeVR;
      public
        ///// プロパティ
        property Count :Byte read GetCount;
+       property Items[ const I_:Byte ] :TTypeVR read GetItems;
        ///// メソッド
        function ToArray :TArray<TTypeVR>;
        function ToString :String;
@@ -141,6 +143,25 @@ begin
      Result := 0;
 
      for K in Self do Inc( Result );
+end;
+
+function HKindVR.GetItems( const I_:Byte ) :TTypeVR;
+var
+   I :Byte;
+   K :TTypeVR;
+begin
+     I := 0;
+     for K in Self do
+     begin
+          if I = I_ then
+          begin
+               Result := K;
+
+               Break;
+          end;
+
+          Inc( I );
+     end;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
