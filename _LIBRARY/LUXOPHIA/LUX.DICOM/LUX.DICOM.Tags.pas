@@ -50,17 +50,17 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmElem = class
      private
      protected
-       _Elem :THex4;
-       _Name :AnsiString;
-       _Kind :TKindVR;
-       _Desc :String;
+       _Elem  :THex4;
+       _Name  :AnsiString;
+       _Kinds :TKindVR;
+       _Desc  :String;
      public
-       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
        ///// プロパティ
-       property Elem :THex4      read _Elem;
-       property Name :AnsiString read _Name;
-       property Kind :TKindVR    read _Kind;
-       property Desc :String     read _Desc;
+       property Elem  :THex4      read _Elem ;
+       property Name  :AnsiString read _Name ;
+       property Kinds :TKindVR    read _Kinds;
+       property Desc  :String     read _Desc ;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
@@ -240,14 +240,14 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
 begin
      inherited Create;
 
-     _Elem := Elem_;
-     _Name := Name_;
-     _Kind := Kind_;
-     _Desc := Desc_;
+     _Elem  := Elem_ ;
+     _Name  := Name_ ;
+     _Kinds := Kinds_;
+     _Desc  := Desc_ ;
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
