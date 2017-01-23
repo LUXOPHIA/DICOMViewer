@@ -13,7 +13,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1
      //// Table 6.2-1. DICOM Value Representations
-     TTypeVR = ( vrAE,   //Application Entity
+     TTypeVR = ( vr00,   //Implicit VR
+                 vrAE,   //Application Entity
                  vrAS,   //Age String
                  vrAT,   //Attribute Tag
                  vrCS,   //Code String
@@ -58,10 +59,12 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      HKindVR = record helper for TKindVR
      private
        function GetCount :Byte;
+       function GetHead :TTypeVR;
        function GetItems( const I_:Byte ) :TTypeVR;
      public
        ///// プロパティ
-       property Count :Byte read GetCount;
+       property Count                  :Byte    read GetCount;
+       property Head                   :TTypeVR read GetHead ;
        property Items[ const I_:Byte ] :TTypeVR read GetItems;
        ///// メソッド
        function ToArray :TArray<TTypeVR>;
@@ -90,19 +93,19 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
-     TdcmBookVR = class( TObjectDictionary<TKindVR,TdcmVR> )
+     TdcmBookVR = class( TObjectDictionary<TTypeVR,TdcmVR> )
      private
      protected
-       _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
+       _NameToKind :TDictionary<TAnsiChar2,TTypeVR>;
        ///// メソッド
-       procedure Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+       procedure Add( const Kind_:TTypeVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
      public
        constructor Create;
        destructor Destroy; override;
        ///// プロパティ
-       property NameToKind :TDictionary<TAnsiChar2,TKindVR> read _NameToKind;
+       property NameToKind :TDictionary<TAnsiChar2,TTypeVR> read _NameToKind;
        ///// メソッド
-       function ReadStream( const F_:TFileStream ) :TKindVR;
+       function ReadStream( const F_:TFileStream ) :TTypeVR;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -127,7 +130,8 @@ uses LUX.DICOM;
 
 function HTypeVR.ToString :String;
 begin
-     Result := String( _BookVR_[ [Self] ].Name );
+     if Self = TTypeVR.vr00 then Result := ''
+                            else Result := String( _BookVR_[ Self ].Name );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
@@ -145,6 +149,20 @@ begin
      for K in Self do Inc( Result );
 end;
 
+function HKindVR.GetHead :TTypeVR;
+var
+   K :TTypeVR;
+begin
+     for K in Self do
+     begin
+          Result := K;
+
+          Exit;
+     end;
+
+     Result := TTypeVR.vr00;
+end;
+
 function HKindVR.GetItems( const I_:Byte ) :TTypeVR;
 var
    I :Byte;
@@ -157,11 +175,13 @@ begin
           begin
                Result := K;
 
-               Break;
+               Exit;
           end;
 
           Inc( I );
      end;
+
+     Result := TTypeVR.vr00;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -222,7 +242,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+procedure TdcmBookVR.Add( const Kind_:TTypeVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
 begin
      _NameToKind.Add( Name_, Kind_ );
 
@@ -235,41 +255,41 @@ constructor TdcmBookVR.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
-     _NameToKind := TDictionary<TAnsiChar2,TKindVR>.Create;
+     _NameToKind := TDictionary<TAnsiChar2,TTypeVR>.Create;
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
      //// 7.1.2 Data Element Structure with Explicit VR
-     Add( [TTypeVR.vrAE], 'AE', 2, 'Application Entity' );
-     Add( [TTypeVR.vrAS], 'AS', 2, 'Age String' );
-     Add( [TTypeVR.vrAT], 'AT', 2, 'Attribute Tag' );
-     Add( [TTypeVR.vrCS], 'CS', 2, 'Code String' );
-     Add( [TTypeVR.vrDA], 'DA', 2, 'Date' );
-     Add( [TTypeVR.vrDS], 'DS', 2, 'Decimal String' );
-     Add( [TTypeVR.vrDT], 'DT', 2, 'Date Time' );
-     Add( [TTypeVR.vrFL], 'FL', 2, 'Floating Point Single' );
-     Add( [TTypeVR.vrFD], 'FD', 2, 'Floating Point Double' );
-     Add( [TTypeVR.vrIS], 'IS', 2, 'Integer String' );
-     Add( [TTypeVR.vrLO], 'LO', 2, 'Long String' );
-     Add( [TTypeVR.vrLT], 'LT', 2, 'Long Text' );
-     Add( [TTypeVR.vrOB], 'OB', 6, 'Other Byte' );
-     Add( [TTypeVR.vrOD], 'OD', 6, 'Other Double' );
-     Add( [TTypeVR.vrOF], 'OF', 6, 'Other Float' );
-     Add( [TTypeVR.vrOL], 'OL', 6, 'Other Long' );
-     Add( [TTypeVR.vrOW], 'OW', 6, 'Other Word' );
-     Add( [TTypeVR.vrPN], 'PN', 2, 'Person Name' );
-     Add( [TTypeVR.vrSH], 'SH', 2, 'Short String' );
-     Add( [TTypeVR.vrSL], 'SL', 2, 'Signed Long' );
-     Add( [TTypeVR.vrSQ], 'SQ', 6, 'Sequence of Items' );
-     Add( [TTypeVR.vrSS], 'SS', 2, 'Signed Short' );
-     Add( [TTypeVR.vrST], 'ST', 2, 'Short Text' );
-     Add( [TTypeVR.vrTM], 'TM', 2, 'Time' );
-     Add( [TTypeVR.vrUC], 'UC', 6, 'Unlimited Characters' );
-     Add( [TTypeVR.vrUI], 'UI', 2, 'Unique Identifier (UID)' );
-     Add( [TTypeVR.vrUL], 'UL', 2, 'Unsigned Long' );
-     Add( [TTypeVR.vrUN], 'UN', 6, 'Unknown' );
-     Add( [TTypeVR.vrUR], 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
-     Add( [TTypeVR.vrUS], 'US', 2, 'Unsigned Short' );
-     Add( [TTypeVR.vrUT], 'UT', 6, 'Unlimited Text' );
+     Add( TTypeVR.vrAE, 'AE', 2, 'Application Entity' );
+     Add( TTypeVR.vrAS, 'AS', 2, 'Age String' );
+     Add( TTypeVR.vrAT, 'AT', 2, 'Attribute Tag' );
+     Add( TTypeVR.vrCS, 'CS', 2, 'Code String' );
+     Add( TTypeVR.vrDA, 'DA', 2, 'Date' );
+     Add( TTypeVR.vrDS, 'DS', 2, 'Decimal String' );
+     Add( TTypeVR.vrDT, 'DT', 2, 'Date Time' );
+     Add( TTypeVR.vrFL, 'FL', 2, 'Floating Point Single' );
+     Add( TTypeVR.vrFD, 'FD', 2, 'Floating Point Double' );
+     Add( TTypeVR.vrIS, 'IS', 2, 'Integer String' );
+     Add( TTypeVR.vrLO, 'LO', 2, 'Long String' );
+     Add( TTypeVR.vrLT, 'LT', 2, 'Long Text' );
+     Add( TTypeVR.vrOB, 'OB', 6, 'Other Byte' );
+     Add( TTypeVR.vrOD, 'OD', 6, 'Other Double' );
+     Add( TTypeVR.vrOF, 'OF', 6, 'Other Float' );
+     Add( TTypeVR.vrOL, 'OL', 6, 'Other Long' );
+     Add( TTypeVR.vrOW, 'OW', 6, 'Other Word' );
+     Add( TTypeVR.vrPN, 'PN', 2, 'Person Name' );
+     Add( TTypeVR.vrSH, 'SH', 2, 'Short String' );
+     Add( TTypeVR.vrSL, 'SL', 2, 'Signed Long' );
+     Add( TTypeVR.vrSQ, 'SQ', 6, 'Sequence of Items' );
+     Add( TTypeVR.vrSS, 'SS', 2, 'Signed Short' );
+     Add( TTypeVR.vrST, 'ST', 2, 'Short Text' );
+     Add( TTypeVR.vrTM, 'TM', 2, 'Time' );
+     Add( TTypeVR.vrUC, 'UC', 6, 'Unlimited Characters' );
+     Add( TTypeVR.vrUI, 'UI', 2, 'Unique Identifier (UID)' );
+     Add( TTypeVR.vrUL, 'UL', 2, 'Unsigned Long' );
+     Add( TTypeVR.vrUN, 'UN', 6, 'Unknown' );
+     Add( TTypeVR.vrUR, 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
+     Add( TTypeVR.vrUS, 'US', 2, 'Unsigned Short' );
+     Add( TTypeVR.vrUT, 'UT', 6, 'Unlimited Text' );
 end;
 
 destructor TdcmBookVR.Destroy;
@@ -281,7 +301,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TdcmBookVR.ReadStream( const F_:TFileStream ) :TKindVR;
+function TdcmBookVR.ReadStream( const F_:TFileStream ) :TTypeVR;
 var
    P :Integer;
    Name :TAnsiChar2;
@@ -295,7 +315,7 @@ begin
      begin
           F_.Position := P;
 
-          Result := [];
+          Result := TTypeVR.vr00;
      end;
 end;
 
