@@ -434,39 +434,6 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function FindWords( const F_:TFileStream; const Ws_:array of Word ) :Boolean;
-var
-   E :Integer;
-   P :Int64;
-   W, B :Word;
-label
-     NOMATCH;
-begin
-     E := F_.Size - SizeOf( Ws_ );
-
-     while F_.Position <= E do
-     begin
-          P := F_.Position;
-
-          for W in Ws_ do
-          begin
-               F_.ReadData( B );
-
-               if B <> W then goto NOMATCH;
-          end;
-
-          Result := True;
-
-          Exit;
-
-          NOMATCH:
-
-          F_.Position := P + SizeOf(Word);
-     end;
-
-     Result := False;
-end;
-
 procedure TdcmData.ReadStream( const F_:TFileStream );
 //･･･････････････････････････････････････････････････
      function ReadWord :Word;
@@ -499,16 +466,30 @@ procedure TdcmData.ReadStream( const F_:TFileStream );
      //･･････････････････････････････････････････････
      function FindSize :Cardinal;
      var
-        P :Int64;
+        P, I :Int64;
      begin
           //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.5
           //// 7.5 Nesting of Data Sets
 
           P := F_.Position;
 
-          Assert( FindWords( F_, [ $FFFE, $E0DD, $0000, $0000 ] ), 'SequenceDelimitationItem is not found.' );
+          with TSearchBM<Word>.Create( [ $FFFE, $E0DD, $0000, $0000 ] ) do
+          begin
+               I := Match( P div 2, F_.Size div 2,
+                    procedure( const HeadI_:Integer; const Buffer_:TArray<Word> )
+                    begin
+                         F_.Position := 2 * HeadI_;
 
-          Result := F_.Position - P;
+                         F_.Read( Buffer_[0], 2 * 4 );
+
+                    end );
+
+               Assert( I >= 0, 'SequenceDelimitationItem is not found.' );
+
+               Free;
+          end;
+
+          Result := 2 * ( I + 4 ) - P;
 
           F_.Position := P;
      end;
