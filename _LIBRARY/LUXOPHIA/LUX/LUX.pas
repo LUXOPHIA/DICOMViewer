@@ -2,7 +2,7 @@
 
 interface //#################################################################### ■
 
-uses System.Types, System.SysUtils, System.Classes, System.Math.Vectors, System.Threading;
+uses System.Types, System.SysUtils, System.Classes, System.Math.Vectors, System.Generics.Collections, System.Threading;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
@@ -130,6 +130,52 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// メソッド
        function EndOfStream :Boolean;
        function ReadLine :String;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSearchBM<_TYPE_>
+
+     TSearchBM<_TYPE_> = class
+     private
+       __TableBC :TDictionary<_TYPE_,Integer>;
+       _PN0      :Integer;
+       _PN1      :Integer;
+       _PN2      :Integer;
+       ///// アクセス
+       function Get_TableBC( const Key_:_TYPE_ ) :Integer;
+       procedure Set_TableBC( const Key_:_TYPE_; const Val_:Integer );
+       ///// メソッド
+       function Equal( const A_,B_:_TYPE_ ) :Boolean;
+     protected
+       _Pattern  :TArray<_TYPE_>;
+       _TableSF  :TArray<Integer>;
+       _TableGS  :TArray<Integer>;
+       ///// プロパティ
+       property _TableBC[ const Key_:_TYPE_ ] :Integer read Get_TableBC write Set_TableBC;
+       ///// アクセス
+       function GetPattern :TArray<_TYPE_>;
+       procedure SetPattern( const Pattern_:TArray<_TYPE_> );
+       ///// メソッド
+       procedure MakeTableBC;
+       procedure MakeTableSF;
+       procedure MakeTableGS;
+     public
+       type TOnRead      = reference to function( const I_:Integer ) :_TYPE_;
+       type TOnReadBlock = reference to procedure( const HeadI_:Integer; const Buffer_:TArray<_TYPE_> );
+     public
+       constructor Create; overload;
+       constructor Create( const Pattern_:TArray<_TYPE_> ); overload;
+       destructor Destroy; override;
+       ///// プロパティ
+       property Pattern :TArray<_TYPE_> read GetPattern write SetPattern;
+       ///// メソッド
+       function Match( const Source_:TArray<_TYPE_>; const StartI_,StopI_:Integer ) :Integer; overload;
+       function Matches( const Source_:TArray<_TYPE_>; const StartI_,StopI_:Integer ) :TArray<Integer>; overload;
+       function Match( const Source_:TArray<_TYPE_>; const StartI_:Integer = 0 ) :Integer; overload;
+       function Matches( const Source_:TArray<_TYPE_>; const StartI_:Integer = 0 ) :TArray<Integer>; overload;
+       function Match( const StartI_,StopI_:Integer; const OnRead_:TOnRead ) :Integer; overload;
+       function Matches( const StartI_,StopI_:Integer; const OnRead_:TOnRead ) :TArray<Integer>; overload;
+       function Match( const StartI_,StopI_:Integer; const OnReadBlock_:TOnReadBlock ) :Integer; overload;
+       function Matches( const StartI_,StopI_:Integer; const OnReadBlock_:TOnReadBlock ) :TArray<Integer>; overload;
      end;
 
 const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -473,6 +519,390 @@ begin
      end;
 
      Result := _Encoding.GetString( Bs );
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSearchBM<_TYPE_>
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TSearchBM<_TYPE_>.Get_TableBC( const Key_:_TYPE_ ) :Integer;
+begin
+     if __TableBC.ContainsKey( Key_ ) then Result := __TableBC[ Key_ ]
+                                      else Result := _PN0;
+
+end;
+
+procedure TSearchBM<_TYPE_>.Set_TableBC( const Key_:_TYPE_; const Val_:Integer );
+begin
+     __TableBC.AddOrSetValue( Key_, Val_ );
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TSearchBM<_TYPE_>.Equal( const A_,B_:_TYPE_ ) :Boolean;
+begin
+     Result := CompareMem( @A_, @B_, SizeOf( _TYPE_ ) );
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TSearchBM<_TYPE_>.GetPattern :TArray<_TYPE_>;
+begin
+     Result := _Pattern;
+end;
+
+procedure TSearchBM<_TYPE_>.SetPattern( const Pattern_:TArray<_TYPE_> );
+begin
+     _Pattern := Pattern_;
+
+     _PN0 := Length( _Pattern );
+     _PN1 := _PN0 - 1;
+     _PN2 := _PN1 - 1;
+
+     MakeTableBC;
+     MakeTableSF;
+     MakeTableGS;
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+procedure TSearchBM<_TYPE_>.MakeTableBC;
+var
+   I :Integer;
+begin
+     with __TableBC do
+     begin
+          Clear;
+
+          for I := 0 to _PN2 do AddOrSetValue( _Pattern[ I ], _PN1 - I );
+     end;
+end;
+
+procedure TSearchBM<_TYPE_>.MakeTableSF;
+var
+   I, G, F :Integer;
+begin
+     SetLength( _TableSF, _PN0 );
+
+     _TableSF[ _PN1 ] := _PN0;
+
+     F := _PN1;
+     G := _PN1;
+     for I := _PN2 downto 0 do
+     begin
+          if ( I > G ) and ( _TableSF[ I + _PN1 - F ] < I - G ) then
+          begin
+               _TableSF[ I ] := _TableSF[ I + _PN1 - F ];
+          end
+          else
+          begin
+               if I < G then G := I;
+
+               F := I;
+
+               while ( G >= 0 ) and Equal( _Pattern[ G ], _Pattern[ G + _PN1 - F ] ) do Dec( G );
+
+               _TableSF[ I ] := F - G;
+          end;
+     end;
+end;
+{
+procedure TSearchBM<_TYPE_>.MakeTableGS;
+var
+   S, I, J :Integer;
+begin
+     SetLength( _TableGS, _PN0 );
+
+     for I := 0 to _PN1 do _TableGS[ I ] := _PN0;
+
+     I := 0;
+     S := 0;
+     for J := _PN1 downto 0 do
+     begin
+          if _TableSF[ J ] = J + 1 then
+          begin
+               while I < S do
+               begin
+                    _TableGS[ I ] := S;
+
+                    Inc( I );
+               end;
+          end;
+
+          Inc( S );
+     end;
+
+     for I := 0 to _PN2 do _TableGS[ _PN1 - _TableSF[ I ] ] := _PN1 - I;
+end;
+}
+procedure TSearchBM<_TYPE_>.MakeTableGS;
+var
+   S, I, J :Integer;
+begin
+     SetLength( _TableGS, _PN0 );
+
+     S := _PN0;
+
+     _TableGS[ _PN1 ] := S;
+
+     J := 0;
+     for I := _PN2 downto 0 do
+     begin
+          if _TableSF[ J ] = J + 1 then S := I + 1;
+
+          _TableGS[ I ] := S;
+
+          Inc( J );
+     end;
+
+     for I := 0 to _PN2 do _TableGS[ _PN1 - _TableSF[ I ] ] := _PN1 - I;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TSearchBM<_TYPE_>.Create;
+begin
+     inherited;
+
+     __TableBC := TDictionary<_TYPE_,Integer>.Create;
+end;
+
+constructor TSearchBM<_TYPE_>.Create( const Pattern_:TArray<_TYPE_> );
+begin
+     Create;
+
+     SetPattern( Pattern_ );
+end;
+
+destructor TSearchBM<_TYPE_>.Destroy;
+begin
+     __TableBC.Free;
+
+     inherited;
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TSearchBM<_TYPE_>.Match( const Source_:TArray<_TYPE_>; const StartI_,StopI_:Integer ) :Integer;
+var
+   J, I :Integer;
+   A :_TYPE_;
+label
+     NOTMATCH;
+begin
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          for I := _PN1 downto 0 do
+          begin
+               A := Source_[ J + I ];
+
+               if not Equal( _Pattern[ I ], A ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ A ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := J;
+
+          Exit;
+
+          NOTMATCH:
+     end;
+
+     Result := -1;
+end;
+
+function TSearchBM<_TYPE_>.Matches( const Source_:TArray<_TYPE_>; const StartI_,StopI_:Integer ) :TArray<Integer>;
+var
+   J, I :Integer;
+   A :_TYPE_;
+label
+     NOTMATCH;
+begin
+     Result := [];
+
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          for I := _PN1 downto 0 do
+          begin
+               A := Source_[ J + I ];
+
+               if not Equal( _Pattern[ I ], A ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ A ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := Result + [ J ];
+
+          Inc( J, _TableGS[ 0 ] );
+
+          NOTMATCH:
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSearchBM<_TYPE_>.Match( const Source_:TArray<_TYPE_>; const StartI_:Integer = 0 ) :Integer;
+begin
+     Result := Match( Source_, StartI_, Length( Source_ ) );
+end;
+
+function TSearchBM<_TYPE_>.Matches( const Source_:TArray<_TYPE_>; const StartI_:Integer = 0 ) :TArray<Integer>;
+begin
+     Result := Matches( Source_, StartI_, Length( Source_ ) );
+end;
+
+//------------------------------------------------------------------------------
+
+function TSearchBM<_TYPE_>.Match( const StartI_,StopI_:Integer; const OnRead_:TOnRead ) :Integer;
+var
+   J, I :Integer;
+   A :_TYPE_;
+label
+     NOTMATCH;
+begin
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          for I := _PN1 downto 0 do
+          begin
+               A := OnRead_( J + I );
+
+               if not Equal( _Pattern[ I ], A ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ A ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := J;
+
+          Exit;
+
+          NOTMATCH:
+     end;
+
+     Result := -1;
+end;
+
+function TSearchBM<_TYPE_>.Matches( const StartI_,StopI_:Integer; const OnRead_:TOnRead ) :TArray<Integer>;
+var
+   J, I :Integer;
+   A :_TYPE_;
+label
+     NOTMATCH;
+begin
+     Result := [];
+
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          for I := _PN1 downto 0 do
+          begin
+               A := OnRead_( J + I );
+
+               if not Equal( _Pattern[ I ], A ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ A ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := Result + [ J ];
+
+          Inc( J, _TableGS[ 0 ] );
+
+          NOTMATCH:
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSearchBM<_TYPE_>.Match( const StartI_,StopI_:Integer; const OnReadBlock_:TOnReadBlock ) :Integer;
+var
+   B :TArray<_TYPE_>;
+   J, I :Integer;
+label
+     NOTMATCH;
+begin
+     SetLength( B, _PN0 );
+
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          OnReadBlock_( J, B );
+
+          for I := _PN1 downto 0 do
+          begin
+               if not Equal( _Pattern[ I ], B[ I ] ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ B[ I ] ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := J;
+
+          Exit;
+
+          NOTMATCH:
+     end;
+
+     Result := -1;
+end;
+
+function TSearchBM<_TYPE_>.Matches( const StartI_,StopI_:Integer; const OnReadBlock_:TOnReadBlock ) :TArray<Integer>;
+var
+   B :TArray<_TYPE_>;
+   J, I :Integer;
+label
+     NOTMATCH;
+begin
+     Result := [];
+
+     SetLength( B, _PN0 );
+
+     J := StartI_;
+
+     while J <= StopI_ - _PN0 do
+     begin
+          OnReadBlock_( J, B );
+
+          for I := _PN1 downto 0 do
+          begin
+               if not Equal( _Pattern[ I ], B[ I ] ) then
+               begin
+                    Inc( J, Max( _TableGS[ I ], _TableBC[ B[ I ] ] - _PN1 + I ) );
+
+                    goto NOTMATCH;
+               end;
+          end;
+
+          Result := Result + [ J ];
+
+          Inc( J, _TableGS[ 0 ] );
+
+          NOTMATCH:
+     end;
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
