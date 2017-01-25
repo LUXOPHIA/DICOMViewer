@@ -104,14 +104,14 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      protected
        _File  :TdcmFile;
        _Tag   :TdcmTag;
-       _ExpVR :TTypeVR;
+       _ExpVR :TKindVR;
        _Data  :TBytes;
        _Port  :TdcmPort;
        ///// アクセス
        function GetIsStd :Boolean;
        function GetElem :TdcmElem;
        function GetOriVR :TKindsVR;
-       function GetRecVR :TTypeVR;
+       function GetRecVR :TKindVR;
        function GetSize :Cardinal;
        procedure SetSize( const Size_:Cardinal );
        function GetDesc :String;
@@ -125,8 +125,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        property IsStd :Boolean  read GetIsStd              ;
        property Elem  :TdcmElem read GetElem               ;
        property OriVR :TKindsVR read GetOriVR              ;
-       property ExpVR :TTypeVR  read   _ExpVR              ;
-       property RecVR :TTypeVR  read GetRecVR              ;
+       property ExpVR :TKindVR  read   _ExpVR              ;
+       property RecVR :TKindVR  read GetRecVR              ;
        property Size  :Cardinal read GetSize  write SetSize;
        property Data  :TBytes   read   _Data               ;
        property Port  :TdcmPort read   _Port               ;
@@ -354,11 +354,11 @@ begin
               else Result := [];
 end;
 
-function TdcmData.GetRecVR :TTypeVR;
+function TdcmData.GetRecVR :TKindVR;
 begin
      Result := ExpVR;
 
-     if ( Result = TTypeVR.vr00 ) and ( OriVR.Count = 1 ) then Result := OriVR.Head;
+     if ( Result = TKindVR.vr00 ) and ( OriVR.Count = 1 ) then Result := OriVR.Head;
 end;
 
 function TdcmData.GetSize :Cardinal;
@@ -446,12 +446,12 @@ procedure TdcmData.ReadStream( const F_:TFileStream );
           F_.ReadData( Result );
      end;
      //･･････････････････････････････････････････････
-     function ReadSize( const VR_:TTypeVR ) :Cardinal;
+     function ReadSize( const VR_:TKindVR ) :Cardinal;
      begin
           //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.3
           //// 7.1.3 Data Element Structure with Implicit VR
 
-          if VR_ = TTypeVR.vr00 then Result := ReadCardinal
+          if VR_ = TKindVR.vr00 then Result := ReadCardinal
           else
           begin
                if _BookVR_[ VR_ ].Size = 2 then Result := ReadWord

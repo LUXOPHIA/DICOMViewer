@@ -45,16 +45,16 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, 'PrintJobID', [TTypeVR.vrSH], 'Print Job ID' );
-     Add( $0020, 'ExecutionStatus', [TTypeVR.vrCS], 'Execution Status' );
-     Add( $0030, 'ExecutionStatusInfo', [TTypeVR.vrCS], 'Execution Status Info' );
-     Add( $0040, 'CreationDate', [TTypeVR.vrDA], 'Creation Date' );
-     Add( $0050, 'CreationTime', [TTypeVR.vrTM], 'Creation Time' );
-     Add( $0070, 'Originator', [TTypeVR.vrAE], 'Originator' );
-     Add( $0140, 'DestinationAE', [TTypeVR.vrAE], 'Destination AE' );
-     Add( $0160, 'OwnerID', [TTypeVR.vrSH], 'Owner ID' );
-     Add( $0170, 'NumberOfFilms', [TTypeVR.vrIS], 'Number of Films' );
-     Add( $0500, 'ReferencedPrintJobSequencePullStoredPrint', [TTypeVR.vrSQ], 'Referenced Print Job Sequence (Pull Stored Print)' );
+     Add( $0010, 'PrintJobID', [TKindVR.vrSH], 'Print Job ID' );
+     Add( $0020, 'ExecutionStatus', [TKindVR.vrCS], 'Execution Status' );
+     Add( $0030, 'ExecutionStatusInfo', [TKindVR.vrCS], 'Execution Status Info' );
+     Add( $0040, 'CreationDate', [TKindVR.vrDA], 'Creation Date' );
+     Add( $0050, 'CreationTime', [TKindVR.vrTM], 'Creation Time' );
+     Add( $0070, 'Originator', [TKindVR.vrAE], 'Originator' );
+     Add( $0140, 'DestinationAE', [TKindVR.vrAE], 'Destination AE' );
+     Add( $0160, 'OwnerID', [TKindVR.vrSH], 'Owner ID' );
+     Add( $0170, 'NumberOfFilms', [TKindVR.vrIS], 'Number of Films' );
+     Add( $0500, 'ReferencedPrintJobSequencePullStoredPrint', [TKindVR.vrSQ], 'Referenced Print Job Sequence (Pull Stored Print)' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

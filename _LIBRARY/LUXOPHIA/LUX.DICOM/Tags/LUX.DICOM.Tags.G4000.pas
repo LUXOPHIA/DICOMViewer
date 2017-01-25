@@ -45,8 +45,8 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, 'Arbitrary', [TTypeVR.vrLT], 'Arbitrary' );
-     Add( $4000, 'TextComments', [TTypeVR.vrLT], 'Text Comments' );
+     Add( $0010, 'Arbitrary', [TKindVR.vrLT], 'Arbitrary' );
+     Add( $4000, 'TextComments', [TKindVR.vrLT], 'Text Comments' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
