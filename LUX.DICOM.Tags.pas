@@ -35,9 +35,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTagComp
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTagSort
 
-     TdcmTagComp = class( TComparer<TdcmTag> )
+     TdcmTagSort = class( TComparer<TdcmTag> )
      private
      protected
      public
@@ -50,17 +50,17 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmElem = class
      private
      protected
-       _Elem :THex4;
-       _Name :AnsiString;
-       _Kind :TKindVR;
-       _Desc :String;
+       _Elem  :THex4;
+       _Name  :AnsiString;
+       _Kinds :TKindVR;
+       _Desc  :String;
      public
-       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
        ///// プロパティ
-       property Elem :THex4      read _Elem;
-       property Name :AnsiString read _Name;
-       property Kind :TKindVR    read _Kind;
-       property Desc :String     read _Desc;
+       property Elem  :THex4      read _Elem ;
+       property Name  :AnsiString read _Name ;
+       property Kinds :TKindVR    read _Kinds;
+       property Desc  :String     read _Desc ;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
@@ -99,7 +99,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
 
-//var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
+var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
+
+    _BookTag_ :TdcmBookTag;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
@@ -216,7 +218,7 @@ end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTagComp
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmTagSort
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -226,7 +228,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TdcmTagComp.Compare( const Left_,Right_:TdcmTag ) :Integer;
+function TdcmTagSort.Compare( const Left_,Right_:TdcmTag ) :Integer;
 begin
      Result := ( Left_ .Grup shl 16 or Left_ .Elem )
              - ( Right_.Grup shl 16 or Right_.Elem );
@@ -240,14 +242,14 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
 begin
      inherited Create;
 
-     _Elem := Elem_;
-     _Name := Name_;
-     _Kind := Kind_;
-     _Desc := Desc_;
+     _Elem  := Elem_ ;
+     _Name  := Name_ ;
+     _Kinds := Kinds_;
+     _Desc  := Desc_ ;
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmGrup
@@ -418,6 +420,10 @@ end;
 
 initialization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 初期化
 
+     _BookTag_ := TdcmBookTag.Create;
+
 finalization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 最終化
+
+     _BookTag_.Free;
 
 end. //######################################################################### ■
