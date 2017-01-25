@@ -9,11 +9,11 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      TAnsiChar2 = array [ 0..2-1 ] of AnsiChar;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TTypeVR
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1
      //// Table 6.2-1. DICOM Value Representations
-     TTypeVR = ( vr00,   //Implicit VR
+     TKindVR = ( vr00,   //Implicit VR
                  vrAE,   //Application Entity
                  vrAS,   //Age String
                  vrAT,   //Attribute Tag
@@ -46,28 +46,28 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                  vrUS,   //Unsigned Short
                  vrUT ); //Unlimited Text
 
-     HTypeVR = record helper for TTypeVR
+     HKindVR = record helper for TKindVR
      private
      public
        function ToString :String;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
 
-     TKindVR = set of TTypeVR;
+     TKindsVR = set of TKindVR;
 
-     HKindVR = record helper for TKindVR
+     HKindsVR = record helper for TKindsVR
      private
        function GetCount :Byte;
-       function GetHead :TTypeVR;
-       function GetItems( const I_:Byte ) :TTypeVR;
+       function GetHead :TKindVR;
+       function GetItems( const I_:Byte ) :TKindVR;
      public
        ///// プロパティ
        property Count                  :Byte    read GetCount;
-       property Head                   :TTypeVR read GetHead ;
-       property Items[ const I_:Byte ] :TTypeVR read GetItems;
+       property Head                   :TKindVR read GetHead ;
+       property Items[ const I_:Byte ] :TKindVR read GetItems;
        ///// メソッド
-       function ToArray :TArray<TTypeVR>;
+       function ToArray :TArray<TKindVR>;
        function ToString :String;
      end;
 
@@ -93,19 +93,19 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
 
-     TdcmBookVR = class( TObjectDictionary<TTypeVR,TdcmVR> )
+     TdcmBookVR = class( TObjectDictionary<TKindVR,TdcmVR> )
      private
      protected
-       _NameToKind :TDictionary<TAnsiChar2,TTypeVR>;
+       _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
        ///// メソッド
-       procedure Add( const Kind_:TTypeVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+       procedure Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
      public
        constructor Create;
        destructor Destroy; override;
        ///// プロパティ
-       property NameToKind :TDictionary<TAnsiChar2,TTypeVR> read _NameToKind;
+       property NameToKind :TDictionary<TAnsiChar2,TKindVR> read _NameToKind;
        ///// メソッド
-       function ReadStream( const F_:TFileStream ) :TTypeVR;
+       function ReadStream( const F_:TFileStream ) :TKindVR;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -120,7 +120,7 @@ implementation //###############################################################
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TTypeVR
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -128,30 +128,30 @@ implementation //###############################################################
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function HTypeVR.ToString :String;
+function HKindVR.ToString :String;
 begin
-     if Self = TTypeVR.vr00 then Result := ''
+     if Self = TKindVR.vr00 then Result := ''
                             else Result := String( _BookVR_[ Self ].Name );
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function HKindVR.GetCount :Byte;
+function HKindsVR.GetCount :Byte;
 var
-   K :TTypeVR;
+   K :TKindVR;
 begin
      Result := 0;
 
      for K in Self do Inc( Result );
 end;
 
-function HKindVR.GetHead :TTypeVR;
+function HKindsVR.GetHead :TKindVR;
 var
-   K :TTypeVR;
+   K :TKindVR;
 begin
      for K in Self do
      begin
@@ -160,13 +160,13 @@ begin
           Exit;
      end;
 
-     Result := TTypeVR.vr00;
+     Result := TKindVR.vr00;
 end;
 
-function HKindVR.GetItems( const I_:Byte ) :TTypeVR;
+function HKindsVR.GetItems( const I_:Byte ) :TKindVR;
 var
    I :Byte;
-   K :TTypeVR;
+   K :TKindVR;
 begin
      I := 0;
      for K in Self do
@@ -181,25 +181,25 @@ begin
           Inc( I );
      end;
 
-     Result := TTypeVR.vr00;
+     Result := TKindVR.vr00;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function HKindVR.ToArray :TArray<TTypeVR>;
+function HKindsVR.ToArray :TArray<TKindVR>;
 var
-   K :TTypeVR;
+   K :TKindVR;
 begin
      Result := [];
 
      for K in Self do Result := Result + [ K ];
 end;
 
-function HKindVR.ToString :String;
+function HKindsVR.ToString :String;
 var
-   Ks :TArray<TTypeVR>;
+   Ks :TArray<TKindVR>;
    I :Integer;
 begin
      if Self = [] then Result := ''
@@ -242,7 +242,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmBookVR.Add( const Kind_:TTypeVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
 begin
      _NameToKind.Add( Name_, Kind_ );
 
@@ -255,41 +255,41 @@ constructor TdcmBookVR.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
-     _NameToKind := TDictionary<TAnsiChar2,TTypeVR>.Create;
+     _NameToKind := TDictionary<TAnsiChar2,TKindVR>.Create;
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
      //// 7.1.2 Data Element Structure with Explicit VR
-     Add( TTypeVR.vrAE, 'AE', 2, 'Application Entity' );
-     Add( TTypeVR.vrAS, 'AS', 2, 'Age String' );
-     Add( TTypeVR.vrAT, 'AT', 2, 'Attribute Tag' );
-     Add( TTypeVR.vrCS, 'CS', 2, 'Code String' );
-     Add( TTypeVR.vrDA, 'DA', 2, 'Date' );
-     Add( TTypeVR.vrDS, 'DS', 2, 'Decimal String' );
-     Add( TTypeVR.vrDT, 'DT', 2, 'Date Time' );
-     Add( TTypeVR.vrFL, 'FL', 2, 'Floating Point Single' );
-     Add( TTypeVR.vrFD, 'FD', 2, 'Floating Point Double' );
-     Add( TTypeVR.vrIS, 'IS', 2, 'Integer String' );
-     Add( TTypeVR.vrLO, 'LO', 2, 'Long String' );
-     Add( TTypeVR.vrLT, 'LT', 2, 'Long Text' );
-     Add( TTypeVR.vrOB, 'OB', 6, 'Other Byte' );
-     Add( TTypeVR.vrOD, 'OD', 6, 'Other Double' );
-     Add( TTypeVR.vrOF, 'OF', 6, 'Other Float' );
-     Add( TTypeVR.vrOL, 'OL', 6, 'Other Long' );
-     Add( TTypeVR.vrOW, 'OW', 6, 'Other Word' );
-     Add( TTypeVR.vrPN, 'PN', 2, 'Person Name' );
-     Add( TTypeVR.vrSH, 'SH', 2, 'Short String' );
-     Add( TTypeVR.vrSL, 'SL', 2, 'Signed Long' );
-     Add( TTypeVR.vrSQ, 'SQ', 6, 'Sequence of Items' );
-     Add( TTypeVR.vrSS, 'SS', 2, 'Signed Short' );
-     Add( TTypeVR.vrST, 'ST', 2, 'Short Text' );
-     Add( TTypeVR.vrTM, 'TM', 2, 'Time' );
-     Add( TTypeVR.vrUC, 'UC', 6, 'Unlimited Characters' );
-     Add( TTypeVR.vrUI, 'UI', 2, 'Unique Identifier (UID)' );
-     Add( TTypeVR.vrUL, 'UL', 2, 'Unsigned Long' );
-     Add( TTypeVR.vrUN, 'UN', 6, 'Unknown' );
-     Add( TTypeVR.vrUR, 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
-     Add( TTypeVR.vrUS, 'US', 2, 'Unsigned Short' );
-     Add( TTypeVR.vrUT, 'UT', 6, 'Unlimited Text' );
+     Add( TKindVR.vrAE, 'AE', 2, 'Application Entity' );
+     Add( TKindVR.vrAS, 'AS', 2, 'Age String' );
+     Add( TKindVR.vrAT, 'AT', 2, 'Attribute Tag' );
+     Add( TKindVR.vrCS, 'CS', 2, 'Code String' );
+     Add( TKindVR.vrDA, 'DA', 2, 'Date' );
+     Add( TKindVR.vrDS, 'DS', 2, 'Decimal String' );
+     Add( TKindVR.vrDT, 'DT', 2, 'Date Time' );
+     Add( TKindVR.vrFL, 'FL', 2, 'Floating Point Single' );
+     Add( TKindVR.vrFD, 'FD', 2, 'Floating Point Double' );
+     Add( TKindVR.vrIS, 'IS', 2, 'Integer String' );
+     Add( TKindVR.vrLO, 'LO', 2, 'Long String' );
+     Add( TKindVR.vrLT, 'LT', 2, 'Long Text' );
+     Add( TKindVR.vrOB, 'OB', 6, 'Other Byte' );
+     Add( TKindVR.vrOD, 'OD', 6, 'Other Double' );
+     Add( TKindVR.vrOF, 'OF', 6, 'Other Float' );
+     Add( TKindVR.vrOL, 'OL', 6, 'Other Long' );
+     Add( TKindVR.vrOW, 'OW', 6, 'Other Word' );
+     Add( TKindVR.vrPN, 'PN', 2, 'Person Name' );
+     Add( TKindVR.vrSH, 'SH', 2, 'Short String' );
+     Add( TKindVR.vrSL, 'SL', 2, 'Signed Long' );
+     Add( TKindVR.vrSQ, 'SQ', 6, 'Sequence of Items' );
+     Add( TKindVR.vrSS, 'SS', 2, 'Signed Short' );
+     Add( TKindVR.vrST, 'ST', 2, 'Short Text' );
+     Add( TKindVR.vrTM, 'TM', 2, 'Time' );
+     Add( TKindVR.vrUC, 'UC', 6, 'Unlimited Characters' );
+     Add( TKindVR.vrUI, 'UI', 2, 'Unique Identifier (UID)' );
+     Add( TKindVR.vrUL, 'UL', 2, 'Unsigned Long' );
+     Add( TKindVR.vrUN, 'UN', 6, 'Unknown' );
+     Add( TKindVR.vrUR, 'UR', 6, 'Universal Resource Identifier or Universal Resource Locator (URI/URL)' );
+     Add( TKindVR.vrUS, 'US', 2, 'Unsigned Short' );
+     Add( TKindVR.vrUT, 'UT', 6, 'Unlimited Text' );
 end;
 
 destructor TdcmBookVR.Destroy;
@@ -301,7 +301,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function TdcmBookVR.ReadStream( const F_:TFileStream ) :TTypeVR;
+function TdcmBookVR.ReadStream( const F_:TFileStream ) :TKindVR;
 var
    P :Integer;
    Name :TAnsiChar2;
@@ -315,7 +315,7 @@ begin
      begin
           F_.Position := P;
 
-          Result := TTypeVR.vr00;
+          Result := TKindVR.vr00;
      end;
 end;
 

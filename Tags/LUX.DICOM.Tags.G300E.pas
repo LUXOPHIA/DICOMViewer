@@ -45,10 +45,10 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0002, 'ApprovalStatus', [TTypeVR.vrCS], 'Approval Status' );
-     Add( $0004, 'ReviewDate', [TTypeVR.vrDA], 'Review Date' );
-     Add( $0005, 'ReviewTime', [TTypeVR.vrTM], 'Review Time' );
-     Add( $0008, 'ReviewerName', [TTypeVR.vrPN], 'Reviewer Name' );
+     Add( $0002, 'ApprovalStatus', [TKindVR.vrCS], 'Approval Status' );
+     Add( $0004, 'ReviewDate', [TKindVR.vrDA], 'Review Date' );
+     Add( $0005, 'ReviewTime', [TKindVR.vrTM], 'Review Time' );
+     Add( $0008, 'ReviewerName', [TKindVR.vrPN], 'Reviewer Name' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

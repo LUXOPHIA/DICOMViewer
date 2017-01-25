@@ -52,14 +52,14 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      protected
        _Elem  :THex4;
        _Name  :AnsiString;
-       _Kinds :TKindVR;
+       _Kinds :TKindsVR;
        _Desc  :String;
      public
-       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
+       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
        ///// プロパティ
        property Elem  :THex4      read _Elem ;
        property Name  :AnsiString read _Name ;
-       property Kinds :TKindVR    read _Kinds;
+       property Kinds :TKindsVR   read _Kinds;
        property Desc  :String     read _Desc ;
      end;
 
@@ -72,7 +72,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// アクセス
        function GetElem( const Name_:AnsiString ) :TdcmElem;
        ///// メソッド
-       procedure Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+       procedure Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
      public
        constructor Create;
        destructor Destroy; override;
@@ -242,7 +242,7 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindVR; const Desc_:String );
+constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
 begin
      inherited Create;
 
@@ -268,7 +268,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmGrup.Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindVR; const Desc_:String );
+procedure TdcmGrup.Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
 var
    E :TdcmElem;
 begin

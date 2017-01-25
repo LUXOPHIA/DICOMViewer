@@ -45,18 +45,18 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, 'ReferencedOverlayPlaneSequence', [TTypeVR.vrSQ], 'Referenced Overlay Plane Sequence' );
-     Add( $0011, 'ReferencedOverlayPlaneGroups', [TTypeVR.vrUS], 'Referenced Overlay Plane Groups' );
-     Add( $0020, 'OverlayPixelDataSequence', [TTypeVR.vrSQ], 'Overlay Pixel Data Sequence' );
-     Add( $0060, 'OverlayMagnificationType', [TTypeVR.vrCS], 'Overlay Magnification Type' );
-     Add( $0070, 'OverlaySmoothingType', [TTypeVR.vrCS], 'Overlay Smoothing Type' );
-     Add( $0072, 'OverlayOrImageMagnification', [TTypeVR.vrCS], 'Overlay or Image Magnification' );
-     Add( $0074, 'MagnifyToNumberOfColumns', [TTypeVR.vrUS], 'Magnify to Number of Columns' );
-     Add( $0080, 'OverlayForegroundDensity', [TTypeVR.vrCS], 'Overlay Foreground Density' );
-     Add( $0082, 'OverlayBackgroundDensity', [TTypeVR.vrCS], 'Overlay Background Density' );
-     Add( $0090, 'OverlayMode', [TTypeVR.vrCS], 'Overlay Mode' );
-     Add( $0100, 'ThresholdDensity', [TTypeVR.vrCS], 'Threshold Density' );
-     Add( $0500, 'ReferencedImageBoxSequenceRetired', [TTypeVR.vrSQ], 'Referenced Image Box Sequence (Retired)' );
+     Add( $0010, 'ReferencedOverlayPlaneSequence', [TKindVR.vrSQ], 'Referenced Overlay Plane Sequence' );
+     Add( $0011, 'ReferencedOverlayPlaneGroups', [TKindVR.vrUS], 'Referenced Overlay Plane Groups' );
+     Add( $0020, 'OverlayPixelDataSequence', [TKindVR.vrSQ], 'Overlay Pixel Data Sequence' );
+     Add( $0060, 'OverlayMagnificationType', [TKindVR.vrCS], 'Overlay Magnification Type' );
+     Add( $0070, 'OverlaySmoothingType', [TKindVR.vrCS], 'Overlay Smoothing Type' );
+     Add( $0072, 'OverlayOrImageMagnification', [TKindVR.vrCS], 'Overlay or Image Magnification' );
+     Add( $0074, 'MagnifyToNumberOfColumns', [TKindVR.vrUS], 'Magnify to Number of Columns' );
+     Add( $0080, 'OverlayForegroundDensity', [TKindVR.vrCS], 'Overlay Foreground Density' );
+     Add( $0082, 'OverlayBackgroundDensity', [TKindVR.vrCS], 'Overlay Background Density' );
+     Add( $0090, 'OverlayMode', [TKindVR.vrCS], 'Overlay Mode' );
+     Add( $0100, 'ThresholdDensity', [TKindVR.vrCS], 'Threshold Density' );
+     Add( $0500, 'ReferencedImageBoxSequenceRetired', [TKindVR.vrSQ], 'Referenced Image Box Sequence (Retired)' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
