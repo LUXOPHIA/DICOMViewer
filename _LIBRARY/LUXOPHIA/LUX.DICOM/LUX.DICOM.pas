@@ -110,7 +110,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// アクセス
        function GetIsStd :Boolean;
        function GetElem :TdcmElem;
-       function GetOriVR :TKindVR;
+       function GetOriVR :TKindsVR;
        function GetRecVR :TTypeVR;
        function GetSize :Cardinal;
        procedure SetSize( const Size_:Cardinal );
@@ -124,7 +124,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        property Tag   :TdcmTag  read   _Tag                ;
        property IsStd :Boolean  read GetIsStd              ;
        property Elem  :TdcmElem read GetElem               ;
-       property OriVR :TKindVR  read GetOriVR              ;
+       property OriVR :TKindsVR read GetOriVR              ;
        property ExpVR :TTypeVR  read   _ExpVR              ;
        property RecVR :TTypeVR  read GetRecVR              ;
        property Size  :Cardinal read GetSize  write SetSize;
@@ -348,7 +348,7 @@ begin
      Result := _BookTag_[ _Tag ];
 end;
 
-function TdcmData.GetOriVR :TKindVR;
+function TdcmData.GetOriVR :TKindsVR;
 begin
      if IsStd then Result := GetElem.Kinds
               else Result := [];

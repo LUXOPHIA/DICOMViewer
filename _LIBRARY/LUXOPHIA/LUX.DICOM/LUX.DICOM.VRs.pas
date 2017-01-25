@@ -52,11 +52,11 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
 
-     TKindVR = set of TTypeVR;
+     TKindsVR = set of TTypeVR;
 
-     HKindVR = record helper for TKindVR
+     HKindsVR = record helper for TKindsVR
      private
        function GetCount :Byte;
        function GetHead :TTypeVR;
@@ -134,13 +134,13 @@ begin
                             else Result := String( _BookVR_[ Self ].Name );
 end;
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindsVR
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function HKindVR.GetCount :Byte;
+function HKindsVR.GetCount :Byte;
 var
    K :TTypeVR;
 begin
@@ -149,7 +149,7 @@ begin
      for K in Self do Inc( Result );
 end;
 
-function HKindVR.GetHead :TTypeVR;
+function HKindsVR.GetHead :TTypeVR;
 var
    K :TTypeVR;
 begin
@@ -163,7 +163,7 @@ begin
      Result := TTypeVR.vr00;
 end;
 
-function HKindVR.GetItems( const I_:Byte ) :TTypeVR;
+function HKindsVR.GetItems( const I_:Byte ) :TTypeVR;
 var
    I :Byte;
    K :TTypeVR;
@@ -188,7 +188,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-function HKindVR.ToArray :TArray<TTypeVR>;
+function HKindsVR.ToArray :TArray<TTypeVR>;
 var
    K :TTypeVR;
 begin
@@ -197,7 +197,7 @@ begin
      for K in Self do Result := Result + [ K ];
 end;
 
-function HKindVR.ToString :String;
+function HKindsVR.ToString :String;
 var
    Ks :TArray<TTypeVR>;
    I :Integer;
