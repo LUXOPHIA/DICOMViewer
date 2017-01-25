@@ -510,12 +510,12 @@ end;
 
 function TdcmPortImagU8.GetPixels( const X_,Y_:Integer ) :UInt8;
 begin
-
+     Result := 0;                                                               {ToDo: 未完}
 end;
 
 procedure TdcmPortImagU8.SetPixels( const X_,Y_:Integer; const Pixel_:UInt8 );
 begin
-
+                                                                                {ToDo: 未完}
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -530,12 +530,12 @@ end;
 
 function TdcmPortImagS8.GetPixels( const X_,Y_:Integer ) :Int8;
 begin
-
+     Result := 0;                                                               {ToDo: 未完}
 end;
 
 procedure TdcmPortImagS8.SetPixels( const X_,Y_:Integer; const Pixel_:Int8 );
 begin
-
+                                                                                {ToDo: 未完}
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -550,12 +550,12 @@ end;
 
 function TdcmPortImagU16.GetPixels( const X_,Y_:Integer ) :UInt16;
 begin
-
+     Result := 0;                                                               {ToDo: 未完}
 end;
 
 procedure TdcmPortImagU16.SetPixels( const X_,Y_:Integer; const Pixel_:UInt16 );
 begin
-
+                                                                                {ToDo: 未完}
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -570,12 +570,12 @@ end;
 
 function TdcmPortImagS16.GetPixels( const X_,Y_:Integer ) :Int16;
 begin
-
+     Result := 0;                                                               {ToDo: 未完}
 end;
 
 procedure TdcmPortImagS16.SetPixels( const X_,Y_:Integer; const Pixel_:Int16 );
 begin
-
+                                                                                {ToDo: 未完}
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
