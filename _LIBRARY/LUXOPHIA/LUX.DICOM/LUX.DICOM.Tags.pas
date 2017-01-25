@@ -56,15 +56,15 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
      protected
        _Grup  :TdcmGrup;
-       _Elem  :THex4;
+       _Code  :THex4;
        _Name  :AnsiString;
        _Kinds :TKindsVR;
        _Desc  :String;
      public
-       constructor Create( const Grup_:TdcmGrup; const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
+       constructor Create( const Grup_:TdcmGrup; const Code_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
        ///// プロパティ
        property Grup  :TdcmGrup   read _Grup ;
-       property Elem  :THex4      read _Elem ;
+       property Code  :THex4      read _Code ;
        property Name  :AnsiString read _Name ;
        property Kinds :TKindsVR   read _Kinds;
        property Desc  :String     read _Desc ;
@@ -75,17 +75,20 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmGrup = class( TObjectDictionary<THex4,TdcmElem> )
      private
      protected
-       _Book       :TdcmGrup;
+       _Code       :THex4;
        _NameToElem :TDictionary<AnsiString,TdcmElem>;
        ///// アクセス
+       function GetBook :TdcmBookTag;
        function GetElem( const Name_:AnsiString ) :TdcmElem;
        ///// メソッド
-       procedure Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
+       procedure Add( const Code_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
      public
-       constructor Create;
+       constructor Create( const Code_:THex4 );
        destructor Destroy; override;
        ///// プロパティ
-       property Elem[ const Name_:AnsiString ] :TdcmElem read GetElem;
+       property Book                           :TdcmBookTag read GetBook;
+       property Code                           :THex4       read   _Code;
+       property Elem[ const Name_:AnsiString ] :TdcmElem    read GetElem;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookTag
@@ -250,12 +253,12 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Grup_:TdcmGrup; const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
+constructor TdcmElem.Create( const Grup_:TdcmGrup; const Code_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
 begin
      inherited Create;
 
      _Grup  := Grup_ ;
-     _Elem  := Elem_ ;
+     _Code  := Code_ ;
      _Name  := Name_ ;
      _Kinds := Kinds_;
      _Desc  := Desc_ ;
@@ -269,6 +272,11 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
+function TdcmGrup.GetBook :TdcmBookTag;
+begin
+     Result := _BookTag_;
+end;
+
 function TdcmGrup.GetElem( const Name_:AnsiString ) :TdcmElem;
 begin
      if _NameToElem.ContainsKey( Name_ ) then Result := _NameToElem[ Name_ ]
@@ -277,24 +285,26 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmGrup.Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
+procedure TdcmGrup.Add( const Code_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
 var
    E :TdcmElem;
 begin
-     E := TdcmElem.Create( Self, Elem_, Name_, Kind_, Desc_ );
+     E := TdcmElem.Create( Self, Code_, Name_, Kind_, Desc_ );
 
-     inherited Add( Elem_, E );
+     inherited Add( Code_, E );
 
      if Name_ <> '' then _NameToElem.Add( Name_, E );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmGrup.Create;
+constructor TdcmGrup.Create( const Code_:THex4 );
 begin
      inherited Create( [ doOwnsValues ] );
 
      _NameToElem := TDictionary<AnsiString,TdcmElem>.Create;
+
+     _Code := Code_;
 end;
 
 destructor TdcmGrup.Destroy;
@@ -323,78 +333,78 @@ constructor TdcmBookTag.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
-     Add( $0000, TdcmGrup0000.Create );
-     Add( $0002, TdcmGrup0002.Create );
-     Add( $0004, TdcmGrup0004.Create );
-     Add( $0008, TdcmGrup0008.Create );
-     Add( $0010, TdcmGrup0010.Create );
-     Add( $0012, TdcmGrup0012.Create );
-     Add( $0014, TdcmGrup0014.Create );
-     Add( $0018, TdcmGrup0018.Create );
-     Add( $0020, TdcmGrup0020.Create );
-     Add( $0022, TdcmGrup0022.Create );
-     Add( $0024, TdcmGrup0024.Create );
-     Add( $0028, TdcmGrup0028.Create );
-     Add( $0032, TdcmGrup0032.Create );
-     Add( $0038, TdcmGrup0038.Create );
-     Add( $003A, TdcmGrup003A.Create );
-     Add( $0040, TdcmGrup0040.Create );
-     Add( $0042, TdcmGrup0042.Create );
-     Add( $0044, TdcmGrup0044.Create );
-     Add( $0046, TdcmGrup0046.Create );
-     Add( $0048, TdcmGrup0048.Create );
-     Add( $0050, TdcmGrup0050.Create );
-     Add( $0052, TdcmGrup0052.Create );
-     Add( $0054, TdcmGrup0054.Create );
-     Add( $0060, TdcmGrup0060.Create );
-     Add( $0062, TdcmGrup0062.Create );
-     Add( $0064, TdcmGrup0064.Create );
-     Add( $0066, TdcmGrup0066.Create );
-     Add( $0068, TdcmGrup0068.Create );
-     Add( $0070, TdcmGrup0070.Create );
-     Add( $0072, TdcmGrup0072.Create );
-     Add( $0074, TdcmGrup0074.Create );
-     Add( $0076, TdcmGrup0076.Create );
-     Add( $0078, TdcmGrup0078.Create );
-     Add( $0080, TdcmGrup0080.Create );
-     Add( $0082, TdcmGrup0082.Create );
-     Add( $0088, TdcmGrup0088.Create );
-     Add( $0100, TdcmGrup0100.Create );
-     Add( $0400, TdcmGrup0400.Create );
-     Add( $1000, TdcmGrup1000.Create );
-     Add( $1010, TdcmGrup1010.Create );
-     Add( $2000, TdcmGrup2000.Create );
-     Add( $2010, TdcmGrup2010.Create );
-     Add( $2020, TdcmGrup2020.Create );
-     Add( $2030, TdcmGrup2030.Create );
-     Add( $2040, TdcmGrup2040.Create );
-     Add( $2050, TdcmGrup2050.Create );
-     Add( $2100, TdcmGrup2100.Create );
-     Add( $2110, TdcmGrup2110.Create );
-     Add( $2120, TdcmGrup2120.Create );
-     Add( $2130, TdcmGrup2130.Create );
-     Add( $2200, TdcmGrup2200.Create );
-     Add( $3002, TdcmGrup3002.Create );
-     Add( $3004, TdcmGrup3004.Create );
-     Add( $3006, TdcmGrup3006.Create );
-     Add( $3008, TdcmGrup3008.Create );
-     Add( $300A, TdcmGrup300A.Create );
-     Add( $300C, TdcmGrup300C.Create );
-     Add( $300E, TdcmGrup300E.Create );
-     Add( $4000, TdcmGrup4000.Create );
-     Add( $4008, TdcmGrup4008.Create );
-     Add( $4010, TdcmGrup4010.Create );
-     Add( $4FFE, TdcmGrup4FFE.Create );
-     Add( $5000, TdcmGrup50xx.Create );
-     Add( $5200, TdcmGrup5200.Create );
-     Add( $5400, TdcmGrup5400.Create );
-     Add( $5600, TdcmGrup5600.Create );
-     Add( $6000, TdcmGrup60xx.Create );
-     Add( $7F00, TdcmGrup7Fxx.Create );
-     Add( $7FE0, TdcmGrup7FE0.Create );
-     Add( $FFFA, TdcmGrupFFFA.Create );
-     Add( $FFFC, TdcmGrupFFFC.Create );
-     Add( $FFFE, TdcmGrupFFFE.Create );
+     Add( $0000, TdcmGrup0000.Create( $0000 ) );
+     Add( $0002, TdcmGrup0002.Create( $0002 ) );
+     Add( $0004, TdcmGrup0004.Create( $0004 ) );
+     Add( $0008, TdcmGrup0008.Create( $0008 ) );
+     Add( $0010, TdcmGrup0010.Create( $0010 ) );
+     Add( $0012, TdcmGrup0012.Create( $0012 ) );
+     Add( $0014, TdcmGrup0014.Create( $0014 ) );
+     Add( $0018, TdcmGrup0018.Create( $0018 ) );
+     Add( $0020, TdcmGrup0020.Create( $0020 ) );
+     Add( $0022, TdcmGrup0022.Create( $0022 ) );
+     Add( $0024, TdcmGrup0024.Create( $0024 ) );
+     Add( $0028, TdcmGrup0028.Create( $0028 ) );
+     Add( $0032, TdcmGrup0032.Create( $0032 ) );
+     Add( $0038, TdcmGrup0038.Create( $0038 ) );
+     Add( $003A, TdcmGrup003A.Create( $003A ) );
+     Add( $0040, TdcmGrup0040.Create( $0040 ) );
+     Add( $0042, TdcmGrup0042.Create( $0042 ) );
+     Add( $0044, TdcmGrup0044.Create( $0044 ) );
+     Add( $0046, TdcmGrup0046.Create( $0046 ) );
+     Add( $0048, TdcmGrup0048.Create( $0048 ) );
+     Add( $0050, TdcmGrup0050.Create( $0050 ) );
+     Add( $0052, TdcmGrup0052.Create( $0052 ) );
+     Add( $0054, TdcmGrup0054.Create( $0054 ) );
+     Add( $0060, TdcmGrup0060.Create( $0060 ) );
+     Add( $0062, TdcmGrup0062.Create( $0062 ) );
+     Add( $0064, TdcmGrup0064.Create( $0064 ) );
+     Add( $0066, TdcmGrup0066.Create( $0066 ) );
+     Add( $0068, TdcmGrup0068.Create( $0068 ) );
+     Add( $0070, TdcmGrup0070.Create( $0070 ) );
+     Add( $0072, TdcmGrup0072.Create( $0072 ) );
+     Add( $0074, TdcmGrup0074.Create( $0074 ) );
+     Add( $0076, TdcmGrup0076.Create( $0076 ) );
+     Add( $0078, TdcmGrup0078.Create( $0078 ) );
+     Add( $0080, TdcmGrup0080.Create( $0080 ) );
+     Add( $0082, TdcmGrup0082.Create( $0082 ) );
+     Add( $0088, TdcmGrup0088.Create( $0088 ) );
+     Add( $0100, TdcmGrup0100.Create( $0100 ) );
+     Add( $0400, TdcmGrup0400.Create( $0400 ) );
+     Add( $1000, TdcmGrup1000.Create( $1000 ) );
+     Add( $1010, TdcmGrup1010.Create( $1010 ) );
+     Add( $2000, TdcmGrup2000.Create( $2000 ) );
+     Add( $2010, TdcmGrup2010.Create( $2010 ) );
+     Add( $2020, TdcmGrup2020.Create( $2020 ) );
+     Add( $2030, TdcmGrup2030.Create( $2030 ) );
+     Add( $2040, TdcmGrup2040.Create( $2040 ) );
+     Add( $2050, TdcmGrup2050.Create( $2050 ) );
+     Add( $2100, TdcmGrup2100.Create( $2100 ) );
+     Add( $2110, TdcmGrup2110.Create( $2110 ) );
+     Add( $2120, TdcmGrup2120.Create( $2120 ) );
+     Add( $2130, TdcmGrup2130.Create( $2130 ) );
+     Add( $2200, TdcmGrup2200.Create( $2200 ) );
+     Add( $3002, TdcmGrup3002.Create( $3002 ) );
+     Add( $3004, TdcmGrup3004.Create( $3004 ) );
+     Add( $3006, TdcmGrup3006.Create( $3006 ) );
+     Add( $3008, TdcmGrup3008.Create( $3008 ) );
+     Add( $300A, TdcmGrup300A.Create( $300A ) );
+     Add( $300C, TdcmGrup300C.Create( $300C ) );
+     Add( $300E, TdcmGrup300E.Create( $300E ) );
+     Add( $4000, TdcmGrup4000.Create( $4000 ) );
+     Add( $4008, TdcmGrup4008.Create( $4008 ) );
+     Add( $4010, TdcmGrup4010.Create( $4010 ) );
+     Add( $4FFE, TdcmGrup4FFE.Create( $4FFE ) );
+     Add( $5000, TdcmGrup50xx.Create( $5000 ) );
+     Add( $5200, TdcmGrup5200.Create( $5200 ) );
+     Add( $5400, TdcmGrup5400.Create( $5400 ) );
+     Add( $5600, TdcmGrup5600.Create( $5600 ) );
+     Add( $6000, TdcmGrup60xx.Create( $6000 ) );
+     Add( $7F00, TdcmGrup7Fxx.Create( $7F00 ) );
+     Add( $7FE0, TdcmGrup7FE0.Create( $7FE0 ) );
+     Add( $FFFA, TdcmGrupFFFA.Create( $FFFA ) );
+     Add( $FFFC, TdcmGrupFFFC.Create( $FFFC ) );
+     Add( $FFFE, TdcmGrupFFFE.Create( $FFFE ) );
 end;
 
 destructor TdcmBookTag.Destroy;
