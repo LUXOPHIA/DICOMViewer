@@ -7,6 +7,11 @@ uses System.Classes, System.SysUtils, System.Generics.Defaults, System.Generics.
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
+     TdcmTagSort = class;
+     TdcmElem    = class;
+     TdcmGrup    = class;
+     TdcmBookTag = class;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% THex4
 
      THex4 = type Word;
@@ -50,13 +55,15 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmElem = class
      private
      protected
+       _Grup  :TdcmGrup;
        _Elem  :THex4;
        _Name  :AnsiString;
        _Kinds :TKindsVR;
        _Desc  :String;
      public
-       constructor Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
+       constructor Create( const Grup_:TdcmGrup; const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
        ///// プロパティ
+       property Grup  :TdcmGrup   read _Grup ;
        property Elem  :THex4      read _Elem ;
        property Name  :AnsiString read _Name ;
        property Kinds :TKindsVR   read _Kinds;
@@ -68,6 +75,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmGrup = class( TObjectDictionary<THex4,TdcmElem> )
      private
      protected
+       _Book       :TdcmGrup;
        _NameToElem :TDictionary<AnsiString,TdcmElem>;
        ///// アクセス
        function GetElem( const Name_:AnsiString ) :TdcmElem;
@@ -242,10 +250,11 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmElem.Create( const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
+constructor TdcmElem.Create( const Grup_:TdcmGrup; const Elem_:THex4; const Name_:AnsiString; const Kinds_:TKindsVR; const Desc_:String );
 begin
      inherited Create;
 
+     _Grup  := Grup_ ;
      _Elem  := Elem_ ;
      _Name  := Name_ ;
      _Kinds := Kinds_;
@@ -272,7 +281,7 @@ procedure TdcmGrup.Add( const Elem_:THex4; const Name_:AnsiString; const Kind_:T
 var
    E :TdcmElem;
 begin
-     E := TdcmElem.Create( Elem_, Name_, Kind_, Desc_ );
+     E := TdcmElem.Create( Self, Elem_, Name_, Kind_, Desc_ );
 
      inherited Add( Elem_, E );
 
