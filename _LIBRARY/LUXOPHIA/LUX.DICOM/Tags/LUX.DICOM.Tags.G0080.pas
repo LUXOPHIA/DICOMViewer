@@ -45,19 +45,19 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, 'SurfaceScanAcquisitionTypeCodeSequence', [TTypeVR.vrSQ], 'Surface Scan Acquisition Type Code Sequence' );
-     Add( $0002, 'SurfaceScanModeCodeSequence', [TTypeVR.vrSQ], 'Surface Scan Mode Code Sequence' );
-     Add( $0003, 'RegistrationMethodCodeSequence', [TTypeVR.vrSQ], 'Registration Method Code Sequence' );
-     Add( $0004, 'ShotDurationTime', [TTypeVR.vrFD], 'Shot Duration Time' );
-     Add( $0005, 'ShotOffsetTime', [TTypeVR.vrFD], 'Shot Offset Time' );
-     Add( $0006, 'SurfacePointPresentationValueData', [TTypeVR.vrUS], 'Surface Point Presentation Value Data' );
-     Add( $0007, 'SurfacePointColorCIELabValueData', [TTypeVR.vrUS], 'Surface Point Color CIELab Value Data' );
-     Add( $0008, 'UVMappingSequence', [TTypeVR.vrSQ], 'UV Mapping Sequence' );
-     Add( $0009, 'TextureLabel', [TTypeVR.vrSH], 'Texture Label' );
-     Add( $0010, 'UValueData', [TTypeVR.vrOF], 'U Value Data' );
-     Add( $0011, 'VValueData', [TTypeVR.vrOF], 'V Value Data' );
-     Add( $0012, 'ReferencedTextureSequence', [TTypeVR.vrSQ], 'Referenced Texture Sequence' );
-     Add( $0013, 'ReferencedSurfaceDataSequence', [TTypeVR.vrSQ], 'Referenced Surface Data Sequence' );
+     Add( $0001, 'SurfaceScanAcquisitionTypeCodeSequence', [TKindVR.vrSQ], 'Surface Scan Acquisition Type Code Sequence' );
+     Add( $0002, 'SurfaceScanModeCodeSequence', [TKindVR.vrSQ], 'Surface Scan Mode Code Sequence' );
+     Add( $0003, 'RegistrationMethodCodeSequence', [TKindVR.vrSQ], 'Registration Method Code Sequence' );
+     Add( $0004, 'ShotDurationTime', [TKindVR.vrFD], 'Shot Duration Time' );
+     Add( $0005, 'ShotOffsetTime', [TKindVR.vrFD], 'Shot Offset Time' );
+     Add( $0006, 'SurfacePointPresentationValueData', [TKindVR.vrUS], 'Surface Point Presentation Value Data' );
+     Add( $0007, 'SurfacePointColorCIELabValueData', [TKindVR.vrUS], 'Surface Point Color CIELab Value Data' );
+     Add( $0008, 'UVMappingSequence', [TKindVR.vrSQ], 'UV Mapping Sequence' );
+     Add( $0009, 'TextureLabel', [TKindVR.vrSH], 'Texture Label' );
+     Add( $0010, 'UValueData', [TKindVR.vrOF], 'U Value Data' );
+     Add( $0011, 'VValueData', [TKindVR.vrOF], 'V Value Data' );
+     Add( $0012, 'ReferencedTextureSequence', [TKindVR.vrSQ], 'Referenced Texture Sequence' );
+     Add( $0013, 'ReferencedSurfaceDataSequence', [TKindVR.vrSQ], 'Referenced Surface Data Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

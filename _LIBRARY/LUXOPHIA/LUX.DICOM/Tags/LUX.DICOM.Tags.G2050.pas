@@ -45,9 +45,9 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, 'PresentationLUTSequence', [TTypeVR.vrSQ], 'Presentation LUT Sequence' );
-     Add( $0020, 'PresentationLUTShape', [TTypeVR.vrCS], 'Presentation LUT Shape' );
-     Add( $0500, 'ReferencedPresentationLUTSequence', [TTypeVR.vrSQ], 'Referenced Presentation LUT Sequence' );
+     Add( $0010, 'PresentationLUTSequence', [TKindVR.vrSQ], 'Presentation LUT Sequence' );
+     Add( $0020, 'PresentationLUTShape', [TKindVR.vrCS], 'Presentation LUT Shape' );
+     Add( $0500, 'ReferencedPresentationLUTSequence', [TKindVR.vrSQ], 'Referenced Presentation LUT Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

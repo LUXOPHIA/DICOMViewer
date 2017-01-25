@@ -45,32 +45,32 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0005, 'CurveDimensions', [TTypeVR.vrUS], 'Curve Dimensions' );
-     Add( $0010, 'NumberOfPoints', [TTypeVR.vrUS], 'Number of Points' );
-     Add( $0020, 'TypeOfData', [TTypeVR.vrCS], 'Type of Data' );
-     Add( $0022, 'CurveDescription', [TTypeVR.vrLO], 'Curve Description' );
-     Add( $0030, 'AxisUnits', [TTypeVR.vrSH], 'Axis Units' );
-     Add( $0040, 'AxisLabels', [TTypeVR.vrSH], 'Axis Labels' );
-     Add( $0103, 'DataValueRepresentation', [TTypeVR.vrUS], 'Data Value Representation' );
-     Add( $0104, 'MinimumCoordinateValue', [TTypeVR.vrUS], 'Minimum Coordinate Value' );
-     Add( $0105, 'MaximumCoordinateValue', [TTypeVR.vrUS], 'Maximum Coordinate Value' );
-     Add( $0106, 'CurveRange', [TTypeVR.vrSH], 'Curve Range' );
-     Add( $0110, 'CurveDataDescriptor', [TTypeVR.vrUS], 'Curve Data Descriptor' );
-     Add( $0112, 'CoordinateStartValue', [TTypeVR.vrUS], 'Coordinate Start Value' );
-     Add( $0114, 'CoordinateStepValue', [TTypeVR.vrUS], 'Coordinate Step Value' );
-     Add( $1001, 'CurveActivationLayer', [TTypeVR.vrCS], 'Curve Activation Layer' );
-     Add( $2000, 'AudioType', [TTypeVR.vrUS], 'Audio Type' );
-     Add( $2002, 'AudioSampleFormat', [TTypeVR.vrUS], 'Audio Sample Format' );
-     Add( $2004, 'NumberOfChannels', [TTypeVR.vrUS], 'Number of Channels' );
-     Add( $2006, 'NumberOfSamples', [TTypeVR.vrUL], 'Number of Samples' );
-     Add( $2008, 'SampleRate', [TTypeVR.vrUL], 'Sample Rate' );
-     Add( $200A, 'TotalTime', [TTypeVR.vrUL], 'Total Time' );
-     Add( $200C, 'AudioSampleData', [TTypeVR.vrOB,TTypeVR.vrOW], 'Audio Sample Data' );
-     Add( $200E, 'AudioComments', [TTypeVR.vrLT], 'Audio Comments' );
-     Add( $2500, 'CurveLabel', [TTypeVR.vrLO], 'Curve Label' );
-     Add( $2600, 'CurveReferencedOverlaySequence', [TTypeVR.vrSQ], 'Curve Referenced Overlay Sequence' );
-     Add( $2610, 'CurveReferencedOverlayGroup', [TTypeVR.vrUS], 'Curve Referenced Overlay Group' );
-     Add( $3000, 'CurveData', [TTypeVR.vrOB,TTypeVR.vrOW], 'Curve Data' );
+     Add( $0005, 'CurveDimensions', [TKindVR.vrUS], 'Curve Dimensions' );
+     Add( $0010, 'NumberOfPoints', [TKindVR.vrUS], 'Number of Points' );
+     Add( $0020, 'TypeOfData', [TKindVR.vrCS], 'Type of Data' );
+     Add( $0022, 'CurveDescription', [TKindVR.vrLO], 'Curve Description' );
+     Add( $0030, 'AxisUnits', [TKindVR.vrSH], 'Axis Units' );
+     Add( $0040, 'AxisLabels', [TKindVR.vrSH], 'Axis Labels' );
+     Add( $0103, 'DataValueRepresentation', [TKindVR.vrUS], 'Data Value Representation' );
+     Add( $0104, 'MinimumCoordinateValue', [TKindVR.vrUS], 'Minimum Coordinate Value' );
+     Add( $0105, 'MaximumCoordinateValue', [TKindVR.vrUS], 'Maximum Coordinate Value' );
+     Add( $0106, 'CurveRange', [TKindVR.vrSH], 'Curve Range' );
+     Add( $0110, 'CurveDataDescriptor', [TKindVR.vrUS], 'Curve Data Descriptor' );
+     Add( $0112, 'CoordinateStartValue', [TKindVR.vrUS], 'Coordinate Start Value' );
+     Add( $0114, 'CoordinateStepValue', [TKindVR.vrUS], 'Coordinate Step Value' );
+     Add( $1001, 'CurveActivationLayer', [TKindVR.vrCS], 'Curve Activation Layer' );
+     Add( $2000, 'AudioType', [TKindVR.vrUS], 'Audio Type' );
+     Add( $2002, 'AudioSampleFormat', [TKindVR.vrUS], 'Audio Sample Format' );
+     Add( $2004, 'NumberOfChannels', [TKindVR.vrUS], 'Number of Channels' );
+     Add( $2006, 'NumberOfSamples', [TKindVR.vrUL], 'Number of Samples' );
+     Add( $2008, 'SampleRate', [TKindVR.vrUL], 'Sample Rate' );
+     Add( $200A, 'TotalTime', [TKindVR.vrUL], 'Total Time' );
+     Add( $200C, 'AudioSampleData', [TKindVR.vrOB,TKindVR.vrOW], 'Audio Sample Data' );
+     Add( $200E, 'AudioComments', [TKindVR.vrLT], 'Audio Comments' );
+     Add( $2500, 'CurveLabel', [TKindVR.vrLO], 'Curve Label' );
+     Add( $2600, 'CurveReferencedOverlaySequence', [TKindVR.vrSQ], 'Curve Referenced Overlay Sequence' );
+     Add( $2610, 'CurveReferencedOverlayGroup', [TKindVR.vrUS], 'Curve Referenced Overlay Group' );
+     Add( $3000, 'CurveData', [TKindVR.vrOB,TKindVR.vrOW], 'Curve Data' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

@@ -45,12 +45,12 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-   //Add( $xxx0, 'EscapeTriplet', [TTypeVR.vrUS], 'Escape Triplet' );
-   //Add( $xxx1, 'RunLengthTriplet', [TTypeVR.vrUS], 'Run Length Triplet' );
-   //Add( $xxx2, 'HuffmanTableSize', [TTypeVR.vrUS], 'Huffman Table Size' );
-   //Add( $xxx3, 'HuffmanTableTriplet', [TTypeVR.vrUS], 'Huffman Table Triplet' );
-   //Add( $xxx4, 'ShiftTableSize', [TTypeVR.vrUS], 'Shift Table Size' );
-   //Add( $xxx5, 'ShiftTableTriplet', [TTypeVR.vrUS], 'Shift Table Triplet' );
+   //Add( $xxx0, 'EscapeTriplet', [TKindVR.vrUS], 'Escape Triplet' );
+   //Add( $xxx1, 'RunLengthTriplet', [TKindVR.vrUS], 'Run Length Triplet' );
+   //Add( $xxx2, 'HuffmanTableSize', [TKindVR.vrUS], 'Huffman Table Size' );
+   //Add( $xxx3, 'HuffmanTableTriplet', [TKindVR.vrUS], 'Huffman Table Triplet' );
+   //Add( $xxx4, 'ShiftTableSize', [TKindVR.vrUS], 'Shift Table Size' );
+   //Add( $xxx5, 'ShiftTableTriplet', [TKindVR.vrUS], 'Shift Table Triplet' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

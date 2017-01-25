@@ -45,8 +45,8 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0010, 'AnnotationPosition', [TTypeVR.vrUS], 'Annotation Position' );
-     Add( $0020, 'TextString', [TTypeVR.vrLO], 'Text String' );
+     Add( $0010, 'AnnotationPosition', [TKindVR.vrUS], 'Annotation Position' );
+     Add( $0020, 'TextString', [TKindVR.vrLO], 'Text String' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
