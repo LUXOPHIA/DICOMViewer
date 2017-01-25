@@ -45,13 +45,13 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0130, 'StorageMediaFileSetID', [TTypeVR.vrSH], 'Storage Media File-set ID' );
-     Add( $0140, 'StorageMediaFileSetUID', [TTypeVR.vrUI], 'Storage Media File-set UID' );
-     Add( $0200, 'IconImageSequence', [TTypeVR.vrSQ], 'Icon Image Sequence' );
-     Add( $0904, 'TopicTitle', [TTypeVR.vrLO], 'Topic Title' );
-     Add( $0906, 'TopicSubject', [TTypeVR.vrST], 'Topic Subject' );
-     Add( $0910, 'TopicAuthor', [TTypeVR.vrLO], 'Topic Author' );
-     Add( $0912, 'TopicKeywords', [TTypeVR.vrLO], 'Topic Keywords' );
+     Add( $0130, 'StorageMediaFileSetID', [TKindVR.vrSH], 'Storage Media File-set ID' );
+     Add( $0140, 'StorageMediaFileSetUID', [TKindVR.vrUI], 'Storage Media File-set UID' );
+     Add( $0200, 'IconImageSequence', [TKindVR.vrSQ], 'Icon Image Sequence' );
+     Add( $0904, 'TopicTitle', [TKindVR.vrLO], 'Topic Title' );
+     Add( $0906, 'TopicSubject', [TKindVR.vrST], 'Topic Subject' );
+     Add( $0910, 'TopicAuthor', [TKindVR.vrLO], 'Topic Author' );
+     Add( $0912, 'TopicKeywords', [TKindVR.vrLO], 'Topic Keywords' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

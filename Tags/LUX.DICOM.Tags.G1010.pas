@@ -45,7 +45,7 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-   //Add( $xxxx, 'ZonalMap', [TTypeVR.vrUS], 'Zonal Map' );
+   //Add( $xxxx, 'ZonalMap', [TKindVR.vrUS], 'Zonal Map' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

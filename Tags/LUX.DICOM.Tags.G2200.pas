@@ -45,22 +45,22 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, 'LabelUsingInformationExtractedFromInstances', [TTypeVR.vrCS], 'Label Using Information Extracted From Instances' );
-     Add( $0002, 'LabelText', [TTypeVR.vrUT], 'Label Text' );
-     Add( $0003, 'LabelStyleSelection', [TTypeVR.vrCS], 'Label Style Selection' );
-     Add( $0004, 'MediaDisposition', [TTypeVR.vrLT], 'Media Disposition' );
-     Add( $0005, 'BarcodeValue', [TTypeVR.vrLT], 'Barcode Value' );
-     Add( $0006, 'BarcodeSymbology', [TTypeVR.vrCS], 'Barcode Symbology' );
-     Add( $0007, 'AllowMediaSplitting', [TTypeVR.vrCS], 'Allow Media Splitting' );
-     Add( $0008, 'IncludeNonDICOMObjects', [TTypeVR.vrCS], 'Include Non-DICOM Objects' );
-     Add( $0009, 'IncludeDisplayApplication', [TTypeVR.vrCS], 'Include Display Application' );
-     Add( $000A, 'PreserveCompositeInstancesAfterMediaCreation', [TTypeVR.vrCS], 'Preserve Composite Instances After Media Creation' );
-     Add( $000B, 'TotalNumberOfPiecesOfMediaCreated', [TTypeVR.vrUS], 'Total Number of Pieces of Media Created' );
-     Add( $000C, 'RequestedMediaApplicationProfile', [TTypeVR.vrLO], 'Requested Media Application Profile' );
-     Add( $000D, 'ReferencedStorageMediaSequence', [TTypeVR.vrSQ], 'Referenced Storage Media Sequence' );
-     Add( $000E, 'FailureAttributes', [TTypeVR.vrAT], 'Failure Attributes' );
-     Add( $000F, 'AllowLossyCompression', [TTypeVR.vrCS], 'Allow Lossy Compression' );
-     Add( $0020, 'RequestPriority', [TTypeVR.vrCS], 'Request Priority' );
+     Add( $0001, 'LabelUsingInformationExtractedFromInstances', [TKindVR.vrCS], 'Label Using Information Extracted From Instances' );
+     Add( $0002, 'LabelText', [TKindVR.vrUT], 'Label Text' );
+     Add( $0003, 'LabelStyleSelection', [TKindVR.vrCS], 'Label Style Selection' );
+     Add( $0004, 'MediaDisposition', [TKindVR.vrLT], 'Media Disposition' );
+     Add( $0005, 'BarcodeValue', [TKindVR.vrLT], 'Barcode Value' );
+     Add( $0006, 'BarcodeSymbology', [TKindVR.vrCS], 'Barcode Symbology' );
+     Add( $0007, 'AllowMediaSplitting', [TKindVR.vrCS], 'Allow Media Splitting' );
+     Add( $0008, 'IncludeNonDICOMObjects', [TKindVR.vrCS], 'Include Non-DICOM Objects' );
+     Add( $0009, 'IncludeDisplayApplication', [TKindVR.vrCS], 'Include Display Application' );
+     Add( $000A, 'PreserveCompositeInstancesAfterMediaCreation', [TKindVR.vrCS], 'Preserve Composite Instances After Media Creation' );
+     Add( $000B, 'TotalNumberOfPiecesOfMediaCreated', [TKindVR.vrUS], 'Total Number of Pieces of Media Created' );
+     Add( $000C, 'RequestedMediaApplicationProfile', [TKindVR.vrLO], 'Requested Media Application Profile' );
+     Add( $000D, 'ReferencedStorageMediaSequence', [TKindVR.vrSQ], 'Referenced Storage Media Sequence' );
+     Add( $000E, 'FailureAttributes', [TKindVR.vrAT], 'Failure Attributes' );
+     Add( $000F, 'AllowLossyCompression', [TKindVR.vrCS], 'Allow Lossy Compression' );
+     Add( $0020, 'RequestPriority', [TKindVR.vrCS], 'Request Priority' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】

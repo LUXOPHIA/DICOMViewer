@@ -45,20 +45,20 @@ begin
 
      // http://dicom.nema.org/medical/dicom/current/output/html/part06.html#chapter_6
      // 6 Registry of DICOM Data Elements
-     Add( $0001, 'ProductPackageIdentifier', [TTypeVR.vrST], 'Product Package Identifier' );
-     Add( $0002, 'SubstanceAdministrationApproval', [TTypeVR.vrCS], 'Substance Administration Approval' );
-     Add( $0003, 'ApprovalStatusFurtherDescription', [TTypeVR.vrLT], 'Approval Status Further Description' );
-     Add( $0004, 'ApprovalStatusDateTime', [TTypeVR.vrDT], 'Approval Status DateTime' );
-     Add( $0007, 'ProductTypeCodeSequence', [TTypeVR.vrSQ], 'Product Type Code Sequence' );
-     Add( $0008, 'ProductName', [TTypeVR.vrLO], 'Product Name' );
-     Add( $0009, 'ProductDescription', [TTypeVR.vrLT], 'Product Description' );
-     Add( $000A, 'ProductLotIdentifier', [TTypeVR.vrLO], 'Product Lot Identifier' );
-     Add( $000B, 'ProductExpirationDateTime', [TTypeVR.vrDT], 'Product Expiration DateTime' );
-     Add( $0010, 'SubstanceAdministrationDateTime', [TTypeVR.vrDT], 'Substance Administration DateTime' );
-     Add( $0011, 'SubstanceAdministrationNotes', [TTypeVR.vrLO], 'Substance Administration Notes' );
-     Add( $0012, 'SubstanceAdministrationDeviceID', [TTypeVR.vrLO], 'Substance Administration Device ID' );
-     Add( $0013, 'ProductParameterSequence', [TTypeVR.vrSQ], 'Product Parameter Sequence' );
-     Add( $0019, 'SubstanceAdministrationParameterSequence', [TTypeVR.vrSQ], 'Substance Administration Parameter Sequence' );
+     Add( $0001, 'ProductPackageIdentifier', [TKindVR.vrST], 'Product Package Identifier' );
+     Add( $0002, 'SubstanceAdministrationApproval', [TKindVR.vrCS], 'Substance Administration Approval' );
+     Add( $0003, 'ApprovalStatusFurtherDescription', [TKindVR.vrLT], 'Approval Status Further Description' );
+     Add( $0004, 'ApprovalStatusDateTime', [TKindVR.vrDT], 'Approval Status DateTime' );
+     Add( $0007, 'ProductTypeCodeSequence', [TKindVR.vrSQ], 'Product Type Code Sequence' );
+     Add( $0008, 'ProductName', [TKindVR.vrLO], 'Product Name' );
+     Add( $0009, 'ProductDescription', [TKindVR.vrLT], 'Product Description' );
+     Add( $000A, 'ProductLotIdentifier', [TKindVR.vrLO], 'Product Lot Identifier' );
+     Add( $000B, 'ProductExpirationDateTime', [TKindVR.vrDT], 'Product Expiration DateTime' );
+     Add( $0010, 'SubstanceAdministrationDateTime', [TKindVR.vrDT], 'Substance Administration DateTime' );
+     Add( $0011, 'SubstanceAdministrationNotes', [TKindVR.vrLO], 'Substance Administration Notes' );
+     Add( $0012, 'SubstanceAdministrationDeviceID', [TKindVR.vrLO], 'Substance Administration Device ID' );
+     Add( $0013, 'ProductParameterSequence', [TKindVR.vrSQ], 'Product Parameter Sequence' );
+     Add( $0019, 'SubstanceAdministrationParameterSequence', [TKindVR.vrSQ], 'Substance Administration Parameter Sequence' );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
