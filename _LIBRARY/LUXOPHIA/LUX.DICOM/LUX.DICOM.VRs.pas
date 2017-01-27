@@ -2,12 +2,16 @@
 
 interface //#################################################################### ■
 
-uses System.Classes, System.SysUtils, System.Generics.Collections,
+uses System.Classes, System.Generics.Collections,
      LUX;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-     TAnsiChar2 = array [ 0..2-1 ] of AnsiChar;
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TNameVR
+
+     TNameVR = array [ 0..2-1 ] of AnsiChar;
+
+     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
@@ -71,8 +75,6 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
-     //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
-
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmVR
@@ -80,15 +82,15 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmVR = class
      private
      protected
-       _Name :TAnsiChar2;
+       _Name :TNameVR;
        _Size :Byte;
        _Desc :String;
      public
-       constructor Create( const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+       constructor Create( const Name_:TNameVR; const Size_:Byte; const Desc_:String );
        ///// プロパティ
-       property Name :TAnsiChar2 read _Name;
-       property Size :Byte       read _Size;
-       property Desc :String     read _Desc;
+       property Name :TNameVR read _Name;
+       property Size :Byte    read _Size;
+       property Desc :String  read _Desc;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmBookVR
@@ -96,14 +98,14 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmBookVR = class( TObjectDictionary<TKindVR,TdcmVR> )
      private
      protected
-       _NameToKind :TDictionary<TAnsiChar2,TKindVR>;
+       _NameToKind :TDictionary<TNameVR,TKindVR>;
        ///// メソッド
-       procedure Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+       procedure Add( const Kind_:TKindVR; const Name_:TNameVR; const Size_:Byte; const Desc_:String );
      public
        constructor Create;
        destructor Destroy; override;
        ///// プロパティ
-       property NameToKind :TDictionary<TAnsiChar2,TKindVR> read _NameToKind;
+       property NameToKind :TDictionary<TNameVR,TKindVR> read _NameToKind;
        ///// メソッド
        function ReadStream( const F_:TFileStream ) :TKindVR;
      end;
@@ -119,6 +121,8 @@ var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 implementation //############################################################### ■
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindVR
 
@@ -213,8 +217,6 @@ begin
      end;
 end;
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
-
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmVR
@@ -225,7 +227,7 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmVR.Create( const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+constructor TdcmVR.Create( const Name_:TNameVR; const Size_:Byte; const Desc_:String );
 begin
      inherited Create;
 
@@ -242,7 +244,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
 
-procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TAnsiChar2; const Size_:Byte; const Desc_:String );
+procedure TdcmBookVR.Add( const Kind_:TKindVR; const Name_:TNameVR; const Size_:Byte; const Desc_:String );
 begin
      _NameToKind.Add( Name_, Kind_ );
 
@@ -255,7 +257,7 @@ constructor TdcmBookVR.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
-     _NameToKind := TDictionary<TAnsiChar2,TKindVR>.Create;
+     _NameToKind := TDictionary<TNameVR,TKindVR>.Create;
 
      //// http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
      //// 7.1.2 Data Element Structure with Explicit VR
@@ -304,7 +306,7 @@ end;
 function TdcmBookVR.ReadStream( const F_:TFileStream ) :TKindVR;
 var
    P :Integer;
-   Name :TAnsiChar2;
+   Name :TNameVR;
 begin
      P := F_.Position;
 
