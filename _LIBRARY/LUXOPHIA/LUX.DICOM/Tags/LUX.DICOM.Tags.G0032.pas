@@ -2,7 +2,7 @@
 
 interface //#################################################################### ■
 
-uses LUX, LUX.DICOM.Tags, LUX.DICOM.VRs;
+uses LUX, LUX.DICOM.VRs, LUX.DICOM.Tags;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
@@ -16,7 +16,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
      protected
      public
-       constructor Create( const Code_:THex4 );
+       class procedure AddBook( const Book_:TdcmBookTag );
+       constructor Create( const Book_:TdcmBookTag; const Code_:THex4 );
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -39,7 +40,14 @@ implementation //###############################################################
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmGrup0032.Create( const Code_:THex4 );
+class procedure TdcmGrup0032.AddBook( const Book_:TdcmBookTag );
+begin
+     Create( Book_, $0032 );
+end;
+
+//------------------------------------------------------------------------------
+
+constructor TdcmGrup0032.Create( const Book_:TdcmBookTag; const Code_:THex4 );
 begin
      inherited;
 
