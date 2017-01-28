@@ -2,33 +2,44 @@
 
 interface //#################################################################### ■
 
-uses LUX.DICOM.Ports;
+uses LUX.DICOM, LUX.DICOM.Ports;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-     TdcmPortString = class;
-
-     TdcmPortAE = class;
-     TdcmPortAS = class;
-     TdcmPortCS = class;
-     TdcmPortDA = class;
-     TdcmPortDS = class;
-     TdcmPortDT = class;
-     TdcmPortIS = class;
-     TdcmPortLO = class;
-     TdcmPortLT = class;
-     TdcmPortPN = class;
-     TdcmPortSH = class;
-     TdcmPortST = class;
-     TdcmPortTM = class;
-     TdcmPortUC = class;
-     TdcmPortUI = class;
-     TdcmPortUR = class;
-     TdcmPortUT = class;
+     TdcmPortText<_TYPE_> = class;
+       TdcmPortString     = class;
+         TdcmPortAE       = class;
+         TdcmPortAS       = class;
+         TdcmPortCS       = class;
+       TdcmPortDA         = class;
+       TdcmPortDS         = class;
+       TdcmPortDT         = class;
+       TdcmPortIS         = class;
+         TdcmPortLO       = class;
+         TdcmPortLT       = class;
+         TdcmPortPN       = class;
+         TdcmPortSH       = class;
+         TdcmPortST       = class;
+       TdcmPortTM         = class;
+         TdcmPortUC       = class;
+         TdcmPortUI       = class;
+         TdcmPortUR       = class;
+         TdcmPortUT       = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
+
+     TdcmPortText<_TYPE_> = class( TdcmPort<_TYPE_> )
+     private
+     protected
+       ///// アクセス
+       function GetText :String; override;
+       procedure SetText( const Text_:String ); override;
+     public
+     end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortString
 
@@ -205,6 +216,36 @@ uses System.SysUtils, System.AnsiStrings;
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmPortText<_TYPE_>.GetText :String;
+begin
+     with _Data do SetString( Result, PAnsiChar( Data ), Size );
+end;
+
+procedure TdcmPortText<_TYPE_>.SetText( const Text_:String );
+var
+   T :String;
+begin
+     if Length( Text_ ) mod 2 = 0 then T := Text_
+                                  else T := Text_ + ' ';  //※必ず偶数
+
+     with _Data do
+     begin
+          Size := Length( Text_ );
+
+          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( T ) ), Size );
+     end;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortString
 
