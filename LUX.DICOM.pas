@@ -32,7 +32,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        _Data :TdcmData;
        ///// アクセス
        function GetText :String; virtual; abstract;
-       procedure SetText( Text_:String ); virtual; abstract;
+       procedure SetText( const Text_:String ); virtual; abstract;
      public
        constructor Create( const Data_:TdcmData );
        ///// プロパティ
@@ -104,7 +104,10 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 implementation //############################################################### ■
 
-uses LUX.DICOM.Ports.Text,
+uses LUX.DICOM.Ports,
+     LUX.DICOM.Ports.Reco,
+     LUX.DICOM.Ports.Arra,
+     LUX.DICOM.Ports.Text,
      LUX.DICOM.Ports.Imag;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
@@ -186,35 +189,36 @@ begin
      case RecVR of
          vrAE: _Port := TdcmPortAE.Create( Self );  //Application Entity
          vrAS: _Port := TdcmPortAS.Create( Self );  //Age String
-         vrAT:                                   ;  //Attribute Tag
+         vrAT: _Port := TdcmPortAT.Create( Self );  //Attribute Tag
          vrCS: _Port := TdcmPortCS.Create( Self );  //Code String
          vrDA: _Port := TdcmPortDA.Create( Self );  //Date
          vrDS: _Port := TdcmPortDS.Create( Self );  //Decimal String
          vrDT: _Port := TdcmPortDT.Create( Self );  //Date Time
-         vrFL:                                   ;  //Floating Point Single
-         vrFD:                                   ;  //Floating Point Double
+         vrFL: _Port := TdcmPortFL.Create( Self );  //Floating Point Single
+         vrFD: _Port := TdcmPortFD.Create( Self );  //Floating Point Double
          vrIS: _Port := TdcmPortIS.Create( Self );  //Integer String
          vrLO: _Port := TdcmPortLO.Create( Self );  //Long String
          vrLT: _Port := TdcmPortLT.Create( Self );  //Long Text
-         vrOB:                                   ;  //Other Byte
-         vrOD:                                   ;  //Other Double
-         vrOF:                                   ;  //Other Float
-         vrOL:                                   ;  //Other Long
-         vrOW:                                   ;  //Other Word
+         vrOB: _Port := TdcmPortOB.Create( Self );  //Other Byte
+         vrOD: _Port := TdcmPortOD.Create( Self );  //Other Double
+         vrOF: _Port := TdcmPortOF.Create( Self );  //Other Float
+         vrOL: _Port := TdcmPortOL.Create( Self );  //Other Long
+         vrOW: _Port := TdcmPortOW.Create( Self );  //Other Word
          vrPN: _Port := TdcmPortPN.Create( Self );  //Person Name
          vrSH: _Port := TdcmPortSH.Create( Self );  //Short String
-         vrSL:                                   ;  //Signed Long
-         vrSQ:                                   ;  //Sequence of Items
-         vrSS:                                   ;  //Signed Short
+         vrSL: _Port := TdcmPortSL.Create( Self );  //Signed Long
+         vrSQ: _Port := TdcmPortSQ.Create( Self );  //Sequence of Items
+         vrSS: _Port := TdcmPortSS.Create( Self );  //Signed Short
          vrST: _Port := TdcmPortST.Create( Self );  //Short Text
          vrTM: _Port := TdcmPortTM.Create( Self );  //Time
          vrUC: _Port := TdcmPortUC.Create( Self );  //Unlimited Characters
          vrUI: _Port := TdcmPortUI.Create( Self );  //Unique Identifier (UID)
-         vrUL:                                   ;  //Unsigned Long
-         vrUN:                                   ;  //Unknown
+         vrUL: _Port := TdcmPortUL.Create( Self );  //Unsigned Long
+         vrUN: _Port := TdcmPortUN.Create( Self );  //Unknown
          vrUR: _Port := TdcmPortUR.Create( Self );  //Universal Resource Identifier or Universal Resource Locator (URI/URL)
-         vrUS:                                   ;  //Unsigned Short
+         vrUS: _Port := TdcmPortUS.Create( Self );  //Unsigned Short
          vrUT: _Port := TdcmPortUT.Create( Self );  //Unlimited Text
+         else  _Port := TdcmPortUN.Create( Self );
      end;
 end;
 
