@@ -13,7 +13,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortOB
 
-     TdcmPortOB = class( TdcmPortArra<Byte> )
+     TdcmPortOB = class( TdcmPort1D<Byte> )
      private
      protected
        ///// アクセス
@@ -24,7 +24,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortOD
 
-     TdcmPortOD = class( TdcmPortArra<Double> )
+     TdcmPortOD = class( TdcmPort1D<Double> )
      private
      protected
        ///// アクセス
@@ -35,7 +35,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortOF
 
-     TdcmPortOF = class( TdcmPortArra<Single> )
+     TdcmPortOF = class( TdcmPort1D<Single> )
      private
      protected
        ///// アクセス
@@ -46,7 +46,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortOL
 
-     TdcmPortOL = class( TdcmPortArra<Cardinal> )
+     TdcmPortOL = class( TdcmPort1D<Cardinal> )
      private
      protected
        ///// アクセス
@@ -57,7 +57,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortOW
 
-     TdcmPortOW = class( TdcmPortArra<Word> )
+     TdcmPortOW = class( TdcmPort1D<Word> )
      private
      protected
        ///// アクセス
@@ -68,7 +68,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortUN
 
-     TdcmPortUN = class( TdcmPortArra<Byte> )
+     TdcmPortUN = class( TdcmPort1D<Byte> )
      private
      protected
        ///// アクセス
