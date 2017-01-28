@@ -3,7 +3,7 @@
 interface //#################################################################### ■
 
 uses System.SysUtils,
-     LUX.DICOM.Tags, LUX.DICOM.Ports;
+     LUX.DICOM.Tags, LUX.DICOM;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
