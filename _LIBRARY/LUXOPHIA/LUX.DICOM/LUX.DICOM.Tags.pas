@@ -64,18 +64,18 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      TdcmGrup = class( TObjectDictionary<THex4,TdcmElem> )
      private
      protected
+       _Book       :TdcmBookTag;
        _Code       :THex4;
        _NameToElem :TDictionary<AnsiString,TdcmElem>;
        ///// アクセス
-       function GetBook :TdcmBookTag;
        function GetElem( const Name_:AnsiString ) :TdcmElem;
        ///// メソッド
        procedure Add( const Code_:THex4; const Name_:AnsiString; const Kind_:TKindsVR; const Desc_:String );
      public
-       constructor Create( const Code_:THex4 );
+       constructor Create( const Book_:TdcmBookTag; const Code_:THex4 );
        destructor Destroy; override;
        ///// プロパティ
-       property Book                           :TdcmBookTag read GetBook;
+       property Book                           :TdcmBookTag read   _Book;
        property Code                           :THex4       read   _Code;
        property Elem[ const Name_:AnsiString ] :TdcmElem    read GetElem;
      end;
@@ -175,7 +175,6 @@ uses LUX.DICOM.Tags.G0000,
      LUX.DICOM.Tags.G5600,
      LUX.DICOM.Tags.G60xx,
      LUX.DICOM.Tags.G7Fxx,
-     LUX.DICOM.Tags.G7FE0,
      LUX.DICOM.Tags.GFFFA,
      LUX.DICOM.Tags.GFFFC,
      LUX.DICOM.Tags.GFFFE;
@@ -246,11 +245,6 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TdcmGrup.GetBook :TdcmBookTag;
-begin
-     Result := _BookTag_;
-end;
-
 function TdcmGrup.GetElem( const Name_:AnsiString ) :TdcmElem;
 begin
      if _NameToElem.ContainsKey( Name_ ) then Result := _NameToElem[ Name_ ]
@@ -272,13 +266,16 @@ end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmGrup.Create( const Code_:THex4 );
+constructor TdcmGrup.Create( const Book_:TdcmBookTag; const Code_:THex4 );
 begin
      inherited Create( [ doOwnsValues ] );
 
      _NameToElem := TDictionary<AnsiString,TdcmElem>.Create;
 
+     _Book := Book_;
      _Code := Code_;
+
+     _Book.Add( _Code, Self );
 end;
 
 destructor TdcmGrup.Destroy;
@@ -307,78 +304,77 @@ constructor TdcmBookTag.Create;
 begin
      inherited Create( [ doOwnsValues ] );
 
-     Add( $0000, TdcmGrup0000.Create( $0000 ) );
-     Add( $0002, TdcmGrup0002.Create( $0002 ) );
-     Add( $0004, TdcmGrup0004.Create( $0004 ) );
-     Add( $0008, TdcmGrup0008.Create( $0008 ) );
-     Add( $0010, TdcmGrup0010.Create( $0010 ) );
-     Add( $0012, TdcmGrup0012.Create( $0012 ) );
-     Add( $0014, TdcmGrup0014.Create( $0014 ) );
-     Add( $0018, TdcmGrup0018.Create( $0018 ) );
-     Add( $0020, TdcmGrup0020.Create( $0020 ) );
-     Add( $0022, TdcmGrup0022.Create( $0022 ) );
-     Add( $0024, TdcmGrup0024.Create( $0024 ) );
-     Add( $0028, TdcmGrup0028.Create( $0028 ) );
-     Add( $0032, TdcmGrup0032.Create( $0032 ) );
-     Add( $0038, TdcmGrup0038.Create( $0038 ) );
-     Add( $003A, TdcmGrup003A.Create( $003A ) );
-     Add( $0040, TdcmGrup0040.Create( $0040 ) );
-     Add( $0042, TdcmGrup0042.Create( $0042 ) );
-     Add( $0044, TdcmGrup0044.Create( $0044 ) );
-     Add( $0046, TdcmGrup0046.Create( $0046 ) );
-     Add( $0048, TdcmGrup0048.Create( $0048 ) );
-     Add( $0050, TdcmGrup0050.Create( $0050 ) );
-     Add( $0052, TdcmGrup0052.Create( $0052 ) );
-     Add( $0054, TdcmGrup0054.Create( $0054 ) );
-     Add( $0060, TdcmGrup0060.Create( $0060 ) );
-     Add( $0062, TdcmGrup0062.Create( $0062 ) );
-     Add( $0064, TdcmGrup0064.Create( $0064 ) );
-     Add( $0066, TdcmGrup0066.Create( $0066 ) );
-     Add( $0068, TdcmGrup0068.Create( $0068 ) );
-     Add( $0070, TdcmGrup0070.Create( $0070 ) );
-     Add( $0072, TdcmGrup0072.Create( $0072 ) );
-     Add( $0074, TdcmGrup0074.Create( $0074 ) );
-     Add( $0076, TdcmGrup0076.Create( $0076 ) );
-     Add( $0078, TdcmGrup0078.Create( $0078 ) );
-     Add( $0080, TdcmGrup0080.Create( $0080 ) );
-     Add( $0082, TdcmGrup0082.Create( $0082 ) );
-     Add( $0088, TdcmGrup0088.Create( $0088 ) );
-     Add( $0100, TdcmGrup0100.Create( $0100 ) );
-     Add( $0400, TdcmGrup0400.Create( $0400 ) );
-     Add( $1000, TdcmGrup1000.Create( $1000 ) );
-     Add( $1010, TdcmGrup1010.Create( $1010 ) );
-     Add( $2000, TdcmGrup2000.Create( $2000 ) );
-     Add( $2010, TdcmGrup2010.Create( $2010 ) );
-     Add( $2020, TdcmGrup2020.Create( $2020 ) );
-     Add( $2030, TdcmGrup2030.Create( $2030 ) );
-     Add( $2040, TdcmGrup2040.Create( $2040 ) );
-     Add( $2050, TdcmGrup2050.Create( $2050 ) );
-     Add( $2100, TdcmGrup2100.Create( $2100 ) );
-     Add( $2110, TdcmGrup2110.Create( $2110 ) );
-     Add( $2120, TdcmGrup2120.Create( $2120 ) );
-     Add( $2130, TdcmGrup2130.Create( $2130 ) );
-     Add( $2200, TdcmGrup2200.Create( $2200 ) );
-     Add( $3002, TdcmGrup3002.Create( $3002 ) );
-     Add( $3004, TdcmGrup3004.Create( $3004 ) );
-     Add( $3006, TdcmGrup3006.Create( $3006 ) );
-     Add( $3008, TdcmGrup3008.Create( $3008 ) );
-     Add( $300A, TdcmGrup300A.Create( $300A ) );
-     Add( $300C, TdcmGrup300C.Create( $300C ) );
-     Add( $300E, TdcmGrup300E.Create( $300E ) );
-     Add( $4000, TdcmGrup4000.Create( $4000 ) );
-     Add( $4008, TdcmGrup4008.Create( $4008 ) );
-     Add( $4010, TdcmGrup4010.Create( $4010 ) );
-     Add( $4FFE, TdcmGrup4FFE.Create( $4FFE ) );
-     Add( $5000, TdcmGrup50xx.Create( $5000 ) );
-     Add( $5200, TdcmGrup5200.Create( $5200 ) );
-     Add( $5400, TdcmGrup5400.Create( $5400 ) );
-     Add( $5600, TdcmGrup5600.Create( $5600 ) );
-     Add( $6000, TdcmGrup60xx.Create( $6000 ) );
-     Add( $7F00, TdcmGrup7Fxx.Create( $7F00 ) );
-     Add( $7FE0, TdcmGrup7FE0.Create( $7FE0 ) );
-     Add( $FFFA, TdcmGrupFFFA.Create( $FFFA ) );
-     Add( $FFFC, TdcmGrupFFFC.Create( $FFFC ) );
-     Add( $FFFE, TdcmGrupFFFE.Create( $FFFE ) );
+     TdcmGrup0000.AddBook( Self );
+     TdcmGrup0002.AddBook( Self );
+     TdcmGrup0004.AddBook( Self );
+     TdcmGrup0008.AddBook( Self );
+     TdcmGrup0010.AddBook( Self );
+     TdcmGrup0012.AddBook( Self );
+     TdcmGrup0014.AddBook( Self );
+     TdcmGrup0018.AddBook( Self );
+     TdcmGrup0020.AddBook( Self );
+     TdcmGrup0022.AddBook( Self );
+     TdcmGrup0024.AddBook( Self );
+     TdcmGrup0028.AddBook( Self );
+     TdcmGrup0032.AddBook( Self );
+     TdcmGrup0038.AddBook( Self );
+     TdcmGrup003A.AddBook( Self );
+     TdcmGrup0040.AddBook( Self );
+     TdcmGrup0042.AddBook( Self );
+     TdcmGrup0044.AddBook( Self );
+     TdcmGrup0046.AddBook( Self );
+     TdcmGrup0048.AddBook( Self );
+     TdcmGrup0050.AddBook( Self );
+     TdcmGrup0052.AddBook( Self );
+     TdcmGrup0054.AddBook( Self );
+     TdcmGrup0060.AddBook( Self );
+     TdcmGrup0062.AddBook( Self );
+     TdcmGrup0064.AddBook( Self );
+     TdcmGrup0066.AddBook( Self );
+     TdcmGrup0068.AddBook( Self );
+     TdcmGrup0070.AddBook( Self );
+     TdcmGrup0072.AddBook( Self );
+     TdcmGrup0074.AddBook( Self );
+     TdcmGrup0076.AddBook( Self );
+     TdcmGrup0078.AddBook( Self );
+     TdcmGrup0080.AddBook( Self );
+     TdcmGrup0082.AddBook( Self );
+     TdcmGrup0088.AddBook( Self );
+     TdcmGrup0100.AddBook( Self );
+     TdcmGrup0400.AddBook( Self );
+     TdcmGrup1000.AddBook( Self );
+     TdcmGrup1010.AddBook( Self );
+     TdcmGrup2000.AddBook( Self );
+     TdcmGrup2010.AddBook( Self );
+     TdcmGrup2020.AddBook( Self );
+     TdcmGrup2030.AddBook( Self );
+     TdcmGrup2040.AddBook( Self );
+     TdcmGrup2050.AddBook( Self );
+     TdcmGrup2100.AddBook( Self );
+     TdcmGrup2110.AddBook( Self );
+     TdcmGrup2120.AddBook( Self );
+     TdcmGrup2130.AddBook( Self );
+     TdcmGrup2200.AddBook( Self );
+     TdcmGrup3002.AddBook( Self );
+     TdcmGrup3004.AddBook( Self );
+     TdcmGrup3006.AddBook( Self );
+     TdcmGrup3008.AddBook( Self );
+     TdcmGrup300A.AddBook( Self );
+     TdcmGrup300C.AddBook( Self );
+     TdcmGrup300E.AddBook( Self );
+     TdcmGrup4000.AddBook( Self );
+     TdcmGrup4008.AddBook( Self );
+     TdcmGrup4010.AddBook( Self );
+     TdcmGrup4FFE.AddBook( Self );
+     TdcmGrup50xx.AddBook( Self );
+     TdcmGrup5200.AddBook( Self );
+     TdcmGrup5400.AddBook( Self );
+     TdcmGrup5600.AddBook( Self );
+     TdcmGrup60xx.AddBook( Self );
+     TdcmGrup7Fxx.AddBook( Self );
+     TdcmGrupFFFA.AddBook( Self );
+     TdcmGrupFFFC.AddBook( Self );
+     TdcmGrupFFFE.AddBook( Self );
 end;
 
 destructor TdcmBookTag.Destroy;

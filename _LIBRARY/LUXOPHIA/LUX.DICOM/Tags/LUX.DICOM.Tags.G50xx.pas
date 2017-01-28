@@ -2,7 +2,7 @@
 
 interface //#################################################################### ■
 
-uses LUX, LUX.DICOM.Tags, LUX.DICOM.VRs;
+uses LUX, LUX.DICOM.VRs, LUX.DICOM.Tags;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
@@ -16,7 +16,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
      protected
      public
-       constructor Create( const Code_:THex4 );
+       class procedure AddBook( const Book_:TdcmBookTag );
+       constructor Create( const Book_:TdcmBookTag; const Code_:THex4 );
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -39,7 +40,20 @@ implementation //###############################################################
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-constructor TdcmGrup50xx.Create( const Code_:THex4 );
+class procedure TdcmGrup50xx.AddBook( const Book_:TdcmBookTag );
+var
+   I :Byte;
+begin
+     {
+       http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.6
+       7.6 Repeating Groups
+     }
+     for I := 0 to $1E div 2 do Create( Book_, $5000 + 2 * I );
+end;
+
+//------------------------------------------------------------------------------
+
+constructor TdcmGrup50xx.Create( const Book_:TdcmBookTag; const Code_:THex4 );
 begin
      inherited;
 
