@@ -6,6 +6,8 @@ uses LUX.DICOM.Ports;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
+     TdcmPortString = class;
+
      TdcmPortAE = class;
      TdcmPortAS = class;
      TdcmPortCS = class;
@@ -28,9 +30,20 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortString
+
+     TdcmPortString = class( TdcmPortText<String> )
+     private
+     protected
+       ///// アクセス
+       function GetValue :String; override;
+       procedure SetValue( const Value_:String ); override;
+     public
+     end;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortAE
 
-     TdcmPortAE = class( TdcmPortText )
+     TdcmPortAE = class( TdcmPortString )
      private
      protected
      public
@@ -38,7 +51,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortAS
 
-     TdcmPortAS = class( TdcmPortText )
+     TdcmPortAS = class( TdcmPortString )
      private
      protected
      public
@@ -46,7 +59,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortCS
 
-     TdcmPortCS = class( TdcmPortText )
+     TdcmPortCS = class( TdcmPortString )
      private
      protected
      public
@@ -54,59 +67,51 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortDA
 
-     TdcmPortDA = class( TdcmPortText )
+     TdcmPortDA = class( TdcmPortText<TdcmDate> )
      private
      protected
        ///// アクセス
-       function GetValue :TdcmDate;
-       procedure SetValue( const Value_:TdcmDate );
+       function GetValue :TdcmDate; override;
+       procedure SetValue( const Value_:TdcmDate ); override;
      public
-       ///// プロパティ
-       property Value :TdcmDate read GetValue write SetValue;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortDS
 
-     TdcmPortDS = class( TdcmPortText )
+     TdcmPortDS = class( TdcmPortText<Double> )
      private
      protected
        ///// アクセス
-       function GetValue :Double;
-       procedure SetValue( const Value_:Double );
+       function GetValue :Double; override;
+       procedure SetValue( const Value_:Double ); override;
      public
-       ///// プロパティ
-       property Value :Double read GetValue write SetValue;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortDT
 
-     TdcmPortDT = class( TdcmPortText )
+     TdcmPortDT = class( TdcmPortText<TdcmDateTime> )
      private
      protected
        ///// アクセス
-       function GetValue :TdcmDateTime;
-       procedure SetValue( const Value_:TdcmDateTime );
+       function GetValue :TdcmDateTime; override;
+       procedure SetValue( const Value_:TdcmDateTime ); override;
      public
-       ///// プロパティ
-       property Value :TdcmDateTime read GetValue write SetValue;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortIS
 
-     TdcmPortIS = class( TdcmPortText )
+     TdcmPortIS = class( TdcmPortText<Integer> )
      private
      protected
        ///// アクセス
-       function GetValue :Integer;
-       procedure SetValue( const Value_:Integer );
+       function GetValue :Integer; override;
+       procedure SetValue( const Value_:Integer ); override;
      public
-       ///// プロパティ
-       property Value :Integer read GetValue write SetValue;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortLO
 
-     TdcmPortLO = class( TdcmPortText )
+     TdcmPortLO = class( TdcmPortString )
      private
      protected
      public
@@ -114,7 +119,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortLT
 
-     TdcmPortLT = class( TdcmPortText )
+     TdcmPortLT = class( TdcmPortString )
      private
      protected
      public
@@ -122,7 +127,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortPN
 
-     TdcmPortPN = class( TdcmPortText )
+     TdcmPortPN = class( TdcmPortString )
      private
      protected
      public
@@ -130,7 +135,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSH
 
-     TdcmPortSH = class( TdcmPortText )
+     TdcmPortSH = class( TdcmPortString )
      private
      protected
      public
@@ -138,7 +143,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortST
 
-     TdcmPortST = class( TdcmPortText )
+     TdcmPortST = class( TdcmPortString )
      private
      protected
      public
@@ -146,19 +151,18 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortTM
 
-     TdcmPortTM = class( TdcmPortText )
+     TdcmPortTM = class( TdcmPortText<TdcmTime> )
      private
+     protected
        ///// アクセス
-       function GetValue :TdcmTime;
-       procedure SetValue( const Value_:TdcmTime );
+       function GetValue :TdcmTime; override;
+       procedure SetValue( const Value_:TdcmTime ); override;
      public
-       ///// プロパティ
-       property Value :TdcmTime read GetValue write SetValue;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortUC
 
-     TdcmPortUC = class( TdcmPortText )
+     TdcmPortUC = class( TdcmPortString )
      private
      protected
      public
@@ -166,7 +170,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortUI
 
-     TdcmPortUI = class( TdcmPortText )
+     TdcmPortUI = class( TdcmPortString )
      private
      protected
      public
@@ -174,7 +178,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortUR
 
-     TdcmPortUR = class( TdcmPortText )
+     TdcmPortUR = class( TdcmPortString )
      private
      protected
      public
@@ -182,7 +186,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortUT
 
-     TdcmPortUT = class( TdcmPortText )
+     TdcmPortUT = class( TdcmPortString )
      private
      protected
      public
@@ -201,6 +205,26 @@ uses System.SysUtils, System.AnsiStrings;
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortString
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmPortString.GetValue :String;
+begin
+     Result := GetText;
+end;
+
+procedure TdcmPortString.SetValue( const Value_:String );
+begin
+     SetText( Value_ );
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortAE
 

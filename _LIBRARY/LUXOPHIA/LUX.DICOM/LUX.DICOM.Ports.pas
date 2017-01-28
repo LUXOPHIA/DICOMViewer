@@ -3,11 +3,13 @@
 interface //#################################################################### ■
 
 uses System.Math, System.RegularExpressions,
-     LUX, LUX.DICOM.VRs, LUX.DICOM;
+     LUX,  LUX.DICOM;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-     TdcmPortText                  = class;
+     TdcmPort<_TYPE_>              = class;
+     TdcmPortArra<_TYPE_>          = class;
+     TdcmPortText<_TYPE_>          = class;
      TdcmPortImag<_TPixel_:record> = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
@@ -72,14 +74,48 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
 
-     TdcmPortText = class( TdcmPort )
+     TdcmPort<_TYPE_> = class( TdcmPort )
+     private
+     protected
+       ///// アクセス
+       function GetValue :_TYPE_; virtual;
+       procedure SetValue( const Value_:_TYPE_ ); virtual;
+     public
+       ///// プロパティ
+       property Value :_TYPE_ read GetValue write SetValue;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
+
+     TdcmPortArra<_TYPE_> = class( TdcmPort )
      private
      protected
        ///// アクセス
        function GetText :String; override;
-       procedure SetText( Text_:String ); override;
+       procedure SetText( const Text_:String ); override;
+       function GetTexts( const I_:Integer ) :String; virtual; abstract;
+       procedure SetTexts( const I_:Integer; const Text_:String ); virtual; abstract;
+       function GetValues( const I_:Integer ) :_TYPE_; virtual;
+       procedure SetValues( const I_:Integer; const Value_:_TYPE_ ); virtual;
+       function GetValuesN :Integer; virtual;
+       procedure SetValuesN( const ValuesN_:Integer ); virtual;
+     public
+       ///// プロパティ
+       property Texts[ const I_:Integer ]  :String  read GetTexts   write SetTexts  ;
+       property Values[ const I_:Integer ] :_TYPE_  read GetValues  write SetValues ;
+       property ValuesN                    :Integer read GetValuesN write SetValuesN;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
+
+     TdcmPortText<_TYPE_> = class( TdcmPort<_TYPE_> )
+     private
+     protected
+       ///// アクセス
+       function GetText :String; override;
+       procedure SetText( const Text_:String ); override;
      public
      end;
 
@@ -94,6 +130,17 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        ///// プロパティ
        property Pixels[ const X_,Y_:Integer ] :_TPixel_ read GetPixels write SetPixels;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
+
+     TdcmPortSQ = class( TdcmPort )
+     private
+     protected
+       ///// アクセス
+       function GetText :String; override;
+       procedure SetText( const Text_:String ); override;
+     public
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -251,7 +298,7 @@ end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -259,20 +306,111 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TdcmPortText.GetText :String;
+function TdcmPort<_TYPE_>.GetValue :_TYPE_;
+begin
+     Move( _Data.Data[0], Result, SizeOf( _TYPE_ ) );
+end;
+
+procedure TdcmPort<_TYPE_>.SetValue( const Value_:_TYPE_ );
+begin
+     Move( Value_, _Data.Data[0], SizeOf( _TYPE_ ) );
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmPortArra<_TYPE_>.GetText :String;
+var
+   I :Integer;
+begin
+     if ValuesN > 0 then
+     begin
+          Result := Texts[ 0 ];
+
+          if ValuesN > 5 then
+          begin
+               for I := 1 to       5-1 do Result := Result + ', ' + Texts[ I ];
+
+               Result := Result + ',...';
+          end
+          else
+          begin
+               for I := 1 to ValuesN-1 do Result := Result + ', ' + Texts[ I ];
+          end;
+     end;
+end;
+
+procedure TdcmPortArra<_TYPE_>.SetText( const Text_:String );
+begin
+
+end;
+
+//------------------------------------------------------------------------------
+
+function TdcmPortArra<_TYPE_>.GetValues( const I_:Integer ) :_TYPE_;
+var
+   N :Integer;
+begin
+     N := SizeOf( _TYPE_ );
+
+     Move( _Data.Data[ N * I_ ], Result, N );
+end;
+
+procedure TdcmPortArra<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
+var
+   N :Integer;
+begin
+     N := SizeOf( _TYPE_ );
+
+     Move( Value_, _Data.Data[ N * I_ ], N );
+end;
+
+//------------------------------------------------------------------------------
+
+function TdcmPortArra<_TYPE_>.GetValuesN :Integer;
+begin
+     Result := _Data.Size div SizeOf( _TYPE_ );
+end;
+
+procedure TdcmPortArra<_TYPE_>.SetValuesN( const ValuesN_:Integer );
+begin
+     _Data.Size := SizeOf( _TYPE_ ) * ValuesN_;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmPortText<_TYPE_>.GetText :String;
 begin
      with _Data do SetString( Result, PAnsiChar( Data ), Size );
 end;
 
-procedure TdcmPortText.SetText( Text_:String );
+procedure TdcmPortText<_TYPE_>.SetText( const Text_:String );
+var
+   T :String;
 begin
-     if Length( Text_ ) mod 2 = 1 then Text_ := Text_ + ' ';  //※偶数でなくてはならない。
+     if Length( Text_ ) mod 2 = 0 then T := Text_
+                                  else T := Text_ + ' ';  //※偶数でなくてはならない。
 
      with _Data do
      begin
           Size := Length( Text_ );
 
-          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( Text_ ) ), Size );
+          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( T ) ), Size );
      end;
 end;
 
@@ -283,6 +421,26 @@ end;
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TdcmPortSQ.GetText :String;
+begin
+
+end;
+
+procedure TdcmPortSQ.SetText( const Text_:String );
+begin
+
+end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
