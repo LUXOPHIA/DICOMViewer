@@ -23,6 +23,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        Elem :THex4;
        /////
        constructor Create( const Grup_,Elem_:THex4 );
+       ///// 演算子
+       class operator Equal( const A_,B_:TdcmTag ) :Boolean;
+       class operator NotEqual( const A_,B_:TdcmTag ) :Boolean;
        ///// メソッド
        function ToString :String;
      end;
@@ -191,6 +194,18 @@ constructor TdcmTag.Create( const Grup_,Elem_:THex4 );
 begin
      Grup := Grup_;
      Elem := Elem_;
+end;
+
+///////////////////////////////////////////////////////////////////////// 演算子
+
+class operator TdcmTag.Equal( const A_,B_:TdcmTag ) :Boolean;
+begin
+     Result := ( A_.Grup = B_.Grup ) and ( A_.Elem = B_.Elem );
+end;
+
+class operator TdcmTag.NotEqual( const A_,B_:TdcmTag ) :Boolean;
+begin
+     Result := ( A_.Grup <> B_.Grup ) or ( A_.Elem <> B_.Elem );
 end;
 
 /////////////////////////////////////////////////////////////////////// メソッド
