@@ -403,8 +403,9 @@
         <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.Ports.pas"/>
         <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Reco.pas"/>
         <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Text.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Arra.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Imag.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D1.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.Imag.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -456,6 +457,12 @@
                 <DeployFile LocalName="Win64\Release\DICOMViewer.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>DICOMViewer.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\DICOMViewer.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>DICOMViewer.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
