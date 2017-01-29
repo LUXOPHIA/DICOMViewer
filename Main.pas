@@ -50,8 +50,9 @@ uses LUX.DICOM.VRs,
      LUX.DICOM.Ports,
      LUX.DICOM.Ports.Reco,
      LUX.DICOM.Ports.Text,
-     LUX.DICOM.Ports.Arra,
-     LUX.DICOM.Ports.Imag;
+     LUX.DICOM.Ports.D1,
+     LUX.DICOM.Ports.D2,
+     LUX.DICOM.Ports.D2.Imag;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 

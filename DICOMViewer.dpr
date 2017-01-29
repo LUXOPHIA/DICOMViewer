@@ -95,8 +95,9 @@ uses
   LUX.DICOM.Ports in '_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.Ports.pas',
   LUX.DICOM.Ports.Reco in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Reco.pas',
   LUX.DICOM.Ports.Text in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Text.pas',
-  LUX.DICOM.Ports.Arra in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Arra.pas',
-  LUX.DICOM.Ports.Imag in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Imag.pas';
+  LUX.DICOM.Ports.D1 in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D1.pas',
+  LUX.DICOM.Ports.D2.Imag in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.Imag.pas',
+  LUX.DICOM.Ports.D2 in '_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.pas';
 
 {$R *.res}
 
