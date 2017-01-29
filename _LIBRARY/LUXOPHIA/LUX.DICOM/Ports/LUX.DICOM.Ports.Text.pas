@@ -227,7 +227,7 @@ uses System.SysUtils, System.AnsiStrings;
 
 function TdcmPortText<_TYPE_>.GetText :String;
 begin
-     with _Data do SetString( Result, PAnsiChar( Data ), Size );
+     with _Data do SetString( Result, PAnsiChar( Buff ), Size );
 end;
 
 procedure TdcmPortText<_TYPE_>.SetText( const Text_:String );
@@ -241,7 +241,7 @@ begin
      begin
           Size := Length( Text_ );
 
-          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( T ) ), Size );
+          System.AnsiStrings.StrMove( PAnsiChar( Buff ), PAnsiChar( AnsiString( T ) ), Size );
      end;
 end;
 

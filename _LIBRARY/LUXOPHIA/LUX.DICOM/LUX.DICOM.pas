@@ -70,7 +70,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        _File  :TdcmFile;
        _Tag   :TdcmTag;
        _ExpVR :TKindVR;
-       _Data  :TBytes;
+       _Buff  :TBytes;
        _Port  :IdcmPort;
        ///// アクセス
        function GetIsStd :Boolean;
@@ -96,7 +96,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        property ExpVR :TKindVR  read   _ExpVR              ;
        property RecVR :TKindVR  read GetRecVR              ;
        property Size  :Cardinal read GetSize  write SetSize;
-       property Data  :TBytes   read   _Data               ;
+       property Buff  :TBytes   read   _Buff               ;
        property Port  :IdcmPort read GetPort  write SetPort;
        property Desc  :String   read GetDesc               ;
        ///// メソッド
@@ -154,12 +154,12 @@ uses LUX.DICOM.Ports,
 
 function TdcmPort<_TYPE_>.GetValue :_TYPE_;
 begin
-     Move( _Data.Data[0], Result, SizeOf( _TYPE_ ) );
+     Move( _Data.Buff[0], Result, SizeOf( _TYPE_ ) );
 end;
 
 procedure TdcmPort<_TYPE_>.SetValue( const Value_:_TYPE_ );
 begin
-     Move( Value_, _Data.Data[0], SizeOf( _TYPE_ ) );
+     Move( Value_, _Data.Buff[0], SizeOf( _TYPE_ ) );
 end;
 
 //------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ end;
 
 function TdcmData.GetSize :Cardinal;
 begin
-     Result := Length( _Data );
+     Result := Length( _Buff );
 end;
 
 procedure TdcmData.SetSize( const Size_:Cardinal );
@@ -232,7 +232,7 @@ begin
      if Size_ mod 2 = 0 then N := Size_
                         else N := Size_ + 1;  //バイト数は常に偶数
 
-     SetLength( _Data, N );
+     SetLength( _Buff, N );
 end;
 
 function TdcmData.GetPort :IdcmPort;
@@ -350,7 +350,7 @@ begin
      _File  := File_;
      _Tag   := TdcmTag.Create( $0000, $0000 );
      _ExpVR := TKindVR.vr00;
-     _Data  := [];
+     _Buff  := [];
      _Port  := nil;
 end;
 
@@ -435,7 +435,7 @@ begin
 
      Size := N;
 
-     F_.ReadBuffer( _Data, N );
+     F_.ReadBuffer( _Buff, N );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmFile

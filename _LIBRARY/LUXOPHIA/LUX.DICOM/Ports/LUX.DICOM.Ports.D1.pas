@@ -161,7 +161,7 @@ var
 begin
      N := SizeOf( _TYPE_ );
 
-     Move( _Data.Data[ N * I_ ], Result, N );
+     Move( _Data.Buff[ N * I_ ], Result, N );
 end;
 
 procedure TdcmPort1D<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
@@ -170,7 +170,7 @@ var
 begin
      N := SizeOf( _TYPE_ );
 
-     Move( Value_, _Data.Data[ N * I_ ], N );
+     Move( Value_, _Data.Buff[ N * I_ ], N );
 end;
 
 //------------------------------------------------------------------------------
