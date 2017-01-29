@@ -2,7 +2,7 @@
 
 interface //#################################################################### ■
 
-uses System.Classes, System.SysUtils, System.Generics.Collections,
+uses System.SysUtils, System.Classes, System.Generics.Collections,
      LUX, LUX.DICOM.VRs, LUX.DICOM.Tags;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】

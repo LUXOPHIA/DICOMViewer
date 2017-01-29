@@ -2,13 +2,9 @@
 
 interface //#################################################################### ■
 
-uses System.SysUtils, System.Math, System.RegularExpressions,
-     LUX, LUX.DICOM;
+uses System.Math;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
-
-     TdcmPort1D<_TYPE_> = class;
-     TdcmPort2D<_TYPE_> = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -94,101 +90,6 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort1D<_TYPE_>
-
-     IdcmPort1D = interface( IdcmPort )
-       ['{3414C784-907D-448A-BF97-D6FADE2BC9A1}']
-       ///// アクセス
-       function GetTexts( const I_:Integer ) :String;
-       procedure SetTexts( const I_:Integer; const Text_:String );
-       function GetCountN :Integer;
-       procedure SetCountN( const CountN_:Integer );
-       ///// プロパティ
-       property Texts[ const I_:Integer ] :String  read GetTexts  write SetTexts ;
-       property CountN                    :Integer read GetCountN write SetCountN;
-     end;
-
-     //-------------------------------------------------------------------------
-
-     TdcmPort1D<_TYPE_> = class( TdcmPort<_TYPE_>, IdcmPort1D )
-     private
-     protected
-       ///// アクセス
-       function GetValues( const I_:Integer ) :_TYPE_; virtual;
-       procedure SetValues( const I_:Integer; const Value_:_TYPE_ ); virtual;
-       { IdcmPort }
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
-       { IdcmPort1D }
-       function GetTexts( const I_:Integer ) :String; virtual; abstract;
-       procedure SetTexts( const I_:Integer; const Text_:String ); virtual; abstract;
-       function GetCountN :Integer; virtual;
-       procedure SetCountN( const CountN_:Integer ); virtual;
-     public
-       ///// プロパティ
-       property Values[ const I_:Integer ] :_TYPE_  read GetValues write SetValues;
-       { IdcmPort1D }
-       property Texts[ const I_:Integer ]  :String  read GetTexts  write SetTexts ;
-       property CountN                     :Integer read GetCountN write SetCountN;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort2D<_TYPE_>
-
-     IdcmPort2D = interface( IdcmPort1D )
-       ['{96D62B01-9EBA-4C4D-BD1B-3B6F70483A58}']
-       ///// アクセス
-       function GetTexts2D( const X_,Y_:Integer ) :String;
-       procedure SetTexts2D( const X_,Y_:Integer; const Text_:String );
-       function GetCountX :Integer;
-       procedure SetCountX( const CountX_:Integer );
-       function GetCountY :Integer;
-       procedure SetCountY( const CountY_:Integer );
-       ///// プロパティ
-       property Texts2D[ const X_,Y_:Integer ] :String  read GetTexts2D write SetTexts2D;
-       property CountX                         :Integer read GetCountX  write SetCountX ;
-       property CountY                         :Integer read GetCountY  write SetCountY ;
-     end;
-
-     //-------------------------------------------------------------------------
-
-     TdcmPort2D<_TYPE_> = class( TdcmPort1D<_TYPE_>, IdcmPort2D )
-     private
-     protected
-       _CountX :Word;
-       _CountY :Word;
-       ///// アクセス
-       function GetValues2D( const X_,Y_:Integer ) :_TYPE_; virtual;
-       procedure SetValues2D( const X_,Y_:Integer; const Value_:_TYPE_ ); virtual;
-       { IdcmPort1D }
-       function GetCountN :Integer; override;
-       procedure SetCountN( const CountN_:Integer ); override;
-       { IdcmPort2D }
-       function GetTexts2D( const X_,Y_:Integer ) :String; virtual;
-       procedure SetTexts2D( const X_,Y_:Integer; const Text_:String ); virtual;
-       function GetCountX :Integer; virtual;
-       procedure SetCountX( const CountX_:Integer ); virtual;
-       function GetCountY :Integer; virtual;
-       procedure SetCountY( const CountY_:Integer ); virtual;
-     public
-       ///// プロパティ
-       property Values2D[ const X_,Y_:Integer ] :_TYPE_  read GetValues2D write SetValues2D;
-       { IdcmPort2D }
-       property Texts2D[ const X_,Y_:Integer ]  :String  read GetTexts2D  write SetTexts2D ;
-       property CountX                          :Integer read GetCountX   write SetCountX  ;
-       property CountY                          :Integer read GetCountY   write SetCountY  ;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
-
-     TdcmPortSQ = class( TdcmPort1D<TBytes> )
-     private
-     protected
-       ///// アクセス
-       function GetTexts( const I_:Integer ) :String; override;
-       procedure SetTexts( const I_:Integer; const Text_:String ); override;
-     public
-     end;
-
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
 
 //var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
@@ -196,6 +97,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
 implementation //############################################################### ■
+
+uses System.SysUtils, System.RegularExpressions;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -397,160 +300,6 @@ begin
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort1D<_TYPE_>
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPort1D<_TYPE_>.GetValues( const I_:Integer ) :_TYPE_;
-var
-   N :Integer;
-begin
-     N := SizeOf( _TYPE_ );
-
-     Move( _Data.Data[ N * I_ ], Result, N );
-end;
-
-procedure TdcmPort1D<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
-var
-   N :Integer;
-begin
-     N := SizeOf( _TYPE_ );
-
-     Move( Value_, _Data.Data[ N * I_ ], N );
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPort1D<_TYPE_>.GetText :String;
-var
-   I :Integer;
-begin
-     if CountN > 0 then
-     begin
-          Result := Texts[ 0 ];
-
-          if CountN > 5 then
-          begin
-               for I := 1 to       5-1 do Result := Result + ', ' + Texts[ I ];
-
-               Result := Result + ',...';
-          end
-          else
-          begin
-               for I := 1 to CountN-1 do Result := Result + ', ' + Texts[ I ];
-          end;
-     end;
-end;
-
-procedure TdcmPort1D<_TYPE_>.SetText( const Text_:String );
-begin
-
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPort1D<_TYPE_>.GetCountN :Integer;
-begin
-     Result := _Data.Size div SizeOf( _TYPE_ );
-end;
-
-procedure TdcmPort1D<_TYPE_>.SetCountN( const CountN_:Integer );
-begin
-     _Data.Size := SizeOf( _TYPE_ ) * CountN_;
-end;
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort2D<_TYPE_>
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPort2D<_TYPE_>.GetValues2D( const X_,Y_:Integer ) :_TYPE_;
-begin
-     Result := Values[ _CountX * Y_ + X_ ];
-end;
-
-procedure TdcmPort2D<_TYPE_>.SetValues2D( const X_,Y_:Integer; const Value_:_TYPE_ );
-begin
-     Values[ _CountX * Y_ + X_ ] := Value_;
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPort2D<_TYPE_>.GetCountN :Integer;
-begin
-     Result := _CountY * _CountX;
-end;
-
-procedure TdcmPort2D<_TYPE_>.SetCountN( const CountN_:Integer );
-begin
-
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPort2D<_TYPE_>.GetTexts2D( const X_,Y_:Integer ) :String;
-begin
-     Result := Texts[ _CountX * Y_ + X_ ];
-end;
-
-procedure TdcmPort2D<_TYPE_>.SetTexts2D( const X_,Y_:Integer; const Text_:String );
-begin
-     Texts[ _CountX * Y_ + X_ ] := Text_;
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPort2D<_TYPE_>.GetCountX :Integer;
-begin
-     Result := _CountX;
-end;
-
-procedure TdcmPort2D<_TYPE_>.SetCountX( const CountX_:Integer );
-begin
-     _CountX := CountX_;
-end;
-
-function TdcmPort2D<_TYPE_>.GetCountY :Integer;
-begin
-     Result := _CountY;
-end;
-
-procedure TdcmPort2D<_TYPE_>.SetCountY( const CountY_:Integer );
-begin
-     _CountY := CountY_;
-end;
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPortSQ.GetTexts( const I_:Integer ) :String;
-begin
-
-end;
-
-procedure TdcmPortSQ.SetTexts( const I_:Integer; const Text_:String );
-begin
-
-end;
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
