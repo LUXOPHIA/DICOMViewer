@@ -2,15 +2,13 @@
 
 interface //#################################################################### ■
 
-uses System.Math, System.RegularExpressions,
-     LUX,  LUX.DICOM;
+uses System.SysUtils, System.Math, System.RegularExpressions,
+     LUX, LUX.DICOM;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
-     TdcmPort<_TYPE_>              = class;
-     TdcmPortArra<_TYPE_>          = class;
-     TdcmPortText<_TYPE_>          = class;
-     TdcmPortImag<_TPixel_:record> = class;
+     TdcmPort1D<_TYPE_> = class;
+     TdcmPort2D<_TYPE_> = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -72,69 +70,117 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindPixel
+
+     TKindPixel = ( pxNone,
+                    pxMONOCHROME1,      //MONOCHROME1
+                    pxMONOCHROME2,      //MONOCHROME2
+                    pxPALETTECOLOR,     //PALETTE COLOR
+                    pxRGB,              //RGB
+                    pxYBRFULL,          //YBR_FULL
+                    pxYBRFULL422,       //YBR_FULL_422
+                    pxYBRPARTIAL422,    //YBR_PARTIAL_422
+                    pxYBRPARTIAL420,    //YBR_PARTIAL_420
+                    pxYBRICT,           //YBR_ICT
+                    pxYBRRCT        );  //YBR_RCT
+
+     HKindPixel = record helper for TKindPixel
+     private
+     public
+       constructor Create( const Text_:String );
+       ///// メソッド
+       function ToString :String;
+     end;
+
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort1D<_TYPE_>
 
-     TdcmPort<_TYPE_> = class( TdcmPort )
-     private
-     protected
+     IdcmPort1D = interface( IdcmPort )
+       ['{3414C784-907D-448A-BF97-D6FADE2BC9A1}']
        ///// アクセス
-       function GetValue :_TYPE_; virtual;
-       procedure SetValue( const Value_:_TYPE_ ); virtual;
-     public
+       function GetTexts( const I_:Integer ) :String;
+       procedure SetTexts( const I_:Integer; const Text_:String );
+       function GetCountN :Integer;
+       procedure SetCountN( const CountN_:Integer );
        ///// プロパティ
-       property Value :_TYPE_ read GetValue write SetValue;
+       property Texts[ const I_:Integer ] :String  read GetTexts  write SetTexts ;
+       property CountN                    :Integer read GetCountN write SetCountN;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
+     //-------------------------------------------------------------------------
 
-     TdcmPortArra<_TYPE_> = class( TdcmPort )
+     TdcmPort1D<_TYPE_> = class( TdcmPort<_TYPE_>, IdcmPort1D )
      private
      protected
        ///// アクセス
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
-       function GetTexts( const I_:Integer ) :String; virtual; abstract;
-       procedure SetTexts( const I_:Integer; const Text_:String ); virtual; abstract;
        function GetValues( const I_:Integer ) :_TYPE_; virtual;
        procedure SetValues( const I_:Integer; const Value_:_TYPE_ ); virtual;
-       function GetValuesN :Integer; virtual;
-       procedure SetValuesN( const ValuesN_:Integer ); virtual;
-     public
-       ///// プロパティ
-       property Texts[ const I_:Integer ]  :String  read GetTexts   write SetTexts  ;
-       property Values[ const I_:Integer ] :_TYPE_  read GetValues  write SetValues ;
-       property ValuesN                    :Integer read GetValuesN write SetValuesN;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
-
-     TdcmPortText<_TYPE_> = class( TdcmPort<_TYPE_> )
-     private
-     protected
-       ///// アクセス
+       { IdcmPort }
        function GetText :String; override;
        procedure SetText( const Text_:String ); override;
-     public
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortImag<_TPixel_>
-
-     TdcmPortImag<_TPixel_:record> = class( TdcmPort )
-     private
-     protected
-       ///// アクセス
-       function GetPixels( const X_,Y_:Integer ) :_TPixel_; virtual; abstract;
-       procedure SetPixels( const X_,Y_:Integer; const Pixel_:_TPixel_ ); virtual; abstract;
+       { IdcmPort1D }
+       function GetTexts( const I_:Integer ) :String; virtual; abstract;
+       procedure SetTexts( const I_:Integer; const Text_:String ); virtual; abstract;
+       function GetCountN :Integer; virtual;
+       procedure SetCountN( const CountN_:Integer ); virtual;
      public
        ///// プロパティ
-       property Pixels[ const X_,Y_:Integer ] :_TPixel_ read GetPixels write SetPixels;
+       property Values[ const I_:Integer ] :_TYPE_  read GetValues write SetValues;
+       { IdcmPort1D }
+       property Texts[ const I_:Integer ]  :String  read GetTexts  write SetTexts ;
+       property CountN                     :Integer read GetCountN write SetCountN;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort2D<_TYPE_>
+
+     IdcmPort2D = interface( IdcmPort1D )
+       ['{96D62B01-9EBA-4C4D-BD1B-3B6F70483A58}']
+       ///// アクセス
+       function GetTexts2D( const X_,Y_:Integer ) :String;
+       procedure SetTexts2D( const X_,Y_:Integer; const Text_:String );
+       function GetCountX :Integer;
+       procedure SetCountX( const CountX_:Integer );
+       function GetCountY :Integer;
+       procedure SetCountY( const CountY_:Integer );
+       ///// プロパティ
+       property Texts2D[ const X_,Y_:Integer ] :String  read GetTexts2D write SetTexts2D;
+       property CountX                         :Integer read GetCountX  write SetCountX ;
+       property CountY                         :Integer read GetCountY  write SetCountY ;
+     end;
+
+     //-------------------------------------------------------------------------
+
+     TdcmPort2D<_TYPE_> = class( TdcmPort1D<_TYPE_>, IdcmPort2D )
+     private
+     protected
+       _CountX :Word;
+       _CountY :Word;
+       ///// アクセス
+       function GetValues2D( const X_,Y_:Integer ) :_TYPE_; virtual;
+       procedure SetValues2D( const X_,Y_:Integer; const Value_:_TYPE_ ); virtual;
+       { IdcmPort1D }
+       function GetCountN :Integer; override;
+       procedure SetCountN( const CountN_:Integer ); override;
+       { IdcmPort2D }
+       function GetTexts2D( const X_,Y_:Integer ) :String; virtual;
+       procedure SetTexts2D( const X_,Y_:Integer; const Text_:String ); virtual;
+       function GetCountX :Integer; virtual;
+       procedure SetCountX( const CountX_:Integer ); virtual;
+       function GetCountY :Integer; virtual;
+       procedure SetCountY( const CountY_:Integer ); virtual;
+     public
+       ///// プロパティ
+       property Values2D[ const X_,Y_:Integer ] :_TYPE_  read GetValues2D write SetValues2D;
+       { IdcmPort2D }
+       property Texts2D[ const X_,Y_:Integer ]  :String  read GetTexts2D  write SetTexts2D ;
+       property CountX                          :Integer read GetCountX   write SetCountX  ;
+       property CountY                          :Integer read GetCountY   write SetCountY  ;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
 
-     TdcmPortSQ = class( TdcmPort )
+     TdcmPortSQ = class( TdcmPort1D<TBytes> )
      private
      protected
        ///// アクセス
@@ -150,8 +196,6 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
 implementation //############################################################### ■
-
-uses System.SysUtils, System.AnsiStrings;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -296,29 +340,65 @@ begin
      Result := Date.ToString + Time.ToString + Zone.ToString;
 end;
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindPixel
+{
+  http://dicom.nema.org/medical/dicom/current/output/html/part03.html#sect_C.7.6.3.1.2
+  C.7.6.3.1.2 Photometric Interpretation
+}
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPort<_TYPE_>.GetValue :_TYPE_;
-begin
-     Move( _Data.Data[0], Result, SizeOf( _TYPE_ ) );
-end;
-
-procedure TdcmPort<_TYPE_>.SetValue( const Value_:_TYPE_ );
-begin
-     Move( Value_, _Data.Data[0], SizeOf( _TYPE_ ) );
-end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
+constructor HKindPixel.Create( const Text_:String );
+var
+   T :String;
+begin
+     T := Text_.TrimRight;
+
+     if T = 'MONOCHROME1'     then Self := TKindPixel.pxMONOCHROME1
+                              else
+     if T = 'MONOCHROME2'     then Self := TKindPixel.pxMONOCHROME2
+                              else
+     if T = 'PALETTE COLOR'   then Self := TKindPixel.pxPALETTECOLOR
+                              else
+     if T = 'RGB'             then Self := TKindPixel.pxRGB
+                              else
+     if T = 'YBR_FULL'        then Self := TKindPixel.pxYBRFULL
+                              else
+     if T = 'YBR_FULL_422'    then Self := TKindPixel.pxYBRFULL422
+                              else
+     if T = 'YBR_PARTIAL_422' then Self := TKindPixel.pxYBRPARTIAL422
+                              else
+     if T = 'YBR_PARTIAL_420' then Self := TKindPixel.pxYBRPARTIAL420
+                              else
+     if T = 'YBR_ICT'         then Self := TKindPixel.pxYBRICT
+                              else
+     if T = 'YBR_RCT'         then Self := TKindPixel.pxYBRRCT
+                              else Self := TKindPixel.pxNone;
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function HKindPixel.ToString :String;
+begin
+     case Self of
+     TKindPixel.pxNone         : Result := '';
+     TKindPixel.pxMONOCHROME1  : Result := 'MONOCHROME1';
+     TKindPixel.pxMONOCHROME2  : Result := 'MONOCHROME2';
+     TKindPixel.pxPALETTECOLOR : Result := 'PALETTE COLOR';
+     TKindPixel.pxRGB          : Result := 'RGB';
+     TKindPixel.pxYBRFULL      : Result := 'YBR_FULL';
+     TKindPixel.pxYBRFULL422   : Result := 'YBR_FULL_422';
+     TKindPixel.pxYBRPARTIAL422: Result := 'YBR_PARTIAL_422';
+     TKindPixel.pxYBRPARTIAL420: Result := 'YBR_PARTIAL_420';
+     TKindPixel.pxYBRICT       : Result := 'YBR_ICT';
+     TKindPixel.pxYBRRCT       : Result := 'YBR_RCT';
+     end;
+end;
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort1D<_TYPE_>
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -326,35 +406,7 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TdcmPortArra<_TYPE_>.GetText :String;
-var
-   I :Integer;
-begin
-     if ValuesN > 0 then
-     begin
-          Result := Texts[ 0 ];
-
-          if ValuesN > 5 then
-          begin
-               for I := 1 to       5-1 do Result := Result + ', ' + Texts[ I ];
-
-               Result := Result + ',...';
-          end
-          else
-          begin
-               for I := 1 to ValuesN-1 do Result := Result + ', ' + Texts[ I ];
-          end;
-     end;
-end;
-
-procedure TdcmPortArra<_TYPE_>.SetText( const Text_:String );
-begin
-
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPortArra<_TYPE_>.GetValues( const I_:Integer ) :_TYPE_;
+function TdcmPort1D<_TYPE_>.GetValues( const I_:Integer ) :_TYPE_;
 var
    N :Integer;
 begin
@@ -363,7 +415,7 @@ begin
      Move( _Data.Data[ N * I_ ], Result, N );
 end;
 
-procedure TdcmPortArra<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
+procedure TdcmPort1D<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
 var
    N :Integer;
 begin
@@ -374,19 +426,47 @@ end;
 
 //------------------------------------------------------------------------------
 
-function TdcmPortArra<_TYPE_>.GetValuesN :Integer;
+function TdcmPort1D<_TYPE_>.GetText :String;
+var
+   I :Integer;
+begin
+     if CountN > 0 then
+     begin
+          Result := Texts[ 0 ];
+
+          if CountN > 5 then
+          begin
+               for I := 1 to       5-1 do Result := Result + ', ' + Texts[ I ];
+
+               Result := Result + ',...';
+          end
+          else
+          begin
+               for I := 1 to CountN-1 do Result := Result + ', ' + Texts[ I ];
+          end;
+     end;
+end;
+
+procedure TdcmPort1D<_TYPE_>.SetText( const Text_:String );
+begin
+
+end;
+
+//------------------------------------------------------------------------------
+
+function TdcmPort1D<_TYPE_>.GetCountN :Integer;
 begin
      Result := _Data.Size div SizeOf( _TYPE_ );
 end;
 
-procedure TdcmPortArra<_TYPE_>.SetValuesN( const ValuesN_:Integer );
+procedure TdcmPort1D<_TYPE_>.SetCountN( const CountN_:Integer );
 begin
-     _Data.Size := SizeOf( _TYPE_ ) * ValuesN_;
+     _Data.Size := SizeOf( _TYPE_ ) * CountN_;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort2D<_TYPE_>
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
 
@@ -394,33 +474,61 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TdcmPortText<_TYPE_>.GetText :String;
+function TdcmPort2D<_TYPE_>.GetValues2D( const X_,Y_:Integer ) :_TYPE_;
 begin
-     with _Data do SetString( Result, PAnsiChar( Data ), Size );
+     Result := Values[ _CountX * Y_ + X_ ];
 end;
 
-procedure TdcmPortText<_TYPE_>.SetText( const Text_:String );
-var
-   T :String;
+procedure TdcmPort2D<_TYPE_>.SetValues2D( const X_,Y_:Integer; const Value_:_TYPE_ );
 begin
-     if Length( Text_ ) mod 2 = 0 then T := Text_
-                                  else T := Text_ + ' ';  //※偶数でなくてはならない。
-
-     with _Data do
-     begin
-          Size := Length( Text_ );
-
-          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( T ) ), Size );
-     end;
+     Values[ _CountX * Y_ + X_ ] := Value_;
 end;
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+//------------------------------------------------------------------------------
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortImag<_TPixel_>
+function TdcmPort2D<_TYPE_>.GetCountN :Integer;
+begin
+     Result := _CountY * _CountX;
+end;
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+procedure TdcmPort2D<_TYPE_>.SetCountN( const CountN_:Integer );
+begin
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+end;
+
+//------------------------------------------------------------------------------
+
+function TdcmPort2D<_TYPE_>.GetTexts2D( const X_,Y_:Integer ) :String;
+begin
+     Result := Texts[ _CountX * Y_ + X_ ];
+end;
+
+procedure TdcmPort2D<_TYPE_>.SetTexts2D( const X_,Y_:Integer; const Text_:String );
+begin
+     Texts[ _CountX * Y_ + X_ ] := Text_;
+end;
+
+//------------------------------------------------------------------------------
+
+function TdcmPort2D<_TYPE_>.GetCountX :Integer;
+begin
+     Result := _CountX;
+end;
+
+procedure TdcmPort2D<_TYPE_>.SetCountX( const CountX_:Integer );
+begin
+     _CountX := CountX_;
+end;
+
+function TdcmPort2D<_TYPE_>.GetCountY :Integer;
+begin
+     Result := _CountY;
+end;
+
+procedure TdcmPort2D<_TYPE_>.SetCountY( const CountY_:Integer );
+begin
+     _CountY := CountY_;
+end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
