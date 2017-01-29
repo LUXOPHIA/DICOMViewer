@@ -1,0 +1,136 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'DICOMViewer'
+  ClientHeight = 660
+  ClientWidth = 968
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object TabControl1: TTabControl
+    Align = Client
+    Margins.Left = 10.000000000000000000
+    Margins.Top = 10.000000000000000000
+    Margins.Right = 10.000000000000000000
+    Margins.Bottom = 10.000000000000000000
+    Size.Width = 948.000000000000000000
+    Size.Height = 640.000000000000000000
+    Size.PlatformDefault = False
+    TabIndex = 0
+    TabOrder = 2
+    TabPosition = PlatformDefault
+    Sizes = (
+      948s
+      614s
+      948s
+      614s)
+    object TabItem1: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 53.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Image'
+      ExplicitSize.cx = 53.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object Image1: TImage
+        MultiResBitmap = <
+          item
+          end>
+        Align = Client
+        Margins.Left = 10.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Size.Width = 928.000000000000000000
+        Size.Height = 594.000000000000000000
+        Size.PlatformDefault = False
+        OnDragOver = Image1DragOver
+        OnDragDrop = Image1DragDrop
+      end
+    end
+    object TabItem2: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 45.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Data'
+      ExplicitSize.cx = 45.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object StringGrid1: TStringGrid
+        Align = Client
+        CanFocus = True
+        ClipChildren = True
+        Margins.Left = 10.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Size.Width = 928.000000000000000000
+        Size.Height = 594.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = #65325#65331' '#12468#12471#12483#12463
+        StyledSettings = [Size, Style, FontColor]
+        TabOrder = 0
+        RowCount = 0
+        Viewport.Width = 924.000000000000000000
+        Viewport.Height = 569.000000000000000000
+        object StringColumn1: TStringColumn
+          Header = 'No.'
+          ReadOnly = True
+          Size.Width = 40.000000000000000000
+        end
+        object StringColumn2: TStringColumn
+          Header = 'Grup'
+          ReadOnly = True
+          Size.Width = 40.000000000000000000
+        end
+        object StringColumn3: TStringColumn
+          Header = 'Elem'
+          ReadOnly = True
+          Size.Width = 40.000000000000000000
+        end
+        object StringColumn4: TStringColumn
+          Header = 'OriVR'
+          ReadOnly = True
+          Size.Width = 60.000000000000000000
+        end
+        object StringColumn5: TStringColumn
+          Header = 'ExpVR'
+          ReadOnly = True
+          Size.Width = 50.000000000000000000
+        end
+        object StringColumn6: TStringColumn
+          Header = 'Size'
+          ReadOnly = True
+          Size.Width = 70.000000000000000000
+        end
+        object StringColumn7: TStringColumn
+          Header = 'Data'
+          ReadOnly = True
+          Size.Width = 380.000000000000000000
+        end
+        object StringColumn8: TStringColumn
+          Header = 'Desc'
+          ReadOnly = True
+          Size.Width = 220.000000000000000000
+        end
+        object StringColumn9: TStringColumn
+          Visible = False
+        end
+      end
+    end
+  end
+end
