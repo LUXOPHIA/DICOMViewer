@@ -184,8 +184,8 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
      protected
        ///// アクセス
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
+       function GetTexts( const I_:Integer ) :String; override;
+       procedure SetTexts( const I_:Integer; const Text_:String ); override;
      public
      end;
 
@@ -540,12 +540,12 @@ end;
 
 /////////////////////////////////////////////////////////////////////// アクセス
 
-function TdcmPortSQ.GetText :String;
+function TdcmPortSQ.GetTexts( const I_:Integer ) :String;
 begin
 
 end;
 
-procedure TdcmPortSQ.SetText( const Text_:String );
+procedure TdcmPortSQ.SetTexts( const I_:Integer; const Text_:String );
 begin
 
 end;
