@@ -2,15 +2,9 @@
 
 interface //#################################################################### ■
 
-uses System.Math, System.RegularExpressions,
-     LUX,  LUX.DICOM;
+uses System.Math;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
-
-     TdcmPort<_TYPE_>              = class;
-     TdcmPortArra<_TYPE_>          = class;
-     TdcmPortText<_TYPE_>          = class;
-     TdcmPortImag<_TPixel_:record> = class;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -72,76 +66,29 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function ToString :String;
      end;
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindPixel
+
+     TKindPixel = ( pxNone,
+                    pxMONOCHROME1,      //MONOCHROME1
+                    pxMONOCHROME2,      //MONOCHROME2
+                    pxPALETTECOLOR,     //PALETTE COLOR
+                    pxRGB,              //RGB
+                    pxYBRFULL,          //YBR_FULL
+                    pxYBRFULL422,       //YBR_FULL_422
+                    pxYBRPARTIAL422,    //YBR_PARTIAL_422
+                    pxYBRPARTIAL420,    //YBR_PARTIAL_420
+                    pxYBRICT,           //YBR_ICT
+                    pxYBRRCT        );  //YBR_RCT
+
+     HKindPixel = record helper for TKindPixel
+     private
+     public
+       constructor Create( const Text_:String );
+       ///// メソッド
+       function ToString :String;
+     end;
+
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
-
-     TdcmPort<_TYPE_> = class( TdcmPort )
-     private
-     protected
-       ///// アクセス
-       function GetValue :_TYPE_; virtual;
-       procedure SetValue( const Value_:_TYPE_ ); virtual;
-     public
-       ///// プロパティ
-       property Value :_TYPE_ read GetValue write SetValue;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
-
-     TdcmPortArra<_TYPE_> = class( TdcmPort )
-     private
-     protected
-       ///// アクセス
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
-       function GetTexts( const I_:Integer ) :String; virtual; abstract;
-       procedure SetTexts( const I_:Integer; const Text_:String ); virtual; abstract;
-       function GetValues( const I_:Integer ) :_TYPE_; virtual;
-       procedure SetValues( const I_:Integer; const Value_:_TYPE_ ); virtual;
-       function GetValuesN :Integer; virtual;
-       procedure SetValuesN( const ValuesN_:Integer ); virtual;
-     public
-       ///// プロパティ
-       property Texts[ const I_:Integer ]  :String  read GetTexts   write SetTexts  ;
-       property Values[ const I_:Integer ] :_TYPE_  read GetValues  write SetValues ;
-       property ValuesN                    :Integer read GetValuesN write SetValuesN;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
-
-     TdcmPortText<_TYPE_> = class( TdcmPort<_TYPE_> )
-     private
-     protected
-       ///// アクセス
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
-     public
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortImag<_TPixel_>
-
-     TdcmPortImag<_TPixel_:record> = class( TdcmPort )
-     private
-     protected
-       ///// アクセス
-       function GetPixels( const X_,Y_:Integer ) :_TPixel_; virtual; abstract;
-       procedure SetPixels( const X_,Y_:Integer; const Pixel_:_TPixel_ ); virtual; abstract;
-     public
-       ///// プロパティ
-       property Pixels[ const X_,Y_:Integer ] :_TPixel_ read GetPixels write SetPixels;
-     end;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
-
-     TdcmPortSQ = class( TdcmPort )
-     private
-     protected
-       ///// アクセス
-       function GetText :String; override;
-       procedure SetText( const Text_:String ); override;
-     public
-     end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
 
@@ -151,7 +98,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 implementation //############################################################### ■
 
-uses System.SysUtils, System.AnsiStrings;
+uses System.SysUtils, System.RegularExpressions;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -296,153 +243,63 @@ begin
      Result := Date.ToString + Time.ToString + Zone.ToString;
 end;
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPort<_TYPE_>
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TKindPixel
+{
+  http://dicom.nema.org/medical/dicom/current/output/html/part03.html#sect_C.7.6.3.1.2
+  C.7.6.3.1.2 Photometric Interpretation
+}
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPort<_TYPE_>.GetValue :_TYPE_;
-begin
-     Move( _Data.Data[0], Result, SizeOf( _TYPE_ ) );
-end;
-
-procedure TdcmPort<_TYPE_>.SetValue( const Value_:_TYPE_ );
-begin
-     Move( Value_, _Data.Data[0], SizeOf( _TYPE_ ) );
-end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortArra<_TYPE_>
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPortArra<_TYPE_>.GetText :String;
-var
-   I :Integer;
-begin
-     if ValuesN > 0 then
-     begin
-          Result := Texts[ 0 ];
-
-          if ValuesN > 5 then
-          begin
-               for I := 1 to       5-1 do Result := Result + ', ' + Texts[ I ];
-
-               Result := Result + ',...';
-          end
-          else
-          begin
-               for I := 1 to ValuesN-1 do Result := Result + ', ' + Texts[ I ];
-          end;
-     end;
-end;
-
-procedure TdcmPortArra<_TYPE_>.SetText( const Text_:String );
-begin
-
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPortArra<_TYPE_>.GetValues( const I_:Integer ) :_TYPE_;
-var
-   N :Integer;
-begin
-     N := SizeOf( _TYPE_ );
-
-     Move( _Data.Data[ N * I_ ], Result, N );
-end;
-
-procedure TdcmPortArra<_TYPE_>.SetValues( const I_:Integer; const Value_:_TYPE_ );
-var
-   N :Integer;
-begin
-     N := SizeOf( _TYPE_ );
-
-     Move( Value_, _Data.Data[ N * I_ ], N );
-end;
-
-//------------------------------------------------------------------------------
-
-function TdcmPortArra<_TYPE_>.GetValuesN :Integer;
-begin
-     Result := _Data.Size div SizeOf( _TYPE_ );
-end;
-
-procedure TdcmPortArra<_TYPE_>.SetValuesN( const ValuesN_:Integer );
-begin
-     _Data.Size := SizeOf( _TYPE_ ) * ValuesN_;
-end;
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortText<_TYPE_>
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPortText<_TYPE_>.GetText :String;
-begin
-     with _Data do SetString( Result, PAnsiChar( Data ), Size );
-end;
-
-procedure TdcmPortText<_TYPE_>.SetText( const Text_:String );
+constructor HKindPixel.Create( const Text_:String );
 var
    T :String;
 begin
-     if Length( Text_ ) mod 2 = 0 then T := Text_
-                                  else T := Text_ + ' ';  //※偶数でなくてはならない。
+     T := Text_.TrimRight;
 
-     with _Data do
-     begin
-          Size := Length( Text_ );
+     if T = 'MONOCHROME1'     then Self := TKindPixel.pxMONOCHROME1
+                              else
+     if T = 'MONOCHROME2'     then Self := TKindPixel.pxMONOCHROME2
+                              else
+     if T = 'PALETTE COLOR'   then Self := TKindPixel.pxPALETTECOLOR
+                              else
+     if T = 'RGB'             then Self := TKindPixel.pxRGB
+                              else
+     if T = 'YBR_FULL'        then Self := TKindPixel.pxYBRFULL
+                              else
+     if T = 'YBR_FULL_422'    then Self := TKindPixel.pxYBRFULL422
+                              else
+     if T = 'YBR_PARTIAL_422' then Self := TKindPixel.pxYBRPARTIAL422
+                              else
+     if T = 'YBR_PARTIAL_420' then Self := TKindPixel.pxYBRPARTIAL420
+                              else
+     if T = 'YBR_ICT'         then Self := TKindPixel.pxYBRICT
+                              else
+     if T = 'YBR_RCT'         then Self := TKindPixel.pxYBRRCT
+                              else Self := TKindPixel.pxNone;
+end;
 
-          System.AnsiStrings.StrMove( PAnsiChar( Data ), PAnsiChar( AnsiString( T ) ), Size );
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function HKindPixel.ToString :String;
+begin
+     case Self of
+     TKindPixel.pxNone         : Result := '';
+     TKindPixel.pxMONOCHROME1  : Result := 'MONOCHROME1';
+     TKindPixel.pxMONOCHROME2  : Result := 'MONOCHROME2';
+     TKindPixel.pxPALETTECOLOR : Result := 'PALETTE COLOR';
+     TKindPixel.pxRGB          : Result := 'RGB';
+     TKindPixel.pxYBRFULL      : Result := 'YBR_FULL';
+     TKindPixel.pxYBRFULL422   : Result := 'YBR_FULL_422';
+     TKindPixel.pxYBRPARTIAL422: Result := 'YBR_PARTIAL_422';
+     TKindPixel.pxYBRPARTIAL420: Result := 'YBR_PARTIAL_420';
+     TKindPixel.pxYBRICT       : Result := 'YBR_ICT';
+     TKindPixel.pxYBRRCT       : Result := 'YBR_RCT';
      end;
 end;
 
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortImag<_TPixel_>
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TdcmPortSQ
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
-
-/////////////////////////////////////////////////////////////////////// アクセス
-
-function TdcmPortSQ.GetText :String;
-begin
-
-end;
-
-procedure TdcmPortSQ.SetText( const Text_:String );
-begin
-
-end;
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 

@@ -2,8 +2,7 @@
 
 interface //#################################################################### ■
 
-uses System.Classes, System.Generics.Collections,
-     LUX;
+uses System.Classes, System.Generics.Collections;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
