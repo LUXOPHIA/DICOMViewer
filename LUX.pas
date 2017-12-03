@@ -8,18 +8,39 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      PPByte = ^PByte;
 
-     PInt8   = ^Int8;
-     PUInt8  = ^UInt8;
-     PInt16  = ^Int16;
-     PUInt16 = ^UInt16;
-     PInt32  = ^Int32;
-     PUInt32 = ^UInt32;
+     //-------------------------------------------------------------------------
 
-     PIntPtr  = ^IntPtr;
-     PUIntPtr = ^UIntPtr;
+     PUInt8   = ^UInt8  ;  PInt8   = ^Int8  ;
+     PUInt16  = ^UInt16 ;  PInt16  = ^Int16 ;
+     PUInt32  = ^UInt32 ;  PInt32  = ^Int32 ;
+     PUIntPtr = ^UIntPtr;  PIntPtr = ^IntPtr;
 
-     TArray2<TValue_> = array of TArray <TValue_>;
-     TArray3<TValue_> = array of TArray2<TValue_>;
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TArray2/3<>
+
+     TArray2<T> = array of TArray <T>;
+     TArray3<T> = array of TArray2<T>;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TConstProc/Func<>
+
+     TConstProc<TA         > = reference to procedure( const A:TA                                     );
+     TConstProc<TA,TB      > = reference to procedure( const A:TA; const B:TB                         );
+     TConstProc<TA,TB,TC   > = reference to procedure( const A:TA; const B:TB; const C:TC             );
+     TConstProc<TA,TB,TC,TD> = reference to procedure( const A:TA; const B:TB; const C:TC; const D:TD );
+
+     TConstFunc<TA,         TResult> = reference to function( const A:TA                                     ) :TResult;
+     TConstFunc<TA,TB,      TResult> = reference to function( const A:TA; const B:TB                         ) :TResult;
+     TConstFunc<TA,TB,TC,   TResult> = reference to function( const A:TA; const B:TB; const C:TC             ) :TResult;
+     TConstFunc<TA,TB,TC,TD,TResult> = reference to function( const A:TA; const B:TB; const C:TC; const D:TD ) :TResult;
+
+     TConstProc1<T>         = reference to procedure( const A:T       );
+     TConstProc2<T,TResult> = reference to procedure( const A,B:T     );
+     TConstProc3<T,TResult> = reference to procedure( const A,B,C:T   );
+     TConstProc4<T,TResult> = reference to procedure( const A,B,C,D:T );
+
+     TConstFunc1<T,TResult> = reference to function( const A:T       ) :TResult;
+     TConstFunc2<T,TResult> = reference to function( const A,B:T     ) :TResult;
+     TConstFunc3<T,TResult> = reference to function( const A,B,C:T   ) :TResult;
+     TConstFunc4<T,TResult> = reference to function( const A,B,C,D:T ) :TResult;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
@@ -113,6 +134,28 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInterfacedBase
+
+     TInterfacedBase = class( TObject, IInterface )
+     private
+     protected
+       function QueryInterface( const IID_:TGUID; out Obj_ ) :HResult; stdcall;
+       function _AddRef :Integer; stdcall;
+       function _Release :Integer; stdcall;
+     public
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIdleTask
+
+     TIdleTask = class
+     private
+     protected class var
+       _Task :ITask;
+     public
+       ///// メソッド
+       class procedure Run( const Proc_:TThreadProcedure; const Delay_:Integer = 500 );
+     end;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIter< TValue_ >
 
      TIter< TValue_ > = class
@@ -191,6 +234,23 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
 
+      SINGLE_EPS = 1.1920928955078125E-7;
+      DOUBLE_EPS = 2.220446049250313080847263336181640625E-16;
+
+      SINGLE_EPS1 = SINGLE_EPS * 1E1;
+      DOUBLE_EPS1 = DOUBLE_EPS * 1E1;
+
+      SINGLE_EPS2 = SINGLE_EPS * 1E2;
+      DOUBLE_EPS2 = DOUBLE_EPS * 1E2;
+
+      SINGLE_EPS3 = SINGLE_EPS * 1E3;
+      DOUBLE_EPS3 = DOUBLE_EPS * 1E3;
+
+      SINGLE_EPS4 = SINGLE_EPS * 1E4;
+      DOUBLE_EPS4 = DOUBLE_EPS * 1E4;
+
+      //------------------------------------------------------------------------
+
       Pi2 = 2 * Pi;
       Pi3 = 3 * Pi;
       Pi4 = 4 * Pi;
@@ -201,11 +261,11 @@ const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
       P3i2 = Pi2 / 3;
 
+      //------------------------------------------------------------------------
+
       CRLF = #13#10;
 
-var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
-
-    _ThreadPool_ :TThreadPool;
+//var //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【変数】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
 
@@ -250,6 +310,14 @@ function Clamp( const X_,Min_,Max_:Integer ) :Integer; inline; overload;
 function Clamp( const X_,Min_,Max_:Single ) :Single; inline; overload;
 function Clamp( const X_,Min_,Max_:Double ) :Double; inline; overload;
 
+function ClampMin( const X_,Min_:Integer ) :Integer; inline; overload;
+function ClampMin( const X_,Min_:Single ) :Single; inline; overload;
+function ClampMin( const X_,Min_:Double ) :Double; inline; overload;
+
+function ClampMax( const X_,Max_:Integer ) :Integer; inline; overload;
+function ClampMax( const X_,Max_:Single ) :Single; inline; overload;
+function ClampMax( const X_,Max_:Double ) :Double; inline; overload;
+
 function Min( const A_,B_,C_:Integer ) :Integer; overload;
 function Min( const A_,B_,C_:Single ) :Single; overload;
 function Min( const A_,B_,C_:Double ) :Double; overload;
@@ -285,6 +353,7 @@ function MaxI( const Vs_:array of Double ) :Integer; overload;
 function RealMod( const X_,Range_:Integer ) :Integer; overload;
 function RealMod( const X_,Range_:Int64 ) :Int64; overload;
 
+{$IF Defined( MACOS ) or Defined( MSWINDOWS ) }
 function RevBytes( const Value_:Word ) :Word; overload;
 function RevBytes( const Value_:Smallint ) :Smallint; overload;
 
@@ -295,10 +364,39 @@ function RevBytes( const Value_:Single ) :Single; overload;
 function RevBytes( const Value_:UInt64 ) :UInt64; overload;
 function RevBytes( const Value_:Int64 ) :Int64; overload;
 function RevBytes( const Value_:Double ) :Double; overload;
+{$ENDIF}
 
+{$IF Defined( MACOS ) or Defined( MSWINDOWS ) }
 function CharsToStr( const Cs_:TArray<AnsiChar> ) :AnsiString;
+{$ENDIF}
 
 function FileToBytes( const FileName_:string ) :TBytes;
+
+function Comb( N_,K_:Cardinal ) :UInt64;
+
+function BinPow( const N_:Integer ) :Integer; overload;
+function BinPow( const N_:Cardinal ) :Cardinal; overload;
+function BinPow( const N_:Int64 ) :Int64; overload;
+function BinPow( const N_:UInt64 ) :UInt64; overload;
+
+function IntToStr( const Value_:Integer; const N_:Integer; const C_:Char = '0' ) :String; overload;
+function IntToStr( const Value_:Int64; const N_:Integer; const C_:Char = '0' ) :String; overload;
+function IntToStrP( const Value_:Integer; const N_:Integer; const C_:Char = '0' ) :String; overload;
+function IntToStrP( const Value_:Int64; const N_:Integer; const C_:Char = '0' ) :String; overload;
+
+procedure FloatToStr( const Value_:Single; const N_:Integer; out Man_,Exp_:String ); overload;
+procedure FloatToStr( const Value_:Double; const N_:Integer; out Man_,Exp_:String ); overload;
+
+function _TestFloatToStr_Single( const Value_:String; const N_:Integer ) :String;
+function _TestFloatToStr_Double( const Value_:String; const N_:Integer ) :String;
+
+procedure FloatToStr( const Value_:Single; const N_:Integer; out Man_,Exp_:String; out DecN_:Integer ); overload;
+procedure FloatToStr( const Value_:Double; const N_:Integer; out Man_,Exp_:String; out DecN_:Integer ); overload;
+
+function FloatToStr( const Value_:Single; const N_:Integer ) :String; overload;
+function FloatToStr( const Value_:Double; const N_:Integer ) :String; overload;
+function FloatToStrP( const Value_:Single; const N_:Integer ) :String; overload;
+function FloatToStrP( const Value_:Double; const N_:Integer ) :String; overload;
 
 implementation //############################################################### ■
 
@@ -492,6 +590,54 @@ begin
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInterfacedBase
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TInterfacedBase.QueryInterface( const IID_:TGUID; out Obj_ ) :HResult;
+begin
+     if GetInterface( IID_, Obj_ ) then Result := 0
+                                   else Result := E_NOINTERFACE;
+end;
+
+function TInterfacedBase._AddRef :Integer;
+begin
+     Result := 0;
+end;
+
+function TInterfacedBase._Release :Integer;
+begin
+     Result := 0;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIdleTask
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& protected
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+class procedure TIdleTask.Run( const Proc_:TThreadProcedure; const Delay_:Integer = 500 );
+begin
+     if Assigned( _Task ) then _Task.Cancel;
+
+     _Task := TTask.Run( procedure
+     begin
+          Sleep( Delay_ );
+
+          if TTask.CurrentTask.Status = TTaskStatus.Running then TThread.Queue( nil, Proc_ );
+     end );
+end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TIter< TValue_ >
 
@@ -1103,7 +1249,7 @@ function Clamp( const X_,Min_,Max_:Integer ) :Integer;
 begin
      if X_ < Min_ then Result := Min_
                   else
-     if X_ > Max_ then Result := Max_
+     if Max_ < X_ then Result := Max_
                   else Result := X_;
 end;
 
@@ -1111,7 +1257,7 @@ function Clamp( const X_,Min_,Max_:Single ) :Single;
 begin
      if X_ < Min_ then Result := Min_
                   else
-     if X_ > Max_ then Result := Max_
+     if Max_ < X_ then Result := Max_
                   else Result := X_;
 end;
 
@@ -1119,7 +1265,47 @@ function Clamp( const X_,Min_,Max_:Double ) :Double;
 begin
      if X_ < Min_ then Result := Min_
                   else
-     if X_ > Max_ then Result := Max_
+     if Max_ < X_ then Result := Max_
+                  else Result := X_;
+end;
+
+//------------------------------------------------------------------------------
+
+function ClampMin( const X_,Min_:Integer ) :Integer;
+begin
+     if X_ < Min_ then Result := Min_
+                  else Result := X_;
+end;
+
+function ClampMin( const X_,Min_:Single ) :Single;
+begin
+     if X_ < Min_ then Result := Min_
+                  else Result := X_;
+end;
+
+function ClampMin( const X_,Min_:Double ) :Double;
+begin
+     if X_ < Min_ then Result := Min_
+                  else Result := X_;
+end;
+
+//------------------------------------------------------------------------------
+
+function ClampMax( const X_,Max_:Integer ) :Integer;
+begin
+     if Max_ < X_ then Result := Max_
+                  else Result := X_;
+end;
+
+function ClampMax( const X_,Max_:Single ) :Single;
+begin
+     if Max_ < X_ then Result := Max_
+                  else Result := X_;
+end;
+
+function ClampMax( const X_,Max_:Double ) :Double;
+begin
+     if Max_ < X_ then Result := Max_
                   else Result := X_;
 end;
 
@@ -1466,6 +1652,8 @@ end;
 
 //------------------------------------------------------------------------------
 
+{$IF Defined( MACOS ) or Defined( MSWINDOWS ) }
+
 function RevBytes( const Value_:Word ) :Word;
 asm
 {$IFDEF CPUX64 }
@@ -1550,7 +1738,11 @@ begin
      Result := PDouble( @V )^;
 end;
 
+{$ENDIF}
+
 //------------------------------------------------------------------------------
+
+{$IF Defined( MACOS ) or Defined( MSWINDOWS ) }
 
 function CharsToStr( const Cs_:TArray<AnsiChar> ) :AnsiString;
 var
@@ -1564,6 +1756,8 @@ begin
                                   else Result := Result + Cs_[ I ];
      end;
 end;
+
+{$ENDIF}
 
 //------------------------------------------------------------------------------
 
@@ -1584,16 +1778,218 @@ begin
      end;
 end;
 
+//------------------------------------------------------------------------------
+
+function Comb( N_,K_:Cardinal ) :UInt64;
+var
+   I :Cardinal;
+begin
+     if N_ < 2 * K_ then K_ := N_ - K_;
+
+     Result := 1;
+
+     for I := 1 to K_ do
+     begin
+          //Result := Result * ( N_ - K_ + I ) div I;
+
+          Result := Result * N_ div I;  Dec( N_ );
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function BinPow( const N_:Integer ) :Integer;
+begin
+     Result := 1 shl N_;
+end;
+
+function BinPow( const N_:Cardinal ) :Cardinal;
+begin
+     Result := 1 shl N_;
+end;
+
+function BinPow( const N_:Int64 ) :Int64;
+begin
+     Result := 1 shl N_;
+end;
+
+function BinPow( const N_:UInt64 ) :UInt64;
+begin
+     Result := 1 shl N_;
+end;
+
+//------------------------------------------------------------------------------
+
+function IntToStr( const Value_:Integer; const N_:Integer; const C_:Char = '0' ) :String;
+var
+   I :Integer;
+begin
+     Result := IntToStr( Value_ );
+
+     if Value_ < 0 then I := 1
+                   else I := 0;
+
+     Result := Result.Insert( I, StringOfChar( C_, N_ + I - Length( Result ) ) );
+end;
+
+function IntToStr( const Value_:Int64; const N_:Integer; const C_:Char = '0' ) :String;
+var
+   I :Integer;
+begin
+     Result := IntToStr( Value_ );
+
+     if Value_ < 0 then I := 1
+                   else I := 0;
+
+     Result := Result.Insert( I, StringOfChar( C_, N_ + I - Length( Result ) ) );
+end;
+
+function IntToStrP( const Value_:Integer; const N_:Integer; const C_:Char = '0' ) :String;
+begin
+     Result := IntToStr( Value_, N_, C_ );
+
+     if Value_ > 0 then Result := '+' + Result;
+end;
+
+function IntToStrP( const Value_:Int64; const N_:Integer; const C_:Char = '0' ) :String;
+begin
+     Result := IntToStr( Value_, N_, C_ );
+
+     if Value_ > 0 then Result := '+' + Result;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure _SplitME( const Value_:String; out Man_,Exp_:String );
+var
+   I :Integer;
+begin
+     I := Value_.IndexOf( 'E' );
+
+     Man_ := Value_.Substring( 0, I ).TrimRight( [ '0' ] );
+     Exp_ := Value_.Substring( I+1 );
+end;
+
+procedure FloatToStr( const Value_:Single; const N_:Integer; out Man_,Exp_:String );
+begin
+     _SplitME( FloatToStrF( Value_, TFloatFormat.ffExponent, N_, 0 ), Man_,Exp_ );
+end;
+
+procedure FloatToStr( const Value_:Double; const N_:Integer; out Man_,Exp_:String );
+begin
+     _SplitME( FloatToStrF( Value_, TFloatFormat.ffExponent, N_, 0 ), Man_,Exp_ );
+end;
+
+//------------------------------------------------------------------------------
+
+function _DecN( const Man_,Exp_:String ) :Integer;
+var
+   M, E :Integer;
+begin
+     if Man_.Chars[ 0 ] = '-' then M := Man_.Length - 3
+                              else M := Man_.Length - 2;
+
+     E := Exp_.ToInteger;
+
+     Result := M - E;
+
+     if Result <= 0 then Result := -E-1;
+end;
+
+procedure FloatToStr( const Value_:Single; const N_:Integer; out Man_,Exp_:String; out DecN_:Integer );
+begin
+     FloatToStr( Value_, N_, Man_, Exp_ );
+
+     DecN_ := _DecN( Man_, Exp_ );
+end;
+
+procedure FloatToStr( const Value_:Double; const N_:Integer; out Man_,Exp_:String; out DecN_:Integer );
+begin
+     FloatToStr( Value_, N_, Man_, Exp_ );
+
+     DecN_ := _DecN( Man_, Exp_ );
+end;
+
+//------------------------------------------------------------------------------
+
+function _TestFloatToStr_Single( const Value_:String; const N_:Integer ) :String;
+var
+   Zs, S0, S :String;
+   I :Integer;
+begin
+     Zs := StringOfChar( '0', N_+1 );
+
+     S0 := Zs + Value_ + Zs;
+
+     for I := 1 to Length( S0 )-1 do
+     begin
+          S := S0;  S.Insert( I, '.' );
+
+          Result := Result + S + '	' + FloatToStr( S.ToSingle, N_ ) + CRLF;
+     end;
+end;
+
+function _TestFloatToStr_Double( const Value_:String; const N_:Integer ) :String;
+var
+   Zs, S0, S :String;
+   I :Integer;
+begin
+     Zs := StringOfChar( '0', N_+1 );
+
+     S0 := Zs + Value_ + Zs;
+
+     for I := 1 to Length( S0 )-1 do
+     begin
+          S := S0;  S.Insert( I, '.' );
+
+          Result := Result + S + '	' + FloatToStr( S.ToDouble, N_ ) + CRLF;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function FloatToStr( const Value_:Single; const N_:Integer ) :String;
+var
+   M, E :String;
+   D :Integer;
+begin
+     FloatToStr( Value_, N_, M, E, D );
+
+     if Abs( D ) <= N_ then Result := FloatToStrF( Value_, TFloatFormat.ffFixed, N_, ClampMin( D, 0 ) )
+                       else Result := M + 'e' + E;
+end;
+
+function FloatToStr( const Value_:Double; const N_:Integer ) :String;
+var
+   M, E :String;
+   D :Integer;
+begin
+     FloatToStr( Value_, N_, M, E, D );
+
+     if Abs( D ) <= N_ then Result := FloatToStrF( Value_, TFloatFormat.ffFixed, N_, ClampMin( D, 0 ) )
+                       else Result := M + 'e' + E;
+end;
+
+function FloatToStrP( const Value_:Single; const N_:Integer ) :String;
+begin
+     Result := FloatToStr( Value_, N_ );
+
+     if Value_ > 0 then Result := '+' + Result;
+end;
+
+function FloatToStrP( const Value_:Double; const N_:Integer ) :String;
+begin
+     Result := FloatToStr( Value_, N_ );
+
+     if Value_ > 0 then Result := '+' + Result;
+end;
+
 //############################################################################## □
 
 initialization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 初期化
 
      Randomize;
 
-     _ThreadPool_ := TThreadPool.Create;
-
 finalization //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 最終化
-
-     _ThreadPool_.Free;
 
 end. //######################################################################### ■
