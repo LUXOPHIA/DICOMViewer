@@ -9,6 +9,54 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TByte4D
+
+     TByte4D = record
+     private
+       ///// アクセス
+       function GetV( const I_:Integer ) :Byte; inline;
+       procedure SetV( const I_:Integer; const V_:Byte ); inline;
+     public
+       constructor Create( const V_:Byte ); overload;
+       constructor Create( const X_,Y_,Z_,W_:Byte ); overload;
+       ///// プロパティ
+       property _s[ const I_:Integer ] :Byte read GetV write SetV; default;
+     case Byte of
+      0:( _ :array [ 1..4 ] of Byte; );
+      1:(  X :Byte;
+           Y :Byte;
+           Z :Byte;
+           W :Byte;                  );
+      2:( _1 :Byte;
+          _2 :Byte;
+          _3 :Byte;
+          _4 :Byte;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInteger4D
+
+     TInteger4D = record
+     private
+       ///// アクセス
+       function GetV( const I_:Integer ) :Integer; inline;
+       procedure SetV( const I_:Integer; const V_:Integer ); inline;
+     public
+       constructor Create( const V_:Integer ); overload;
+       constructor Create( const X_,Y_,Z_,W_:Integer ); overload;
+       ///// プロパティ
+       property _s[ const I_:Integer ] :Integer read GetV write SetV; default;
+     case Byte of
+      0:( _ :array [ 1..4 ] of Integer; );
+      1:(  X :Integer;
+           Y :Integer;
+           Z :Integer;
+           W :Integer;                  );
+      2:( _1 :Integer;
+          _2 :Integer;
+          _3 :Integer;
+          _4 :Integer;                  );
+     end;
+
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingle4D
 
      TSingle4D = record
@@ -25,6 +73,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        constructor Create( const V_:Single ); overload;
        constructor Create( const X_,Y_,Z_,W_:Single ); overload;
+       constructor Create( const P_:TSingle3D; const W_:Single ); overload;
        ///// プロパティ
        property V[ const I_:Integer ] :Single    read GetV      write SetV     ; default;
        property Siz2                  :Single    read GetSiz2   write SetSiz2  ;
@@ -54,6 +103,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function VectorTo( const P_:TSingle4D ) :TSingle4D;
        function UnitorTo( const P_:TSingle4D ) :TSingle4D;
        function DistanTo( const P_:TSingle4D ) :Single;
+       function ToCart :TSingle3D;
        class function RandG :TSingle4D; static;
        class function RandBS1 :TSingle4D; static;
        class function RandBS2 :TSingle4D; static;
@@ -89,6 +139,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        constructor Create( const V_:Double ); overload;
        constructor Create( const X_,Y_,Z_,W_:Double ); overload;
+       constructor Create( const P_:TDouble3D; const W_:Double ); overload;
        ///// プロパティ
        property V[ const I_:Integer ] :Double    read GetV      write SetV     ; default;
        property Siz2                  :Double    read GetSiz2   write SetSiz2  ;
@@ -118,6 +169,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        function VectorTo( const P_:TDouble4D ) :TDouble4D;
        function UnitorTo( const P_:TDouble4D ) :TDouble4D;
        function DistanTo( const P_:TDouble4D ) :Double;
+       function ToCart :TDouble3D;
        class function RandG :TDouble4D; static;
        class function RandBS1 :TDouble4D; static;
        class function RandBS2 :TDouble4D; static;
@@ -293,6 +345,74 @@ uses System.SysUtils, System.Math;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TByte4D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TByte4D.GetV( const I_:Integer ) :Byte;
+begin
+     Result := _[ I_ ];
+end;
+
+procedure TByte4D.SetV( const I_:Integer; const V_:Byte );
+begin
+     _[ I_ ] := V_;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TByte4D.Create( const V_:Byte );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+     W := V_;
+end;
+
+constructor TByte4D.Create( const X_,Y_,Z_,W_:Byte );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+     W := W_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInteger4D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TInteger4D.GetV( const I_:Integer ) :Integer;
+begin
+     Result := _[ I_ ];
+end;
+
+procedure TInteger4D.SetV( const I_:Integer; const V_:Integer );
+begin
+     _[ I_ ] := V_;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TInteger4D.Create( const V_:Integer );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+     W := V_;
+end;
+
+constructor TInteger4D.Create( const X_,Y_,Z_,W_:Integer );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+     W := W_;
+end;
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingle4D
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
@@ -357,6 +477,14 @@ begin
      Y := Y_;
      Z := Z_;
      W := W_;
+end;
+
+constructor TSingle4D.Create( const P_:TSingle3D; const W_:Single );
+begin
+     X := P_.X ;
+     Y := P_.Y ;
+     Z := P_.Z ;
+     W :=    W_;
 end;
 
 ///////////////////////////////////////////////////////////////////////// 演算子
@@ -569,6 +697,15 @@ end;
 
 //------------------------------------------------------------------------------
 
+function TSingle4D.ToCart :TSingle3D;
+begin
+     Result.X := X / W;
+     Result.Y := Y / W;
+     Result.Z := Z / W;
+end;
+
+//------------------------------------------------------------------------------
+
 class function TSingle4D.RandG :TSingle4D;
 begin
      with Result do
@@ -679,6 +816,14 @@ begin
      Y := Y_;
      Z := Z_;
      W := W_;
+end;
+
+constructor TDouble4D.Create( const P_:TDouble3D; const W_:Double );
+begin
+     X := P_.X ;
+     Y := P_.Y ;
+     Z := P_.Z ;
+     W :=    W_;
 end;
 
 ///////////////////////////////////////////////////////////////////////// 演算子
@@ -887,6 +1032,15 @@ end;
 function TDouble4D.DistanTo( const P_:TDouble4D ) :Double;
 begin
      Result := VectorTo( P_ ).Size;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDouble4D.ToCart :TDouble3D;
+begin
+     Result.X := X / W;
+     Result.Y := Y / W;
+     Result.Z := Z / W;
 end;
 
 //------------------------------------------------------------------------------
