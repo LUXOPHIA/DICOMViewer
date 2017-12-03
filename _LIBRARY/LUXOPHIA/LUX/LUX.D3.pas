@@ -2,12 +2,203 @@
 
 interface //#################################################################### ■
 
-uses System.Math.Vectors,
+uses System.Math, System.Math.Vectors,
      LUX, LUX.D1, LUX.D2;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% T1Bit3D
+
+     T1Bit3D = record
+     private
+       ///// アクセス
+       function Get_( const I_:Byte ) :Byte;
+       procedure Set_( const I_:Byte; const o_:Byte );
+       function GetX :Byte;
+       procedure SetX( const X_:Byte );
+       function GetY :Byte;
+       procedure SetY( const Y_:Byte );
+       function GetZ :Byte;
+       procedure SetZ( const Z_:Byte );
+     public
+       o :Byte;
+       constructor Create( const V_:Byte ); overload;
+       constructor Create( const X_,Y_,Z_:Byte ); overload;
+       ///// プロパティ
+       property _[ const I_:Byte ] :Byte read Get_ write Set_;
+       property  X                 :Byte read GetX write SetX;
+       property  Y                 :Byte read GetY write SetY;
+       property  Z                 :Byte read GetZ write SetZ;
+       property _1                 :Byte read GetX write SetX;
+       property _2                 :Byte read GetY write SetY;
+       property _3                 :Byte read GetZ write SetZ;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TByte3D
+
+     TByte3D = record
+     private
+     public
+       constructor Create( const V_:Byte ); overload;
+       constructor Create( const X_,Y_,Z_:Byte ); overload;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Byte; );
+      1:(  X :Byte;
+           Y :Byte;
+           Z :Byte;                  );
+      2:( _1 :Byte;
+          _2 :Byte;
+          _3 :Byte;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TShortint3D
+
+     TShortint3D = record
+     private
+     public
+       constructor Create( const V_:Shortint ); overload;
+       constructor Create( const X_,Y_,Z_:Shortint ); overload;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Shortint; );
+      1:(  X :Shortint;
+           Y :Shortint;
+           Z :Shortint;                  );
+      2:( _1 :Shortint;
+          _2 :Shortint;
+          _3 :Shortint;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TWord3D
+
+     TWord3D = record
+     private
+     public
+       constructor Create( const V_:Word ); overload;
+       constructor Create( const X_,Y_,Z_:Word ); overload;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Word; );
+      1:(  X :Word;
+           Y :Word;
+           Z :Word;                  );
+      2:( _1 :Word;
+          _2 :Word;
+          _3 :Word;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSmallint3D
+
+     TSmallint3D = record
+     private
+     public
+       constructor Create( const V_:Smallint ); overload;
+       constructor Create( const X_,Y_,Z_:Smallint ); overload;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Smallint; );
+      1:(  X :Smallint;
+           Y :Smallint;
+           Z :Smallint;                  );
+      2:( _1 :Smallint;
+          _2 :Smallint;
+          _3 :Smallint;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TCardinal3D
+
+     TCardinal3D = record
+     private
+       ///// アクセス
+       function GetLSB :T1Bit3D;
+       function GetMSB :T1Bit3D;
+     public
+       constructor Create( const V_:Cardinal ); overload;
+       constructor Create( const X_,Y_,Z_:Cardinal ); overload;
+       ///// プロパティ
+       property LSB :T1Bit3D read GetLSB;
+       property MSB :T1Bit3D read GetMSB;
+       ///// 演算子
+       class operator Negative( const V_:TCardinal3D ) :TCardinal3D; inline;
+       class operator Positive( const V_:TCardinal3D ) :TCardinal3D; inline;
+       class operator Add( const A_,B_:TCardinal3D ) :TCardinal3D; inline;
+       class operator Subtract( const A_,B_:TCardinal3D ) :TCardinal3D; inline;
+       class operator Multiply( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       class operator Multiply( const A_:Cardinal; const B_:TCardinal3D ) :TCardinal3D; inline;
+       class operator IntDivide( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       class operator Modulus( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       class operator LeftShift( const A_:TCardinal3D; const B_:Integer ) :TCardinal3D; inline;
+       class operator RightShift( const A_:TCardinal3D; const B_:Integer ) :TCardinal3D; inline;
+       class operator Equal( const A_,B_:TCardinal3D ) :Boolean; inline;
+       class operator NotEqual( const A_,B_:TCardinal3D ) :Boolean; inline;
+       class operator BitwiseAnd( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       class operator BitwiseOr( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       class operator BitwiseXor( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D; inline;
+       ///// 型変換
+       class operator Explicit( const V_:TCardinal3D ) :TByte3D; inline;
+       class operator Explicit( const V_:TByte3D ) :TCardinal3D; inline;
+       class operator Explicit( const V_:TCardinal3D ) :TShortint3D; inline;
+       class operator Explicit( const V_:TShortint3D ) :TCardinal3D; inline;
+       class operator Explicit( const V_:TCardinal3D ) :TWord3D; inline;
+       class operator Explicit( const V_:TWord3D ) :TCardinal3D; inline;
+       class operator Explicit( const V_:TCardinal3D ) :TSmallint3D; inline;
+       class operator Explicit( const V_:TSmallint3D ) :TCardinal3D; inline;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Cardinal; );
+      1:(  X :Cardinal;
+           Y :Cardinal;
+           Z :Cardinal;                  );
+      2:( _1 :Cardinal;
+          _2 :Cardinal;
+          _3 :Cardinal;                  );
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInteger3D
+
+     TInteger3D = record
+     private
+       ///// アクセス
+       function GetLSB :T1Bit3D;
+       function GetMSB :T1Bit3D;
+     public
+       constructor Create( const V_:Integer ); overload;
+       constructor Create( const X_,Y_,Z_:Integer ); overload;
+       ///// プロパティ
+       property LSB :T1Bit3D read GetLSB;
+       property MSB :T1Bit3D read GetMSB;
+       ///// 演算子
+       class operator Negative( const V_:TInteger3D ) :TInteger3D; inline;
+       class operator Positive( const V_:TInteger3D ) :TInteger3D; inline;
+       class operator Add( const A_,B_:TInteger3D ) :TInteger3D; inline;
+       class operator Subtract( const A_,B_:TInteger3D ) :TInteger3D; inline;
+       class operator Multiply( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator Multiply( const A_:Integer; const B_:TInteger3D ) :TInteger3D; inline;
+       class operator IntDivide( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator Modulus( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator LeftShift( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator RightShift( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator Equal( const A_,B_:TInteger3D ) :Boolean; inline;
+       class operator NotEqual( const A_,B_:TInteger3D ) :Boolean; inline;
+       class operator BitwiseAnd( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator BitwiseOr( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       class operator BitwiseXor( const A_:TInteger3D; const B_:Integer ) :TInteger3D; inline;
+       ///// 型変換
+       class operator Explicit( const V_:TInteger3D ) :TByte3D; inline;
+       class operator Explicit( const V_:TByte3D ) :TInteger3D; inline;
+       class operator Explicit( const V_:TInteger3D ) :TShortint3D; inline;
+       class operator Explicit( const V_:TShortint3D ) :TInteger3D; inline;
+       class operator Explicit( const V_:TInteger3D ) :TWord3D; inline;
+       class operator Explicit( const V_:TWord3D ) :TInteger3D; inline;
+       class operator Explicit( const V_:TInteger3D ) :TSmallint3D; inline;
+       class operator Explicit( const V_:TSmallint3D ) :TInteger3D; inline;
+     case Byte of
+      0:( _ :array [ 1..3 ] of Integer; );
+      1:(  X :Integer;
+           Y :Integer;
+           Z :Integer;                  );
+      2:( _1 :Integer;
+          _2 :Integer;
+          _3 :Integer;                  );
+     end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingle3D
 
@@ -22,14 +213,25 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        procedure SetSize( const Size_:Single ); inline;
        function GetUnitor :TSingle3D; inline;
        procedure SetUnitor( const Unitor_:TSingle3D ); inline;
+       function GetOrthant :Byte;
+       function GetProjXY :TSingle2D; inline;
+       procedure SetProjXY( const ProjXY_:TSingle2D ); inline;
+       function GetProjYZ :TSingle2D; inline;
+       procedure SetProjYZ( const ProjYZ_:TSingle2D ); inline;
+       function GetProjZX :TSingle2D; inline;
+       procedure SetProjZX( const ProjZX_:TSingle2D ); inline;
      public
        constructor Create( const V_:Single ); overload;
        constructor Create( const X_,Y_,Z_:Single ); overload;
        ///// プロパティ
-       property V[ const I_:Integer ] :Single    read GetV      write SetV     ; default;
-       property Siz2                  :Single    read GetSiz2   write SetSiz2  ;
-       property Size                  :Single    read GetSize   write SetSize  ;
-       property Unitor                :TSingle3D read GetUnitor write SetUnitor;
+       property _s[ const I_:Integer ] :Single    read GetV       write SetV     ; default;
+       property Siz2                   :Single    read GetSiz2    write SetSiz2  ;
+       property Size                   :Single    read GetSize    write SetSize  ;
+       property Unitor                 :TSingle3D read GetUnitor  write SetUnitor;
+       property Orthant                :Byte      read GetOrthant                ;
+       property ProjXY                 :TSingle2D read GetProjXY  write SetProjXY;
+       property ProjYZ                 :TSingle2D read GetProjYZ  write SetProjYZ;
+       property ProjZX                 :TSingle2D read GetProjZX  write SetProjZX;
        ///// 演算子
        class operator Negative( const V_:TSingle3D ) :TSingle3D; inline;
        class operator Positive( const V_:TSingle3D ) :TSingle3D; inline;
@@ -57,7 +259,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        class function RandBS1 :TSingle3D; static;
        class function RandBS2 :TSingle3D; static;
        class function RandBS4 :TSingle3D; static;
-     case Integer of
+     case Byte of
       0:( _ :array [ 1..3 ] of Single; );
       1:(  X :Single;
            Y :Single;
@@ -83,14 +285,25 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        procedure SetSize( const Size_:Double ); inline;
        function GetUnitor :TDouble3D; inline;
        procedure SetUnitor( const Unitor_:TDouble3D ); inline;
+       function GetOrthant :Byte;
+       function GetProjXY :TDouble2D; inline;
+       procedure SetProjXY( const ProjXY_:TDouble2D ); inline;
+       function GetProjYZ :TDouble2D; inline;
+       procedure SetProjYZ( const ProjYZ_:TDouble2D ); inline;
+       function GetProjZX :TDouble2D; inline;
+       procedure SetProjZX( const ProjZX_:TDouble2D ); inline;
      public
        constructor Create( const V_:Double ); overload;
        constructor Create( const X_,Y_,Z_:Double ); overload;
        ///// プロパティ
-       property V[ const I_:Integer ] :Double    read GetV      write SetV     ; default;
-       property Siz2                  :Double    read GetSiz2   write SetSiz2  ;
-       property Size                  :Double    read GetSize   write SetSize  ;
-       property Unitor                :TDouble3D read GetUnitor write SetUnitor;
+       property _s[ const I_:Integer ] :Double    read GetV       write SetV     ; default;
+       property Siz2                   :Double    read GetSiz2    write SetSiz2  ;
+       property Size                   :Double    read GetSize    write SetSize  ;
+       property Unitor                 :TDouble3D read GetUnitor  write SetUnitor;
+       property Orthant                :Byte      read GetOrthant                ;
+       property ProjXY                 :TDouble2D read GetProjXY  write SetProjXY;
+       property ProjYZ                 :TDouble2D read GetProjYZ  write SetProjYZ;
+       property ProjZX                 :TDouble2D read GetProjZX  write SetProjZX;
        ///// 演算子
        class operator Negative( const V_:TDouble3D ) :TDouble3D; inline;
        class operator Positive( const V_:TDouble3D ) :TDouble3D; inline;
@@ -118,7 +331,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        class function RandBS1 :TDouble3D; static;
        class function RandBS2 :TDouble3D; static;
        class function RandBS4 :TDouble3D; static;
-     case Integer of
+     case Byte of
       0:( _ :array [ 1..3 ] of Double; );
       1:(  X :Double;
            Y :Double;
@@ -151,12 +364,12 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        constructor Create( const X_,Y_,Z_:TdSingle );
        ///// プロパティ
-       property V[ const I_:Integer ] :TdSingle   read GetV      write SetV     ; default;
-       property o                     :TSingle3D  read Geto      write Seto     ;
-       property d                     :TSingle3D  read Getd      write Setd     ;
-       property Siz2                  :TdSingle   read GetSiz2   write SetSiz2  ;
-       property Size                  :TdSingle   read GetSize   write SetSize  ;
-       property Unitor                :TdSingle3D read GetUnitor write SetUnitor;
+       property _s[ const I_:Integer ] :TdSingle   read GetV      write SetV     ; default;
+       property o                      :TSingle3D  read Geto      write Seto     ;
+       property d                      :TSingle3D  read Getd      write Setd     ;
+       property Siz2                   :TdSingle   read GetSiz2   write SetSiz2  ;
+       property Size                   :TdSingle   read GetSize   write SetSize  ;
+       property Unitor                 :TdSingle3D read GetUnitor write SetUnitor;
        ///// 演算子
        class operator Negative( const V_:TdSingle3D ) :TdSingle3D; inline;
        class operator Positive( const V_:TdSingle3D ) :TdSingle3D; inline;
@@ -168,7 +381,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// 型変換
        class operator Implicit( const V_:TSingle3D ) :TdSingle3D;
        class operator Implicit( const V_:TdSingle3D ) :TSingle3D; inline;
-     case Integer of
+     case Byte of
       0:( _ :array [ 1..3 ] of TdSingle; );
       1:(  X :TdSingle;
            Y :TdSingle;
@@ -201,12 +414,12 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        constructor Create( const X_,Y_,Z_:TdDouble );
        ///// プロパティ
-       property V[ const I_:Integer ] :TdDouble   read GetV      write SetV     ; default;
-       property o                     :TDouble3D  read Geto      write Seto     ;
-       property d                     :TDouble3D  read Getd      write Setd     ;
-       property Siz2                  :TdDouble   read GetSiz2   write SetSiz2  ;
-       property Size                  :TdDouble   read GetSize   write SetSize  ;
-       property Unitor                :TdDouble3D read GetUnitor write SetUnitor;
+       property _s[ const I_:Integer ] :TdDouble   read GetV      write SetV     ; default;
+       property o                      :TDouble3D  read Geto      write Seto     ;
+       property d                      :TDouble3D  read Getd      write Setd     ;
+       property Siz2                   :TdDouble   read GetSiz2   write SetSiz2  ;
+       property Size                   :TdDouble   read GetSize   write SetSize  ;
+       property Unitor                 :TdDouble3D read GetUnitor write SetUnitor;
        ///// 演算子
        class operator Negative( const V_:TdDouble3D ) :TdDouble3D; inline;
        class operator Positive( const V_:TdDouble3D ) :TdDouble3D; inline;
@@ -218,7 +431,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// 型変換
        class operator Implicit( const V_:TDouble3D ) :TdDouble3D;
        class operator Implicit( const V_:TdDouble3D ) :TDouble3D; inline;
-     case Integer of
+     case Byte of
       0:( _ :array [ 1..3 ] of TdDouble; );
       1:(  X :TdDouble;
            Y :TdDouble;
@@ -230,14 +443,6 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
      TdDoublePos3D = TdDouble3D;
      TdDoubleVec3D = TdDouble3D;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleImplicit3D
-
-     TSingleImplicit3D = reference to function( const P_:TdSingle3D ) :TdSingle;
-
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleImplicit3D
-
-     TDoubleImplicit3D = reference to function( const P_:TdDouble3D ) :TdDouble;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleSiz3D
 
@@ -299,6 +504,20 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
        ///// アクセス
        function GetPoin( const I_:Integer ) :TSingle3D;
+       function GetSign :ShortInt;
+       function GetSizeX :Single;
+       function GetSizeY :Single;
+       function GetSizeZ :Single;
+       function GetProjX :TSingleArea;
+       procedure SetProjX( const ProjX_:TSingleArea );
+       function GetProjY :TSingleArea;
+       procedure SetProjY( const ProjY_:TSingleArea );
+       function GetProjZ :TSingleArea;
+       procedure SetProjZ( const ProjZ_:TSingleArea );
+       function GetCenter :TSingle3D;
+       function GetProjXY :TSingleArea2D;
+       function GetProjYZ :TSingleArea2D;
+       function GetProjZX :TSingleArea2D;
      public
        Min :TSingle3D;
        Max :TSingle3D;
@@ -308,13 +527,27 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                  MaxX_,MaxY_,MaxZ_:Single ); overload;
        constructor Create( const Min_,Max_:TSingle3D ); overload;
        ///// プロパティ
-       property Poin[ const I_:Integer ] :TSingle3D read GetPoin;
+       property Poin[ const I_:Integer ] :TSingle3D     read GetPoin                ;
+       property Sign                     :ShortInt      read GetSign                ;
+       property SizeX                    :Single        read GetSizeX               ;
+       property SizeY                    :Single        read GetSizeY               ;
+       property SizeZ                    :Single        read GetSizeZ               ;
+       property ProjX                    :TSingleArea   read GetProjX write SetProjX;
+       property ProjY                    :TSingleArea   read GetProjY write SetProjY;
+       property ProjZ                    :TSingleArea   read GetProjZ write SetProjZ;
+       property Center                   :TSingle3D     read GetCenter              ;
+       property ProjXY                   :TSingleArea2D read GetProjXY              ;
+       property ProjYZ                   :TSingleArea2D read GetProjYZ              ;
+       property ProjZX                   :TSingleArea2D read GetProjZX              ;
        ///// 定数
        class function NeInf :TSingleArea3D; static;
        class function NeMax :TSingleArea3D; static;
        class function Zero  :TSingleArea3D; static;
        class function PoMax :TSingleArea3D; static;
        class function PoInf :TSingleArea3D; static;
+       ///// メソッド
+       function ProjVec( const Vec_:TSingle3D ) :TSingleArea;
+       function Collision( const Area_:TSingleArea3D ) :Boolean;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea3D
@@ -323,6 +556,20 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      private
        ///// アクセス
        function GetPoin( const I_:Integer ) :TDouble3D;
+       function GetSign :ShortInt;
+       function GetSizeX :Double;
+       function GetSizeY :Double;
+       function GetSizeZ :Double;
+       function GetProjX :TDoubleArea;
+       procedure SetProjX( const ProjX_:TDoubleArea );
+       function GetProjY :TDoubleArea;
+       procedure SetProjY( const ProjY_:TDoubleArea );
+       function GetProjZ :TDoubleArea;
+       procedure SetProjZ( const ProjZ_:TDoubleArea );
+       function GetCenter :TDouble3D;
+       function GetProjXY :TDoubleArea2D;
+       function GetProjYZ :TDoubleArea2D;
+       function GetProjZX :TDoubleArea2D;
      public
        Min :TDouble3D;
        Max :TDouble3D;
@@ -332,13 +579,27 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                                  MaxX_,MaxY_,MaxZ_:Double ); overload;
        constructor Create( const Min_,Max_:TDouble3D ); overload;
        ///// プロパティ
-       property Poin[ const I_:Integer ] :TDouble3D read GetPoin;
+       property Poin[ const I_:Integer ] :TDouble3D     read GetPoin                ;
+       property Sign                     :ShortInt      read GetSign                ;
+       property SizeX                    :Double        read GetSizeX               ;
+       property SizeY                    :Double        read GetSizeY               ;
+       property SizeZ                    :Double        read GetSizeZ               ;
+       property ProjX                    :TDoubleArea   read GetProjX write SetProjX;
+       property ProjY                    :TDoubleArea   read GetProjY write SetProjY;
+       property ProjZ                    :TDoubleArea   read GetProjZ write SetProjZ;
+       property Center                   :TDouble3D     read GetCenter              ;
+       property ProjXY                   :TDoubleArea2D read GetProjXY              ;
+       property ProjYZ                   :TDoubleArea2D read GetProjYZ              ;
+       property ProjZX                   :TDoubleArea2D read GetProjZX              ;
        ///// 定数
        class function NeInf :TDoubleArea3D; static;
        class function NeMax :TDoubleArea3D; static;
        class function Zero  :TDoubleArea3D; static;
        class function PoMax :TDoubleArea3D; static;
        class function PoInf :TDoubleArea3D; static;
+       ///// メソッド
+       function ProjVec( const Vec_:TDouble3D ) :TDoubleArea;
+       function Collision( const Area_:TDoubleArea3D ) :Boolean;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleRay3D
@@ -423,17 +684,675 @@ function Ave( const P1_,P2_,P3_:TdDouble3D ) :TdDouble3D; inline; overload;
 function Ave( const P1_,P2_,P3_,P4_:TdSingle3D ) :TdSingle3D; inline; overload;
 function Ave( const P1_,P2_,P3_,P4_:TdDouble3D ) :TdDouble3D; inline; overload;
 
-function Nabla( const Func_:TSingleImplicit3D; const P_:TSingle3D ) :TSingle3D; inline; overload;
-function Nabla( const Func_:TDoubleImplicit3D; const P_:TDouble3D ) :TDouble3D; inline; overload;
+function Nabla( const Func_:TConstFunc<TdSingle3D,TdSingle>; const P_:TSingle3D ) :TSingle3D; inline; overload;
+function Nabla( const Func_:TConstFunc<TdDouble3D,TdDouble>; const P_:TDouble3D ) :TDouble3D; inline; overload;
 
 function PolySolveReal( const Ks_:TSingle3D; out Xs_:TSingle2D ) :Byte; overload;
 function PolySolveReal( const Ks_:TDouble3D; out Xs_:TDouble2D ) :Byte; overload;
 
 implementation //############################################################### ■
 
-uses System.SysUtils, System.Math;
+uses System.SysUtils;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【レコード】
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% T1Bit3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function T1Bit3D.Get_( const I_:Byte ) :Byte;
+begin
+     Result := ( o shr I_ ) and $01;
+end;
+
+procedure T1Bit3D.Set_( const I_:Byte; const o_:Byte );
+begin
+     o := ( o and ( not ( $01 shl I_ ) ) ) or ( o_ shl I_ );
+end;
+
+function T1Bit3D.GetX :Byte;
+begin
+     Result := o and $01;
+end;
+
+procedure T1Bit3D.SetX( const X_:Byte );
+begin
+     o := ( o and $06 ) or X_;
+end;
+
+function T1Bit3D.GetY :Byte;
+begin
+     Result := ( o shr 1 ) and $01;
+end;
+
+procedure T1Bit3D.SetY( const Y_:Byte );
+begin
+     o := ( o and $05 ) or ( Y_ shl 1 );
+end;
+
+function T1Bit3D.GetZ :Byte;
+begin
+     Result := ( o shr 2 ) and $01;
+end;
+
+procedure T1Bit3D.SetZ( const Z_:Byte );
+begin
+     o := ( o and $03 ) or ( Z_ shl 2 );
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor T1Bit3D.Create( const V_:Byte );
+begin
+     Create( V_, V_, V_ );
+end;
+
+constructor T1Bit3D.Create( const X_,Y_,Z_:Byte );
+begin
+     o := ( Z_ shl 2 ) or ( Y_ shl 1 ) or X_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TByte3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TByte3D.Create( const V_:Byte );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TByte3D.Create( const X_,Y_,Z_:Byte );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TShortint3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TShortint3D.Create( const V_:Shortint );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TShortint3D.Create( const X_,Y_,Z_:Shortint );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TWord3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TWord3D.Create( const V_:Word );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TWord3D.Create( const X_,Y_,Z_:Word );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSmallint3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TSmallint3D.Create( const V_:Smallint );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TSmallint3D.Create( const X_,Y_,Z_:Smallint );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TCardinal3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TCardinal3D.GetLSB :T1Bit3D;
+begin
+     Result.X := X and $00000001;
+     Result.Y := Y and $00000001;
+     Result.Z := Z and $00000001;
+end;
+
+function TCardinal3D.GetMSB :T1Bit3D;
+begin
+     Result.X := X and $80000000;
+     Result.Y := Y and $80000000;
+     Result.Z := Z and $80000000;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TCardinal3D.Create( const V_:Cardinal );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TCardinal3D.Create( const X_,Y_,Z_:Cardinal );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+///////////////////////////////////////////////////////////////////////// 演算子
+
+class operator TCardinal3D.Negative( const V_:TCardinal3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := -V_.X;
+          Y := -V_.Y;
+          Z := -V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Positive( const V_:TCardinal3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := +V_.X;
+          Y := +V_.Y;
+          Z := +V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Add( const A_,B_:TCardinal3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X + B_.X;
+          Y := A_.Y + B_.Y;
+          Z := A_.Z + B_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Subtract( const A_,B_:TCardinal3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X - B_.X;
+          Y := A_.Y - B_.Y;
+          Z := A_.Z - B_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Multiply( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X * B_;
+          Y := A_.Y * B_;
+          Z := A_.Z * B_;
+     end;
+end;
+
+class operator TCardinal3D.Multiply( const A_:Cardinal; const B_:TCardinal3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_ * B_.X;
+          Y := A_ * B_.Y;
+          Z := A_ * B_.Z;
+     end;
+end;
+
+class operator TCardinal3D.IntDivide( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X div B_;
+          Y := A_.Y div B_;
+          Z := A_.Z div B_;
+     end;
+end;
+
+class operator TCardinal3D.Modulus( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X mod B_;
+          Y := A_.Y mod B_;
+          Z := A_.Z mod B_;
+     end;
+end;
+
+class operator TCardinal3D.LeftShift( const A_:TCardinal3D; const B_:Integer ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X shl B_;
+          Y := A_.Y shl B_;
+          Z := A_.Z shl B_;
+     end;
+end;
+
+class operator TCardinal3D.RightShift( const A_:TCardinal3D; const B_:Integer ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X shr B_;
+          Y := A_.Y shr B_;
+          Z := A_.Z shr B_;
+     end;
+end;
+
+class operator TCardinal3D.Equal( const A_,B_:TCardinal3D ) :Boolean;
+begin
+     Result := ( A_.X = B_.X ) and ( A_.Y = B_.Y ) and ( A_.Z = B_.Z );
+end;
+
+class operator TCardinal3D.NotEqual( const A_,B_:TCardinal3D ) :Boolean;
+begin
+     Result := not ( A_ = B_ );
+end;
+
+class operator TCardinal3D.BitwiseAnd( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X and B_;
+          Y := A_.Y and B_;
+          Z := A_.Z and B_;
+     end;
+end;
+
+class operator TCardinal3D.BitwiseOr( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X or B_;
+          Y := A_.Y or B_;
+          Z := A_.Z or B_;
+     end;
+end;
+
+class operator TCardinal3D.BitwiseXor( const A_:TCardinal3D; const B_:Cardinal ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := A_.X or B_;
+          Y := A_.Y or B_;
+          Z := A_.Z or B_;
+     end;
+end;
+
+///////////////////////////////////////////////////////////////////////// 型変換
+
+class operator TCardinal3D.Explicit( const V_:TCardinal3D ) :TByte3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TByte3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TCardinal3D ) :TShortint3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TShortint3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TCardinal3D ) :TWord3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TWord3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TCardinal3D ) :TSmallint3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TCardinal3D.Explicit( const V_:TSmallint3D ) :TCardinal3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TInteger3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+/////////////////////////////////////////////////////////////////////// アクセス
+
+function TInteger3D.GetLSB :T1Bit3D;
+begin
+     Result.X := X and $00000001;
+     Result.Y := Y and $00000001;
+     Result.Z := Z and $00000001;
+end;
+
+function TInteger3D.GetMSB :T1Bit3D;
+begin
+     Result.X := X and $80000000;
+     Result.Y := Y and $80000000;
+     Result.Z := Z and $80000000;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TInteger3D.Create( const V_:Integer );
+begin
+     X := V_;
+     Y := V_;
+     Z := V_;
+end;
+
+constructor TInteger3D.Create( const X_,Y_,Z_:Integer );
+begin
+     X := X_;
+     Y := Y_;
+     Z := Z_;
+end;
+
+///////////////////////////////////////////////////////////////////////// 演算子
+
+class operator TInteger3D.Negative( const V_:TInteger3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := -V_.X;
+          Y := -V_.Y;
+          Z := -V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Positive( const V_:TInteger3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := +V_.X;
+          Y := +V_.Y;
+          Z := +V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Add( const A_,B_:TInteger3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X + B_.X;
+          Y := A_.Y + B_.Y;
+          Z := A_.Z + B_.Z;
+     end;
+end;
+
+class operator TInteger3D.Subtract( const A_,B_:TInteger3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X - B_.X;
+          Y := A_.Y - B_.Y;
+          Z := A_.Z - B_.Z;
+     end;
+end;
+
+class operator TInteger3D.Multiply( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X * B_;
+          Y := A_.Y * B_;
+          Z := A_.Z * B_;
+     end;
+end;
+
+class operator TInteger3D.Multiply( const A_:Integer; const B_:TInteger3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_ * B_.X;
+          Y := A_ * B_.Y;
+          Z := A_ * B_.Z;
+     end;
+end;
+
+class operator TInteger3D.IntDivide( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X div B_;
+          Y := A_.Y div B_;
+          Z := A_.Z div B_;
+     end;
+end;
+
+class operator TInteger3D.Modulus( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X mod B_;
+          Y := A_.Y mod B_;
+          Z := A_.Z mod B_;
+     end;
+end;
+
+class operator TInteger3D.LeftShift( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X shl B_;
+          Y := A_.Y shl B_;
+          Z := A_.Z shl B_;
+     end;
+end;
+
+class operator TInteger3D.RightShift( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X shr B_;
+          Y := A_.Y shr B_;
+          Z := A_.Z shr B_;
+     end;
+end;
+
+class operator TInteger3D.Equal( const A_,B_:TInteger3D ) :Boolean;
+begin
+     Result := ( A_.X = B_.X ) and ( A_.Y = B_.Y ) and ( A_.Z = B_.Z );
+end;
+
+class operator TInteger3D.NotEqual( const A_,B_:TInteger3D ) :Boolean;
+begin
+     Result := not ( A_ = B_ );
+end;
+
+class operator TInteger3D.BitwiseAnd( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X and B_;
+          Y := A_.Y and B_;
+          Z := A_.Z and B_;
+     end;
+end;
+
+class operator TInteger3D.BitwiseOr( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X or B_;
+          Y := A_.Y or B_;
+          Z := A_.Z or B_;
+     end;
+end;
+
+class operator TInteger3D.BitwiseXor( const A_:TInteger3D; const B_:Integer ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := A_.X or B_;
+          Y := A_.Y or B_;
+          Z := A_.Z or B_;
+     end;
+end;
+
+///////////////////////////////////////////////////////////////////////// 型変換
+
+class operator TInteger3D.Explicit( const V_:TInteger3D ) :TByte3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TByte3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TInteger3D ) :TShortint3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TShortint3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TInteger3D ) :TWord3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TWord3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TInteger3D ) :TSmallint3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
+
+class operator TInteger3D.Explicit( const V_:TSmallint3D ) :TInteger3D;
+begin
+     with Result do
+     begin
+          X := V_.X;
+          Y := V_.Y;
+          Z := V_.Z;
+     end;
+end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingle3D
 
@@ -481,6 +1400,54 @@ end;
 procedure TSingle3D.SetUnitor( const Unitor_:TSingle3D );
 begin
      Self := Size * Unitor_;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingle3D.GetOrthant :Byte;
+begin
+     Result := 0;
+     if X >= 0 then Result := Result or 1;
+     if Y >= 0 then Result := Result or 2;
+     if Z >= 0 then Result := Result or 4;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingle3D.GetProjXY :TSingle2D;
+begin
+     Result.X := X;
+     Result.Y := Y;
+end;
+
+procedure TSingle3D.SetProjXY( const ProjXY_:TSingle2D );
+begin
+     X := ProjXY_.X;
+     Y := ProjXY_.Y;
+end;
+
+function TSingle3D.GetProjYZ :TSingle2D;
+begin
+     Result.X := Y;
+     Result.Y := Z;
+end;
+
+procedure TSingle3D.SetProjYZ( const ProjYZ_:TSingle2D );
+begin
+     Y := ProjYZ_.X;
+     Z := ProjYZ_.Y;
+end;
+
+function TSingle3D.GetProjZX :TSingle2D;
+begin
+     Result.X := Z;
+     Result.Y := X;
+end;
+
+procedure TSingle3D.SetProjZX( const ProjZX_:TSingle2D );
+begin
+     Z := ProjZX_.X;
+     X := ProjZX_.Y;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -761,6 +1728,54 @@ end;
 procedure TDouble3D.SetUnitor( const Unitor_:TDouble3D );
 begin
      Self := Size * Unitor_;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDouble3D.GetOrthant :Byte;
+begin
+     Result := 0;
+     if X >= 0 then Result := Result or 1;
+     if Y >= 0 then Result := Result or 2;
+     if Z >= 0 then Result := Result or 4;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDouble3D.GetProjXY :TDouble2D;
+begin
+     Result.X := X;
+     Result.Y := Y;
+end;
+
+procedure TDouble3D.SetProjXY( const ProjXY_:TDouble2D );
+begin
+     X := ProjXY_.X;
+     Y := ProjXY_.Y;
+end;
+
+function TDouble3D.GetProjYZ :TDouble2D;
+begin
+     Result.X := Y;
+     Result.Y := Z;
+end;
+
+procedure TDouble3D.SetProjYZ( const ProjYZ_:TDouble2D );
+begin
+     Y := ProjYZ_.X;
+     Z := ProjYZ_.Y;
+end;
+
+function TDouble3D.GetProjZX :TDouble2D;
+begin
+     Result.X := Z;
+     Result.Y := X;
+end;
+
+procedure TDouble3D.SetProjZX( const ProjZX_:TDouble2D );
+begin
+     Z := ProjZX_.X;
+     X := ProjZX_.Y;
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -1639,6 +2654,108 @@ begin
      end;
 end;
 
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.GetSign :ShortInt;
+var
+   SX, SY, SZ :Byte;
+begin
+     SX := 1 + System.Math.Sign( Max.X - Min.X );
+     SY := 1 + System.Math.Sign( Max.Y - Min.Y );
+     SZ := 1 + System.Math.Sign( Max.Z - Min.Z );
+
+     case SZ * SY * SX of
+       0: Result := -1;
+       1: Result :=  0;
+       8: Result := +2;
+     else Result := +1;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.GetSizeX :Single;
+begin
+     Result := Max.X - Min.X;
+end;
+
+function TSingleArea3D.GetSizeY :Single;
+begin
+     Result := Max.Y - Min.Y;
+end;
+
+function TSingleArea3D.GetSizeZ :Single;
+begin
+     Result := Max.Z - Min.Z;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.GetProjX :TSingleArea;
+begin
+     Result := TSingleArea.Create( Min.X, Max.X );
+end;
+
+procedure TSingleArea3D.SetProjX( const ProjX_:TSingleArea );
+begin
+     Min.X := ProjX_.Min;
+     Max.X := ProjX_.Max;
+end;
+
+function TSingleArea3D.GetProjY :TSingleArea;
+begin
+     Result := TSingleArea.Create( Min.Y, Max.Y );
+end;
+
+procedure TSingleArea3D.SetProjY( const ProjY_:TSingleArea );
+begin
+     Min.Y := ProjY_.Min;
+     Max.Y := ProjY_.Max;
+end;
+
+function TSingleArea3D.GetProjZ :TSingleArea;
+begin
+     Result := TSingleArea.Create( Min.Z, Max.Z );
+end;
+
+procedure TSingleArea3D.SetProjZ( const ProjZ_:TSingleArea );
+begin
+     Min.Z := ProjZ_.Min;
+     Max.Z := ProjZ_.Max;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.GetCenter :TSingle3D;
+begin
+     with Result do
+     begin
+          X := ( Min.X + Max.X ) / 2;
+          Y := ( Min.Y + Max.Y ) / 2;
+          Z := ( Min.Z + Max.Z ) / 2;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.GetProjXY :TSingleArea2D;
+begin
+     Result := TSingleArea2D.Create( Min.X, Min.Y,
+                                     Max.X, Max.Y );
+end;
+
+function TSingleArea3D.GetProjYZ :TSingleArea2D;
+begin
+     Result := TSingleArea2D.Create( Min.Y, Min.Z,
+                                     Max.Y, Max.Z );
+end;
+
+function TSingleArea3D.GetProjZX :TSingleArea2D;
+begin
+     Result := TSingleArea2D.Create( Min.Z, Min.X,
+                                     Max.Z, Max.X );
+end;
+
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
 
 constructor TSingleArea3D.Create( const Min_,Max_:Single );
@@ -1702,6 +2819,31 @@ begin
                                      Single.PositiveInfinity );
 end;
 
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TSingleArea3D.ProjVec( const Vec_:TSingle3D ) :TSingleArea;
+var
+   I0, I1 :Byte;
+begin
+     I1 := Vec_.Orthant;
+     I0 := I1 xor 7;
+
+     with Result do
+     begin
+          Min := DotProduct( Vec_, Poin[ I0 ] );
+          Max := DotProduct( Vec_, Poin[ I1 ] );
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TSingleArea3D.Collision( const Area_:TSingleArea3D ) :Boolean;
+begin
+     Result := ProjX.Collision( Area_.ProjX )
+           and ProjY.Collision( Area_.ProjY )
+           and ProjZ.Collision( Area_.ProjZ );
+end;
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea3D
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
@@ -1720,6 +2862,108 @@ begin
        6: Result := TDouble3D.Create( Min.X, Max.Y, Max.Z );
        7: Result := TDouble3D.Create( Max.X, Max.Y, Max.Z );
      end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.GetSign :ShortInt;
+var
+   SX, SY, SZ :Byte;
+begin
+     SX := 1 + System.Math.Sign( Max.X - Min.X );
+     SY := 1 + System.Math.Sign( Max.Y - Min.Y );
+     SZ := 1 + System.Math.Sign( Max.Z - Min.Z );
+
+     case SZ * SY * SX of
+       0: Result := -1;
+       1: Result :=  0;
+       8: Result := +2;
+     else Result := +1;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.GetSizeX :Double;
+begin
+     Result := Max.X - Min.X;
+end;
+
+function TDoubleArea3D.GetSizeY :Double;
+begin
+     Result := Max.Y - Min.Y;
+end;
+
+function TDoubleArea3D.GetSizeZ :Double;
+begin
+     Result := Max.Z - Min.Z;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.GetProjX :TDoubleArea;
+begin
+     Result := TDoubleArea.Create( Min.X, Max.X );
+end;
+
+procedure TDoubleArea3D.SetProjX( const ProjX_:TDoubleArea );
+begin
+     Min.X := ProjX_.Min;
+     Max.X := ProjX_.Max;
+end;
+
+function TDoubleArea3D.GetProjY :TDoubleArea;
+begin
+     Result := TDoubleArea.Create( Min.Y, Max.Y );
+end;
+
+procedure TDoubleArea3D.SetProjY( const ProjY_:TDoubleArea );
+begin
+     Min.Y := ProjY_.Min;
+     Max.Y := ProjY_.Max;
+end;
+
+function TDoubleArea3D.GetProjZ :TDoubleArea;
+begin
+     Result := TDoubleArea.Create( Min.Z, Max.Z );
+end;
+
+procedure TDoubleArea3D.SetProjZ( const ProjZ_:TDoubleArea );
+begin
+     Min.Z := ProjZ_.Min;
+     Max.Z := ProjZ_.Max;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.GetCenter :TDouble3D;
+begin
+     with Result do
+     begin
+          X := ( Min.X + Max.X ) / 2;
+          Y := ( Min.Y + Max.Y ) / 2;
+          Z := ( Min.Z + Max.Z ) / 2;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.GetProjXY :TDoubleArea2D;
+begin
+     Result := TDoubleArea2D.Create( Min.X, Min.Y,
+                                     Max.X, Max.Y );
+end;
+
+function TDoubleArea3D.GetProjYZ :TDoubleArea2D;
+begin
+     Result := TDoubleArea2D.Create( Min.Y, Min.Z,
+                                     Max.Y, Max.Z );
+end;
+
+function TDoubleArea3D.GetProjZX :TDoubleArea2D;
+begin
+     Result := TDoubleArea2D.Create( Min.Z, Min.X,
+                                     Max.Z, Max.X );
 end;
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
@@ -1783,6 +3027,31 @@ class function TDoubleArea3D.PoInf :TDoubleArea3D;
 begin
      Result := TDoubleArea3D.Create( Double.NegativeInfinity,
                                      Double.PositiveInfinity );
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TDoubleArea3D.ProjVec( const Vec_:TDouble3D ) :TDoubleArea;
+var
+   I0, I1 :Byte;
+begin
+     I1 := Vec_.Orthant;
+     I0 := I1 xor 7;
+
+     with Result do
+     begin
+          Min := DotProduct( Vec_, Poin[ I0 ] );
+          Max := DotProduct( Vec_, Poin[ I1 ] );
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function TDoubleArea3D.Collision( const Area_:TDoubleArea3D ) :Boolean;
+begin
+     Result := ProjX.Collision( Area_.ProjX )
+           and ProjY.Collision( Area_.ProjY )
+           and ProjZ.Collision( Area_.ProjZ );
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleRay3D
@@ -2027,42 +3296,34 @@ end;
 
 //------------------------------------------------------------------------------
 
-function Nabla( const Func_:TSingleImplicit3D; const P_:TSingle3D ) :TSingle3D;
+function Nabla( const Func_:TConstFunc<TdSingle3D,TdSingle>; const P_:TSingle3D ) :TSingle3D;
 var
-   P :TdSingle3D;
+   P, F :TdSingle3D;
 begin
      P.o := P_;
 
-     P.d := TSingle3D.Create( 1, 0, 0 );
+     P.d := TSingle3D.Create( 1, 0, 0 );  F.X := Func_( P );
+     P.d := TSingle3D.Create( 0, 1, 0 );  F.Y := Func_( P );
+     P.d := TSingle3D.Create( 0, 0, 1 );  F.Z := Func_( P );
 
-     Result.X := Func_( P ).d;
-
-     P.d := TSingle3D.Create( 0, 1, 0 );
-
-     Result.Y := Func_( P ).d;
-
-     P.d := TSingle3D.Create( 0, 0, 1 );
-
-     Result.Z := Func_( P ).d;
+     Result.X := F.X.d;
+     Result.Y := F.Y.d;
+     Result.Z := F.Z.d;
 end;
 
-function Nabla( const Func_:TDoubleImplicit3D; const P_:TDouble3D ) :TDouble3D;
+function Nabla( const Func_:TConstFunc<TdDouble3D,TdDouble>; const P_:TDouble3D ) :TDouble3D;
 var
-   P :TdDouble3D;
+   P, F :TdDouble3D;
 begin
      P.o := P_;
 
-     P.d := TDouble3D.Create( 1, 0, 0 );
+     P.d := TDouble3D.Create( 1, 0, 0 );  F.X := Func_( P );
+     P.d := TDouble3D.Create( 0, 1, 0 );  F.Y := Func_( P );
+     P.d := TDouble3D.Create( 0, 0, 1 );  F.Z := Func_( P );
 
-     Result.X := Func_( P ).d;
-
-     P.d := TDouble3D.Create( 0, 1, 0 );
-
-     Result.Y := Func_( P ).d;
-
-     P.d := TDouble3D.Create( 0, 0, 1 );
-
-     Result.Z := Func_( P ).d;
+     Result.X := F.X.d;
+     Result.Y := F.Y.d;
+     Result.Z := F.Z.d;
 end;
 
 //------------------------------------------------------------------------------

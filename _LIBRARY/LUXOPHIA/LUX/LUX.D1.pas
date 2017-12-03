@@ -98,13 +98,16 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        Min :Single;
        Max :Single;
        /////
-       constructor Create( const Min_,Max_:Single );
+       constructor Create( const Min_,Max_:Single );  overload;
+       constructor Create( const V1_,V2_,V3_:Single );  overload;
        ///// 定数
        class function NeInf :TSingleArea; inline; static;
        class function NeMax :TSingleArea; inline; static;
        class function Zero  :TSingleArea; inline; static;
        class function PoMax :TSingleArea; inline; static;
        class function PoInf :TSingleArea; inline; static;
+       ///// メソッド
+       function Collision( const Area_:TSingleArea ) :Boolean;
      end;
 
      //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea
@@ -115,13 +118,16 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        Min :Double;
        Max :Double;
        /////
-       constructor Create( const Min_,Max_:Double );
+       constructor Create( const Min_,Max_:Double );  overload;
+       constructor Create( const V1_,V2_,V3_:Double );  overload;
        ///// 定数
        class function NeInf :TDoubleArea; inline; static;
        class function NeMax :TDoubleArea; inline; static;
        class function Zero  :TDoubleArea; inline; static;
        class function PoMax :TDoubleArea; inline; static;
        class function PoInf :TDoubleArea; inline; static;
+       ///// メソッド
+       function Collision( const Area_:TDoubleArea ) :Boolean;
      end;
 
      //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
@@ -275,6 +281,9 @@ function Sin( const X_:TdDouble ) :TdDouble; overload;
 function Cos( const X_:TdSingle ) :TdSingle; overload;
 function Cos( const X_:TdDouble ) :TdDouble; overload;
 
+procedure CosSin( const X_:TdSingle; out C_,S_:TdSingle ); overload;
+procedure CosSin( const X_:TdDouble; out C_,S_:TdDouble ); overload;
+
 procedure SinCos( const X_:TdSingle; out S_,C_:TdSingle ); overload;
 procedure SinCos( const X_:TdDouble; out S_,C_:TdDouble ); overload;
 
@@ -298,6 +307,18 @@ function Min( const A_,B_,C_:TdSingle ) :TdSingle; overload;
 
 function Max( const A_,B_,C_:TdSingle ) :TdSingle; overload;
 function Max( const A_,B_,C_:TdDouble ) :TdDouble; overload;
+
+function Gauss( const X_,SD_:Single ) :Single; overload;
+function Gauss( const X_,SD_:Double ) :Double; overload;
+
+function Exp( const X_:TdSingle ) :TdSingle; overload;
+function Exp( const X_:TdDouble ) :TdDouble; overload;
+
+function Ln( const X_:TdSingle ) :TdSingle; overload;
+function Ln( const X_:TdDouble ) :TdDouble; overload;
+
+function Power( const X_,N_:TdSingle ) :TdSingle; overload;
+function Power( const X_,N_:TdDouble ) :TdDouble; overload;
 
 implementation //############################################################### ■
 
@@ -665,6 +686,46 @@ begin
      Max := Max_;
 end;
 
+constructor TSingleArea.Create( const V1_,V2_,V3_:Single );
+begin
+     if V1_ <= V2_ then
+     begin
+          // V1_ <= V2_
+          if V1_ <= V3_ then
+          begin
+               // V1_ <= V2_, V3_
+               Min := V1_;
+
+               if V2_ <= V3_ then Max := V3_   // V1_ <= V2_ <= V3_
+                             else Max := V2_;  // V1_ <= V3_ <  V2_
+          end
+          else
+          begin
+               // V3_ < V1_ <= V2_
+               Min := V3_;
+               Max := V2_;
+          end;
+     end
+     else
+     begin
+          // V2_ < V1_
+          if V1_ <= V3_ then
+          begin
+               // V2_ < V1_ <= V3_
+               Min := V2_;
+               Max := V3_;
+          end
+          else
+          begin
+               // V2_, V3_ < V1_
+               Max := V1_;
+
+               if V2_ <= V3_ then Min := V2_   // V2_ <= V3_ < V1_
+                             else Min := V3_;  // V3_ <  V2_ < V1_
+          end;
+     end;
+end;
+
 /////////////////////////////////////////////////////////////////////////// 定数
 
 class function TSingleArea.NeInf :TSingleArea;
@@ -696,6 +757,13 @@ begin
                                    Single.PositiveInfinity );
 end;
 
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TSingleArea.Collision( const Area_:TSingleArea ) :Boolean;
+begin
+     Result := ( Area_.Min <= Max ) and ( Min <= Area_.Max );
+end;
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
@@ -706,6 +774,46 @@ constructor TDoubleArea.Create( const Min_,Max_:Double );
 begin
      Min := Min_;
      Max := Max_;
+end;
+
+constructor TDoubleArea.Create( const V1_,V2_,V3_:Double );
+begin
+     if V1_ <= V2_ then
+     begin
+          // V1_ <= V2_
+          if V1_ <= V3_ then
+          begin
+               // V1_ <= V2_, V3_
+               Min := V1_;
+
+               if V2_ <= V3_ then Max := V3_   // V1_ <= V2_ <= V3_
+                             else Max := V2_;  // V1_ <= V3_ <  V2_
+          end
+          else
+          begin
+               // V3_ < V1_ <= V2_
+               Min := V3_;
+               Max := V2_;
+          end;
+     end
+     else
+     begin
+          // V2_ < V1_
+          if V1_ <= V3_ then
+          begin
+               // V2_ < V1_ <= V3_
+               Min := V2_;
+               Max := V3_;
+          end
+          else
+          begin
+               // V2_, V3_ < V1_
+               Max := V1_;
+
+               if V2_ <= V3_ then Min := V2_   // V2_ <= V3_ < V1_
+                             else Min := V3_;  // V3_ <  V2_ < V1_
+          end;
+     end;
 end;
 
 /////////////////////////////////////////////////////////////////////////// 定数
@@ -737,6 +845,13 @@ class function TDoubleArea.PoInf :TDoubleArea;
 begin
      Result := TDoubleArea.Create( Double.NegativeInfinity,
                                    Double.PositiveInfinity );
+end;
+
+/////////////////////////////////////////////////////////////////////// メソッド
+
+function TDoubleArea.Collision( const Area_:TDoubleArea ) :Boolean;
+begin
+     Result := ( Area_.Min <= Max ) and ( Min <= Area_.Max );
 end;
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
@@ -1150,6 +1265,40 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure CosSin( const X_:TdSingle; out C_,S_:TdSingle );
+var
+   S, C :Single;
+begin
+     with X_ do
+     begin
+          SinCos( o, S, C );
+
+          S_.o :=      S;
+          S_.d := d * +C;
+
+          C_.o :=      C;
+          C_.d := d * -S;
+     end;
+end;
+
+procedure CosSin( const X_:TdDouble; out C_,S_:TdDouble );
+var
+   S, C :Double;
+begin
+     with X_ do
+     begin
+          SinCos( o, S, C );
+
+          S_.o :=      S;
+          S_.d := d * +C;
+
+          C_.o :=      C;
+          C_.d := d * -S;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure SinCos( const X_:TdSingle; out S_,C_:TdSingle );
 var
    S, C :Single;
@@ -1329,6 +1478,86 @@ begin
 
           if B_ >= C_ then Result := B_
                       else Result := C_;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function Gauss( const X_,SD_:Single ) :Single;
+var
+   V :Single;
+begin
+     V := Pow2( SD_ );
+
+     Result := Exp( -Pow2( X_ ) / ( 2 * V ) ) / Roo2( Pi2 * V );
+end;
+
+function Gauss( const X_,SD_:Double ) :Double;
+var
+   V :Double;
+begin
+     V := Pow2( SD_ );
+
+     Result := Exp( -Pow2( X_ ) / ( 2 * V ) ) / Roo2( Pi2 * V );
+end;
+
+//------------------------------------------------------------------------------
+
+function Exp( const X_:TdSingle ) :TdSingle;
+begin
+     with X_ do
+     begin
+          Result.o :=     Exp( o );
+          Result.d := d * Exp( o );
+     end;
+end;
+
+function Exp( const X_:TdDouble ) :TdDouble;
+begin
+     with X_ do
+     begin
+          Result.o :=     Exp( o );
+          Result.d := d * Exp( o );
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function Ln( const X_:TdSingle ) :TdSingle;
+begin
+     with X_ do
+     begin
+          Result.o := Ln( o );
+          Result.d := d / o  ;
+     end;
+end;
+
+function Ln( const X_:TdDouble ) :TdDouble;
+begin
+     with X_ do
+     begin
+          Result.o := Ln( o );
+          Result.d := d / o  ;
+     end;
+end;
+
+//------------------------------------------------------------------------------
+
+function Power( const X_,N_:TdSingle ) :TdSingle;
+begin
+     with Result do
+     begin
+          o :=               Power( X_.o, N_.o     );
+          d := X_.d * N_.o * Power( X_.o, N_.o - 1 );
+     end;
+end;
+
+function Power( const X_,N_:TdDouble ) :TdDouble;
+begin
+     with Result do
+     begin
+          o :=               Power( X_.o, N_.o     );
+          d := X_.d * N_.o * Power( X_.o, N_.o - 1 );
      end;
 end;
 
