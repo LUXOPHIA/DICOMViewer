@@ -14,6 +14,11 @@
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
         <Base_Win64>true</Base_Win64>
         <CfgParent>Base</CfgParent>
@@ -22,6 +27,12 @@
     <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
         <Cfg_1>true</Cfg_1>
         <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
@@ -33,6 +44,12 @@
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
@@ -64,6 +81,16 @@
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;bindcompdbx;IndyIPCommon;RESTComponents;DBXInterBaseDriver;vcl;IndyIPServer;vclactnband;vclFireDAC;IndySystem;tethering;dsnapcon;FireDACADSDriver;FireDACMSAccDriver;fmxFireDAC;vclimg;TeeDB;FireDAC;vcltouch;vcldb;bindcompfmx;Intraweb;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;inetdb;FMXTee;soaprtl;DbxCommonDriver;FmxTeeUI;ibxpress;FireDACIBDriver;fmx;fmxdae;xmlrtl;soapmidas;ibxbindings;fmxobj;vclwinx;vclib;rtl;Tee;DbxClientDriver;CustomIPTransport;vcldsnap;dbexpress;IndyCore;vclx;bindcomp;appanalytics;dsnap;FireDACCommon;IndyIPClient;bindcompvcl;RESTBackendComponents;TeeUI;VCLRESTComponents;soapserver;dbxcds;VclSmp;adortl;vclie;bindengine;DBXMySQLDriver;CloudService;dsnapxml;FireDACMySQLDriver;dbrtl;inetdbxpress;IndyProtocols;FireDACCommonODBC;FireDACCommonDriver;inet;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,6 +110,9 @@
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
@@ -92,6 +122,9 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -105,93 +138,23 @@
             <Form>Form1</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.VRs.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Core\LUX.DICOM.core.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Core\LUX.DICOM.VRs.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Core\LUX.DICOM.Syntax.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Core\LUX.DICOM.Charse.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Dictio\LUX.DICOM.Dictio.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Dictio\LUX.DICOM.Tags.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Dictio\LUX.DICOM.UIDs.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Model\LUX.DICOM.Datset.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\IO\LUX.DICOM.Source.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\IO\LUX.DICOM.Reader.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\IO\LUX.DICOM.Writer.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Codecs\LUX.DICOM.Codecs.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Codecs\LUX.DICOM.Codecs.JPEG.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Codecs\LUX.DICOM.Codecs.JPEG.Lossless.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Pixels\LUX.DICOM.Pixels.pas"/>
+        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Stream\LUX.DICOM.Stream.FMX.pas"/>
         <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.Tags.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0000.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0002.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G003A.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0004.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G4FFE.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G7Fxx.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0008.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0010.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0012.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0014.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0018.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0020.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0022.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0024.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0028.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0032.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0038.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0040.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0042.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0044.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0046.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0048.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0050.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G50xx.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0052.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0054.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0060.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G60xx.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0062.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0064.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0066.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0068.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0070.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0072.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0074.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0076.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0078.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0080.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0082.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0088.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0100.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G300A.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G300C.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G300E.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G0400.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G1000.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G1010.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2000.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2010.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2020.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2030.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2040.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2050.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2100.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2110.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2120.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2130.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G2200.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G3002.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G3004.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G3006.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G3008.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G4000.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G4008.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G4010.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G5200.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G5400.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.G5600.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.GFFFA.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.GFFFC.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Tags\LUX.DICOM.Tags.GFFFE.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\LUX.DICOM.Ports.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Reco.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.Text.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D1.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.Imag.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX.DICOM\Ports\LUX.DICOM.Ports.D2.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.D5.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.DN.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.D1.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.D2.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.D3.pas"/>
-        <DCCReference Include="_LIBRARY\LUXOPHIA\LUX\--------\2022\LUX.D4.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1200,6 +1163,7 @@
                 <ProjectRoot Platform="WinARM64EC" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
+                <Platform value="Win32">False</Platform>
                 <Platform value="Win64">True</Platform>
             </Platforms>
         </BorlandProject>
