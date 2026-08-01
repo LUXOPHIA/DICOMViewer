@@ -1,4 +1,4 @@
-﻿# LUX.DICOM
+# LUX.DICOM
 
 [English](../README.md) | [日本語](README.md)
 
