@@ -31,10 +31,7 @@
 
 タグは 16 ビットのグループ番号と要素番号の組であり、比較は 32 ビットのキー
 
-```math
-\mathrm{key}(g,e) = 2^{16} g + e
-\tag{1}
-```
+$$\mathrm{key}(g,e) = 2^{16} g + e \tag{1}$$
 
 で行う。パックレコードをリトルエンディアンの 32 ビット整数として読むと上下が入れ替わるため、決して行わない。`TdcmDataset` は要素リストをキー昇順に常時維持する。DICOM はデータセットをこの順に符号化するため、解析中の追加は O(1) の末尾追加となり、順序違反ファイルは二分探索位置への挿入で救済され、検索は O(log n) である。
 
@@ -42,16 +39,7 @@
 
 `(0002,0010)` から読んだ転送構文（File Meta 自体は常に Explicit VR Little Endian）が、以降の全要素のレイアウト *tag | VR? | length | value* を決定する。明示的 VR では長さフィールドの幅が VR から従う。
 
-```math
-L =
-\begin{cases}
-16\ \text{ビット} & \text{短形式：AE, AS, AT, CS, DA, DS, DT, FD, FL, IS, LO, LT,}\\
-& \qquad\quad\ \ \text{PN, SH, SL, SS, ST, TM, UI, UL, US} \\
-32\ \text{ビット（予約 2 バイトの後）} & \text{長形式：OB, OD, OF, OL, OV, OW, SQ, SV, UC, UN, UR, UT, UV} \\
-32\ \text{ビット} & \text{暗黙的 VR}
-\end{cases}
-\tag{2}
-```
+$$L = \begin{cases} 16\ \text{ビット} & \text{短形式：AE, AS, AT, CS, DA, DS, DT, FD, FL, IS, LO, LT, PN, SH, SL, SS, ST, TM, UI, UL, US} \\ 32\ \text{ビット（予約 2 バイトの後）} & \text{長形式：OB, OD, OF, OL, OV, OW, SQ, SV, UC, UN, UR, UT, UV} \\ 32\ \text{ビット} & \text{暗黙的 VR} \end{cases} \tag{2}$$
 
 英大文字 2 文字の未知の VR 名は長形式として読み、UN 相当で保全する。2015 年以降に規格へ追加された VR（OD・OL・OV・UC・UR・SV・UV）は例外なく長形式であり、この規則が前方互換の既定である。暗黙的 VR は辞書フックで解決されるため、暗黙的な定義長 SQ も再帰的に展開される。
 
@@ -67,15 +55,7 @@ L =
 
 格納値は 16 ビットのビットパターンから 2 回のシフトで取り出す。Delphi では `shl`／`shr` が 32 ビット `Integer` へ昇格し、かつ `shr` が論理シフトであるため、キャストが本質的である。
 
-```math
-w = \mathrm{Word}(v \ll (15 - \mathrm{HighBit})), \qquad
-s =
-\begin{cases}
-\mathrm{SmallInt}(w) \,/\, 2^{16-\mathrm{BitsStored}} & \text{符号あり} \\
-w \gg (16-\mathrm{BitsStored}) & \text{符号なし}
-\end{cases}
-\tag{3}
-```
+$$w = \mathrm{Word}(v \ll (15 - \mathrm{HighBit})), \qquad s = \begin{cases} \mathrm{SmallInt}(w) \,/\, 2^{16-\mathrm{BitsStored}} & \text{符号あり} \\ w \gg (16-\mathrm{BitsStored}) & \text{符号なし} \end{cases} \tag{3}$$
 
 これにより `HighBit` より上位のオーバーレイビットが除去され、符号拡張も正しく行われる。リスケールと PS3.3 C.11.2.1.2 の線形ウィンドウ [3]（Window Center／Width の欠落・多値・幅 1 未満に対しては実測 min/max へ退避する防御つき）は、MONOCHROME1 の反転とともに 65,536 項目（8 ビットなら 256 項目）の 1 本のルックアップテーブルへ畳み込まれ、フレーム変換は表引き 1 パスで済む。
 
@@ -83,16 +63,7 @@ w \gg (16-\mathrm{BitsStored}) & \text{符号なし}
 
 `Codecs/LUX.DICOM.Codecs.JPEG.Lossless.pas` は ITU-T T.81 の SOF3 [4] を純 Pascal で実装し、転送構文 1.2.840.10008.1.2.4.57 と .70 に自己登録する。正準ハフマン表は 8 ビットの先読み表で引き、8 ビットを超える符号のみ逐次照合へ落とす。バイトスタッフィング（`FF 00`）とリスタートマーカーはビットリーダが処理する。差分カテゴリ SSSS は予測誤差
 
-```math
-d =
-\begin{cases}
-0 & S = 0 \\
-32768 & S = 16 \\
-b - 2^{S} + 1 & b < 2^{S-1} \quad (\text{MSB} = 0 \Rightarrow \text{負数}) \\
-b & \text{それ以外}
-\end{cases}
-\tag{4}
-```
+$$d = \begin{cases} 0 & S = 0 \\ 32768 & S = 16 \\ b - 2^{S} + 1 & b < 2^{S-1} \quad (\text{MSB} = 0 \Rightarrow \text{負数}) \\ b & \text{それ以外} \end{cases} \tag{4}$$
 
 を与え、予測値に $2^{16}$ を法として加算する。予測器は Selection Value 0〜7 を全て実装し、先頭標本とリスタート直後は既定値 $2^{P-P_t-1}$ から再開する。正しさは機械的に検証されている。JIRA サンプルには同一画像が JPEG ロスレス SV1 と非圧縮の両形式で含まれており、`dcmCmp` が全ペアの 9,000,000 画素の完全一致を確認する。
 
@@ -100,10 +71,7 @@ b & \text{それ以外}
 
 `Tools/DictGen` は、NEMA が直接配布する DocBook XML ソース `part06.xml` [2][5] を解析し（公式の GitHub リポジトリも公式リファレンス実装も存在しない）、`LUX.DICOM.Tags.pas`（Table 6-1・7-1・8-1・9-1 から約 5,300 件）と `LUX.DICOM.UIDs.pas`（Table A-1 から約 470 件）を純粋な `const` 配列として出力する。`(60xx,3000)` のようなワイルドカードタグはキー／マスクの組に正規化され、
 
-```math
-(\mathrm{key}(g,e) \wedge \mathrm{mask}) = \mathrm{key}_0
-\tag{5}
-```
+$$(\mathrm{key}(g,e) \wedge \mathrm{mask}) = \mathrm{key}_0 \tag{5}$$
 
 で照合される。規格は年約 5 回改訂される。改訂への追従は、最新の `part06.xml` を取得し、`DictGen part06.xml ..\..\Dictio` を実行し、リビルドして回帰ツールを再実行するだけである。表に新しい VR が現れた場合は生成器が列挙して警告終了する — 列挙値 1 個と `_VRInfo_` の 1 行の追加が唯一の手作業である。
 
