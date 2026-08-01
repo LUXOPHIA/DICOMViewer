@@ -1,112 +1,42 @@
-# DICOMViewer
+﻿# DICOMViewer
 
 [English](../README.md) | [日本語](README.md)
 
-医用画像フォーマット「DICOM」の最小構成ビューアです。Delphi（FireMonkey）製で、`.dcm` ファイルをウィンドウへドラッグ＆ドロップすると、ファイルに埋め込まれたウィンドウ中心／幅を適用したグレースケール画像を表示し、全データ要素をタグ一覧表で確認できます。解析は [LUX.DICOM](https://github.com/LUXOPHIA/LUX.DICOM) ライブラリが担います。
+医用画像フォーマット **DICOM** を表示する Delphi／FireMonkey 製サンプルアプリケーション。全面書き直しされた [LUX.DICOM](https://github.com/LUXOPHIA/LUX.DICOM) ライブラリの上に構築されており、JPEG ロスレス（Process 14）はライブラリの純 Pascal コーデックで復号され、ビット抽出・リスケール・ウィンドウ・MONOCHROME1 反転は 1 本のルックアップテーブルに畳み込まれ、3000×3000 のフレームは `Map` と走査線ポインタでビットマップへ転送される — 900 万回の `SetPixel` ではなく、表引き 1 パスである。
 
-![スクリーンショット](../--------/_SCREENSHOT/DICOMViewer.png)
+![Screenshot of DICOMViewer](../--------/_SCREENSHOT/DICOMViewer.png)
 
 ## 利用ライブラリ
 
-* [**LUX**](https://github.com/LUXOPHIA/LUX) ：ベクトル・行列などの基盤数学ライブラリ。
-* [**LUX.DICOM**](https://github.com/LUXOPHIA/LUX.DICOM) ：DICOM 医用画像フォーマットの読み込みライブラリ。
+* [**LUX.DICOM**](https://github.com/LUXOPHIA/LUX.DICOM) ：DICOM 医用画像フォーマットを読み書きするためのライブラリ。
 
 ## 1. 概要
 
-* **DICOM ファイル解析**：128 バイトのプリアンブルと `DICM` プレフィックスを検証した後、全データ要素を順次読み込み、タグをキーとする辞書（`TdcmFile`）に格納します。
-* **明示的／暗黙的 VR**：値表現（VR）フィールドを VR 辞書と照合し、有効な VR 名が見つからない場合は暗黙的 VR として読み込みます [2]。
-* **不定長要素**：長さが `0xFFFFFFFF` の要素は、Boyer–Moore 探索（`TSearchBM<Word>`）で *Sequence Delimitation Item* `(FFFE,E0DD)` を検出して長さを確定します。
-* **画像表示**：*Pixel Data* 要素 `(7FE0,0010)` を Image Pixel Module の属性 [3] — *Photometric Interpretation*・*Rows*・*Columns*・*Bits Allocated*・*Bits Stored*・*High Bit*・*Pixel Representation* — に基づいて解釈し、無圧縮の 8/16 ビット・符号付き／符号なしグレースケールフレームに対応します。
-* **ウィンドウ処理**：*Window Center* `(0028,1050)` と *Window Width* `(0028,1051)` を線形 VOI 変換として適用します [4]。
-* **データ要素テーブル**：各要素のグループ／要素番号・元 VR・明示的 VR・バイトサイズ・値の文字列表現・タグの標準的な説明を一覧表示します。
+* `*.dcm` ファイルはドラッグ＆ドロップ・**Open...** ボタン・第 1 コマンドライン引数のいずれでも開ける。
+* **Image** タブは DICOM の線形ウィンドウ（PS3.3 C.11.2.1.2）でフレームを描画する。Window Center／Width はタグにあればそれを使い、欠落・多値・不正な値は実測 min/max へ退避するため、どのファイルでも表示が例外死しない。調整は **WC**／**WW** スライダー、または画像上の右ボタンドラッグ（横 = 幅、縦 = 中心）で行い、**Reset** で既定ウィンドウへ戻る。多フレームファイルではフレーム送りが現れる。
+* **Data** タブは DICOMLoader と同じ再帰タグツリーを表示する。キーワードは生成辞書から引かれ、ISO 2022 IR 87 のテキストも復号される。
+* コーデック未登録の転送構文は例外ではなくヘッダ行に理由が表示され、タグは全て閲覧できる。
 
-## 2. 技術的背景
+## 2. ビルド
 
-### 2.1 データ要素の構造
-
-DICOM ファイルは、16 ビット数の（グループ, 要素）ペアでタグ付けされたデータ要素の列です [2]。`TdcmData.ReadStream` はタグを読んだ後、2 文字の VR 名の読み取りを試みます。VR 辞書（`TdcmBookVR`）に存在しない名前ならファイル位置を巻き戻し、長さフィールドが 4 バイトの暗黙的 VR として扱います。明示的 VR の場合、短い VR は 2 バイトの長さを持ち、長い VR（`OB`・`OW`・`SQ` など）は 2 バイトの予約ブロックを読み飛ばした後に 4 バイトの長さを持ちます。
-
-### 2.2 ピクセル値の抽出
-
-格納ピクセル値は、*Bits Allocated*（$N$）ビットのコンテナ内で、最上位ビットが *High Bit*（$h$）の位置に来るように *Bits Stored*（$n$）ビット分だけ配置されています。`TdcmPortImag*.GetValues` は、未使用ビットの破棄を兼ねたシフト対によって値を抽出します。
-
-```math
-p \;=\; \bigl( v \ll (N-1-h) \bigr) \gg (N-n) \tag{1}
-```
-
-ここで $v$ はコンテナの生値、$p$ は抽出されたピクセル値です。符号付きポートクラス（`TdcmPortImagS08`・`TdcmPortImagS16`、*Pixel Representation* `(0028,0103)` が 1 のときに選択）では符号付き型に対してシフトが行われるため、2 の補数表現の符号が保存されます。
-
-### 2.3 VOI ウィンドウ処理
-
-メインフォームは、抽出された各ピクセル値 $p$ を、*Window Center* $c$ と *Window Width* $w$ による線形 VOI（value of interest）変換 [4] で表示グレーレベル $g \in [0,1]$ に写像します。
-
-```math
-g \;=\; \operatorname{clamp}\!\left( \frac{p - \left(c - \tfrac{w}{2}\right)}{w},\; 0,\; 1 \right) \tag{2}
-```
-
-グレーレベルは FireMonkey ビットマップの R・G・B チャンネルに同じ値として書き込まれます。なお *Rescale Slope/Intercept* 変換 `(0028,1053)/(0028,1052)` は適用されず、ウィンドウは格納値に直接作用します。
-
-## 3. アーキテクチャ
+Win64 のみ：
 
 ```
-［所有関係］
-・TForm1 (Main.pas)                  ･･･ FMX GUI: TabControl → Image/StringGrid
-  ┗・_DICOM :TdcmFile               ･･･ TObjectDictionary<TdcmTag,TdcmData>
-     ┗・TdcmData                    ･･･ 1..N（値は辞書が所有）
-        ┣・_Tag :TdcmTag
-        ┣・_ExpVR :TKindVR
-        ┣・_Buff :TBytes
-        ┗・型付きアクセサ :IdcmPort ･･･ RecVR（7FE0,0010）に応じて遅延生成
-
-［継承関係］
-・IdcmPort
-  ┗・TdcmPort<T>
-     ┣・TdcmPortAE … TdcmPortUT    ･･･ VR ごとに 1 クラス
-     ┗・TdcmPort1D<T>
-        ┗・TdcmPort2D<T>
-           ┗・TdcmPortImag<T>       ･･･ IdcmPortImag (KindP, CountX/Y, Pixels)
-              ┣・TdcmPortImagU08
-              ┣・TdcmPortImagS08
-              ┣・TdcmPortImagU16
-              ┗・TdcmPortImagS16
+msbuild DICOMViewer.dproj /t:Build /p:Config=Release /p:Platform=Win64
 ```
 
-```
-・DICOMViewer/
-  ┣・DICOMViewer.dpr       ･･･ プロジェクトファイル
-  ┣・Main.pas / Main.fmx   ･･･ ドラッグ＆ドロップ・画像・タグ一覧表
-  ┣・_DATA/                ･･･ サンプル DICOM ファイル（CR/DX）
-  ┣・--------/_SCREENSHOT/ ･･･ スクリーンショット
-  ┗・_LIBRARY/LUXOPHIA/    ･･･ ライブラリリポジトリの git-subtree コピー
-     ┣・LUX/               ･･･ 基本ユーティリティ（Clamp・TSearchBM・数学型）
-     ┗・LUX.DICOM/         ･･･ DICOM パーサ：TdcmFile/TdcmData・VR/タグ辞書
-```
+ライブラリのソースは [LUX.DICOM](https://github.com/LUXOPHIA/LUX.DICOM) リポジトリの git subtree として `_LIBRARY/LUXOPHIA/LUX.DICOM` に取り込まれている。更新は `git subtree pull --squash` で行う。
 
-## 4. 使い方
+## 3. サンプルデータ
 
-| 操作 | 結果 |
-|---|---|
-| `.dcm` ファイルをウィンドウへドラッグ＆ドロップ | ファイルが解析され、両タブが更新される |
-| **Image** タブ | VOI ウィンドウを適用した *Pixel Data* のグレースケール表示 |
-| **Data** タブ | 全データ要素の一覧：No. / Grup / Elem / OriVR / ExpVR / Size / Data / Desc |
+`_DATA/` には JIRA 日本標準テスト画像 8 ファイルが含まれる。8 ファイル全てが表示できる。JPEG ロスレスはライブラリのコーデックで復号され、非圧縮版と全 9,000,000 画素が一致することをライブラリ側の `dcmCmp` が検証している。
 
-サンプルファイルは `_DATA/` にあります。
+## 4. 参考文献
 
-## 5. ビルド
-
-* **IDE**：RAD Studio / Delphi（FireMonkey アプリケーション、プロジェクト形式 20.4）。
-* **プラットフォーム**：`DICOMViewer.dproj` では Win32 と Win64 が有効。
-* **依存関係**：同梱の `_LIBRARY` ソースのみで、外部 DLL は不要。
-
-`DICOMViewer.dproj` を開き、プラットフォームを選択してビルドしてください。
-
-## 6. 参考文献
-
-1. [DICOM Standard](https://www.dicomstandard.org/)
-2. [DICOM PS3.5 §7.1 *Data Elements*](https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1)（要素構造、明示的／暗黙的 VR）
-3. [DICOM PS3.3 §C.7.6.3 *Image Pixel Module*](https://dicom.nema.org/medical/dicom/current/output/html/part03.html#sect_C.7.6.3)
-4. [DICOM PS3.3 §C.11.2 *VOI LUT Module*](https://dicom.nema.org/medical/dicom/current/output/html/part03.html#sect_C.11.2)（ウィンドウ中心／幅）
-5. Wikipedia: [*DICOM*](https://ja.wikipedia.org/wiki/DICOM)
+1. NEMA, [*DICOM PS3.3 — Information Object Definitions*](https://dicom.nema.org/medical/dicom/current/output/html/part03.html), §C.11.2 VOI LUT Module.
+2. NEMA, [*DICOM PS3.5 — Data Structures and Encoding*](https://dicom.nema.org/medical/dicom/current/output/html/part05.html).
+3. ITU-T, [*Recommendation T.81*](https://www.itu.int/rec/T-REC-T.81), Annex H, Lossless mode of operation.
+4. NEMA, [*DICOM Standard — Current Edition*](https://www.dicomstandard.org/current).
 
 ## 💖 [Embarcadero](https://www.embarcadero.com/jp/) [**Delphi**](https://www.embarcadero.com/jp/products/delphi)
 ネイティブなクロスプラットフォームアプリを開発するための統合開発環境（ＩＤＥ）。
