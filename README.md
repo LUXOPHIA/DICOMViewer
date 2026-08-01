@@ -31,7 +31,7 @@ Design rules: values are kept as raw bytes together with the original VR name an
 
 A tag is a pair of 16-bit group and element numbers, compared by the 32-bit key
 
-$$\mathrm{key}(g,e) = 2^{16} g + e \tag{1}$$
+$$\mathrm{key}(g,e) = 2^{16} g + e \qquad \text{(1)}$$
 
 never by reading the packed record as a little-endian 32-bit integer, which would transpose the halves. `TdcmDataset` maintains its element list in ascending key order — DICOM encodes datasets in that order, so parsing appends in O(1), out-of-order files fall back to binary-search insertion, and lookup is O(log n).
 
@@ -39,7 +39,7 @@ never by reading the packed record as a little-endian 32-bit integer, which woul
 
 The transfer syntax read from `(0002,0010)` — File Meta itself is always Explicit VR Little Endian — determines the layout *tag | VR? | length | value* of every subsequent element. In explicit VR the width of the length field follows from the VR:
 
-$$L = \begin{cases} 16\ \text{bit} & \text{short form: AE, AS, AT, CS, DA, DS, DT, FD, FL, IS, LO, LT, PN, SH, SL, SS, ST, TM, UI, UL, US} \\\\ 32\ \text{bit, after 2 reserved bytes} & \text{long form: OB, OD, OF, OL, OV, OW, SQ, SV, UC, UN, UR, UT, UV} \\\\ 32\ \text{bit} & \text{implicit VR} \end{cases} \tag{2}$$
+$$L = \begin{cases} 16\ \text{bit} & \text{short form: AE, AS, AT, CS, DA, DS, DT, FD, FL, IS, LO, LT, PN, SH, SL, SS, ST, TM, UI, UL, US} \\\\ 32\ \text{bit, after 2 reserved bytes} & \text{long form: OB, OD, OF, OL, OV, OW, SQ, SV, UC, UN, UR, UT, UV} \\\\ 32\ \text{bit} & \text{implicit VR} \end{cases} \qquad \text{(2)}$$
 
 An unrecognized two-uppercase-letter VR name is read in long form and preserved as UN — every VR added to the standard since 2015 (OD, OL, OV, UC, UR, SV, UV) is long-form, and this rule is the forward-compatible default. Implicit VRs are resolved through the dictionary hook, so an implicit defined-length SQ is still recursed into.
 
@@ -55,7 +55,7 @@ Text VRs are decoded per `(0008,0005)`. For ISO 2022 IR 87 the escape sequences 
 
 The stored value is extracted from a 16-bit pattern by two shifts whose casts are essential in Delphi, because `shl`/`shr` promote to 32-bit `Integer` and `shr` is a logical shift:
 
-$$w = \mathrm{Word}(v \ll (15 - \mathrm{HighBit})), \qquad s = \begin{cases} \mathrm{SmallInt}(w)  /  2^{16-\mathrm{BitsStored}} & \text{signed} \\\\ w \gg (16-\mathrm{BitsStored}) & \text{unsigned} \end{cases} \tag{3}$$
+$$w = \mathrm{Word}(v \ll (15 - \mathrm{HighBit})), \qquad s = \begin{cases} \mathrm{SmallInt}(w)  /  2^{16-\mathrm{BitsStored}} & \text{signed} \\\\ w \gg (16-\mathrm{BitsStored}) & \text{unsigned} \end{cases} \qquad \text{(3)}$$
 
 which both discards overlay bits above `HighBit` and sign-extends correctly. Rescale and the linear window of PS3.3 C.11.2.1.2 [3] — with defense against absent or multi-valued Window Center/Width and against widths below 1, falling back to the measured min/max — are folded, together with the MONOCHROME1 inversion, into one 65,536-entry (or 256-entry) lookup table, so converting a frame is a single table-lookup pass.
 
@@ -63,7 +63,7 @@ which both discards overlay bits above `HighBit` and sign-extends correctly. Res
 
 `Codecs/LUX.DICOM.Codecs.JPEG.Lossless.pas` implements ITU-T T.81 SOF3 [4] in pure Pascal and registers itself for the transfer syntaxes 1.2.840.10008.1.2.4.57 and .70. Canonical Huffman tables are decoded through an 8-bit prefix table with sequential extension beyond 8 bits; byte stuffing (`FF 00`) and restart markers are handled in the bit reader. The difference category SSSS yields the prediction error
 
-$$d = \begin{cases} 0 & S = 0 \\\\ 32768 & S = 16 \\\\ b - 2^{S} + 1 & b < 2^{S-1} \quad (\text{MSB} = 0 \Rightarrow \text{negative}) \\\\ b & \text{otherwise} \end{cases} \tag{4}$$
+$$d = \begin{cases} 0 & S = 0 \\\\ 32768 & S = 16 \\\\ b - 2^{S} + 1 & b < 2^{S-1} \quad (\text{MSB} = 0 \Rightarrow \text{negative}) \\\\ b & \text{otherwise} \end{cases} \qquad \text{(4)}$$
 
 added modulo $2^{16}$ to the prediction — selection values 0–7 are all implemented, with the initial prediction $2^{P-P_t-1}$ at the first sample and after restarts. Correctness is verified mechanically: the JIRA sample set contains the same images in both JPEG Lossless SV1 and uncompressed form, and `dcmCmp` confirms that all 9,000,000 pixels of every pair decode identically.
 
@@ -71,7 +71,7 @@ added modulo $2^{16}$ to the prediction — selection values 0–7 are all imple
 
 `Tools/DictGen` parses the DocBook XML source `part06.xml`, which NEMA publishes directly [2][5] — there is no official GitHub repository and no official reference implementation — and emits `LUX.DICOM.Tags.pas` (≈5,300 entries from Tables 6-1, 7-1, 8-1, 9-1) and `LUX.DICOM.UIDs.pas` (≈470 entries from Table A-1) as pure `const` arrays. Wildcard tags such as `(60xx,3000)` are normalized to a key/mask pair matched by
 
-$$(\mathrm{key}(g,e) \wedge \mathrm{mask}) = \mathrm{key}_0 \tag{5}$$
+$$(\mathrm{key}(g,e) \wedge \mathrm{mask}) = \mathrm{key}_0 \qquad \text{(5)}$$
 
 The standard is revised about five times a year; following a revision is: download the current `part06.xml`, run `DictGen part06.xml ..\..\Dictio`, rebuild, and re-run the regression tools. Should a new VR appear in the tables, the generator lists it and exits with a warning — adding one enum value and one `_VRInfo_` row is the only manual step.
 
